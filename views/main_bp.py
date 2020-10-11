@@ -3,7 +3,7 @@ import base64
 import os
 from flask import request
 from flask import current_app
-from flask import Blueprint
+from flask import Blueprint, render_template
 import pandas as pd
 
 main_bp = Blueprint(
@@ -49,6 +49,12 @@ def task():
     current_app.logger.info("hi")
     # df = pd.read_sql("select * from test_df", con=ENG)
     return "hi" 
+
+@main_bp.route('/', methods=["GET"])
+def index():
+    current_app.logger.info("hi")
+    # df = pd.read_sql("select * from test_df", con=ENG)
+    return render_template("index.html")
 
 # [START run_pubsub_handler]
 @main_bp.route('/ab', methods=['POST'])
