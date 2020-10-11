@@ -1,0 +1,27 @@
+version: '2.1'
+
+services:
+    web: 
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: etl
+        container_name: etl-compose
+        restart: always
+        command: ./scripts/start-flask.sh -d 1
+        environment:
+            - GOOGLE_APPLICATION_CREDENTIALS
+            - ETL_SUBSCRIPTION_NAME
+            - PORT=5000
+            - DB_PASSWORD
+            - DB_CONN
+            - DB_NAME
+            - DB_PASS
+            - DB_USER
+            - CLOUD_SQL_CONNECTION_NAME
+            - FLASK_DEBUG=1
+        ports:
+            - "5000:5000"
+
+        volumes:
+            - .:/app
