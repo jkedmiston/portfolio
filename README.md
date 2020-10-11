@@ -4,4 +4,4 @@ Portfolio (WIP)
 
 # Heroku setup
 * `heroku stack:set container --app jke-portfolio`
-
+* ssh
