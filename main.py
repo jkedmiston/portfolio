@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import dash
 from flask import Flask, request, g
 import time
 import datetime
@@ -58,14 +58,42 @@ def register_request_logger(app):
     app.after_request(_after_request)
 
 
+def register_stylized_dashapp(app):
+    from dashboards.dash_files.dash_pk_calc.app import (
+        define_layout,
+        define_callbacks,
+    )
+    # https://community.plot.ly/t/how-do-i-use-dash-to-add-local-css/4914/4
+    # https://github.com/plotly/dash/issues/71
+
+    # Meta tags for viewport responsiveness
+    meta_viewport = {"name": "viewport",
+                     "content": "width=device-width, initial-scale=1, shrink-to-fit=no"}  # noqa
+    dashapp1 = dash.Dash(__name__,
+                         server=app,
+                         url_base_pathname='/pk/',
+                         assets_folder="dashboards/dash_files/dash_pk_calc/assets",
+                         meta_tags=[meta_viewport])
+
+    if (dashapp1.logger.hasHandlers()):
+        dashapp1.logger.handlers.clear()
+
+    with app.app_context():
+        dashapp1.title = "Test"
+        define_layout(dashapp1)
+        define_callbacks(dashapp1)
+        
+    # protect_dashviews(dashapp1)
+    
 def create_app():
     from views.main_bp import main_bp
     from config import Config
 
-    app = Flask(__name__, instance_relative_config=False)
+    app = Flask(__name__, instance_relative_config=False, static_folder="static")
     app.config.from_object(Config)
     app.logger.setLevel(logging.INFO)
     with app.app_context():
         register_request_logger(app)
         app.register_blueprint(main_bp)
+        register_stylized_dashapp(app)
         return app

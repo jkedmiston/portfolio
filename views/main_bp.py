@@ -52,13 +52,11 @@ def task():
 
 @main_bp.route('/', methods=["GET"])
 def index():
-    current_app.logger.info("hi")
-    # df = pd.read_sql("select * from test_df", con=ENG)
     return render_template("index.html")
 
 # [START run_pubsub_handler]
 @main_bp.route('/ab', methods=['POST'])
-def index():
+def ab():
     # pubsub push for ETL subscription
     envelope = request.get_json()
     if not envelope:

@@ -20,6 +20,7 @@ services:
             - DB_USER
             - CLOUD_SQL_CONNECTION_NAME
             - FLASK_DEBUG=1
+            - FLASK_ENV=development
         ports:
             - "5000:5000"
 
