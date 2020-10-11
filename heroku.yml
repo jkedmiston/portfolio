@@ -15,8 +15,8 @@ setup:
   config:
 #    APP_CONFIG_FILE: config.py
     APP_NAME: portfolio-app
-#    FLASK_APP: wsgi.py
-#    FLASK_ENV: production
+    FLASK_APP: wsgi.py
+    FLASK_ENV: production
     LOG_LEVEL: info
     SECRET_KEY: 1Aa567o6su2t73rouo68
 build:
