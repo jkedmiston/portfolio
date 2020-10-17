@@ -1,7 +1,18 @@
-<html>
-  <body>
-    <h1>Hello from index</h1>
-    <a href="/pk">Dashboard</a>
-    <img src="{{url_for('static', filename='download.png')}}">
-  </body>
-</html>
+
+{% extends 'layout.html' %}
+{% block nav_bar_content %}
+      <a href="/" class="btn btn-info">Home</a>  
+{% endblock %}
+{% block content %}
+<div class="container">
+  
+  <div class="row">
+    <div class="col-12">
+      <a href="/pk" class="btn btn-info btn-block">Plotly Dash Dashboard</a>
+      <a href="http://www.gaitanalyzer.info" class="btn btn-info btn-block">Bootcamp project</a>
+      <a href="www.linkedin.com/in/jkedmiston" class="btn btn-info btn-block">LinkedIn</a>
+    </div>
+  </div>
+  </div>
+
+{% endblock %}
