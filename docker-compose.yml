@@ -1,4 +1,4 @@
-version: '2.1'
+version: '3.4'
 
 services:
     web: 
@@ -9,9 +9,12 @@ services:
         container_name: etl-compose
         restart: always
         command: ./scripts/start-flask.sh -d 1
+        depends_on:
+            - database
         environment:
             - GOOGLE_APPLICATION_CREDENTIALS
             - ETL_SUBSCRIPTION_NAME
+            - DATABASE_URL=postgresql://postgres_user:postgres_password@database:5432
             - PORT=5000
             - DB_PASSWORD
             - DB_CONN
@@ -26,3 +29,18 @@ services:
 
         volumes:
             - .:/app
+
+    database:
+        environment:
+          POSTGRES_USER: postgres_user
+          POSTGRES_PASSWORD: postgres_password
+        expose:
+          - "5432"
+        image: postgres:11.5
+        ports:
+          - "127.0.0.1:5444:5432"
+        volumes:
+          - persistent_database_postgres:/var/lib/postgresql/data
+          
+volumes:
+  persistent_database_postgres:
