@@ -1,16 +1,3 @@
-# Copyright 2019 Google, LLC.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 import dash
 from flask import Flask, request, g
 import time
@@ -84,16 +71,41 @@ def register_stylized_dashapp(app):
         define_callbacks(dashapp1)
         
     # protect_dashviews(dashapp1)
+
+def register_extensions(app):
+    from extensions import db
+    db.init_app(app)
+    
+    
+def register_context_processors(app):
+    """
+    ref: flask.palletsprojects.com/en/1.1.x/templating/#context-processors
+    """
+
+    @app.context_processor
+    def urls():
+        """
+        For example: `<a href="{{ urls.main_bp.home }}">Home</a>`
+        """
+        urls_info = {
+            "main": {
+                "google_scholar": "https://scholar.google.com/citations?user=95tccioAAAAJ&hl=en", 
+            }
+        }
+        return {'urls':urls_info}
+        
     
 def create_app():
     from views.main_bp import main_bp
     from config import Config
 
-    app = Flask(__name__, instance_relative_config=False, static_folder="static")
+    app = Flask(__name__, instance_relative_config=False)
     app.config.from_object(Config)
     app.logger.setLevel(logging.INFO)
     with app.app_context():
+        register_extensions(app)        
         register_request_logger(app)
         app.register_blueprint(main_bp)
+        register_context_processors(app)        
         register_stylized_dashapp(app)
         return app
