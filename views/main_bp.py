@@ -34,6 +34,12 @@ def task2():
     # df = pd.read_sql("select * from test_df", con=ENG)
     return render_template("d3_2.html")
 
+@main_bp.route('/download_cv', methods=["GET"])
+def download_cv():
+    from flask import send_from_directory
+    return send_from_directory("/app", "Edmiston_2020.pdf", as_attachment=True)
+
+
 @main_bp.route('/test_schema', methods=["GET"])
 def test_schema():
     # init_all
