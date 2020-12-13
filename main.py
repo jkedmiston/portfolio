@@ -97,19 +97,24 @@ def register_context_processors(app):
         }
         return {'urls':urls_info}
 
+def register_admin_panel(app):
+    from admin_panel import add_admin_app
+    add_admin_app(app)
 
 def create_app():
     from views.main_bp import main_bp
     from config import Config
 
     app = Flask(__name__, instance_relative_config=False, template_folder="templates", static_folder="static")
-    #Talisman(app)
+    csp = {'default-src':["'self'", "'unsafe-inline'"]}
+    Talisman(app, content_security_policy=csp) # Talisman(app, content_security_policy=csp)
     app.config.from_object(Config)
 
     app.logger.setLevel(logging.INFO)
     with app.app_context():
         register_extensions(app)
         register_request_logger(app)
+        register_admin_panel(app)
         app.register_blueprint(main_bp)
         register_context_processors(app)
         register_stylized_dashapp(app)

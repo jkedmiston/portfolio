@@ -20,6 +20,7 @@ services:
             - DB_CONN
             - DB_NAME
             - DB_PASS
+            - SECRET_KEY
             - DB_USER
             - CLOUD_SQL_CONNECTION_NAME
             - FLASK_DEBUG=1

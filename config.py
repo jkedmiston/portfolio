@@ -23,4 +23,5 @@ class Config:
     FLASK_DEBUG = fetch_from_env_or_fail("FLASK_DEBUG")
     SQLALCHEMY_DATABASE_URI = fetch_from_env_or_fail('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SECRET_KEY=fetch_from_env_or_fail('SECRET_KEY')
     # LOG_LEVEL = 'debug'  # fetch_from_env_or_fail('LOG_LEVEL')
