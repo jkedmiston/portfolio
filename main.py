@@ -69,14 +69,14 @@ def register_stylized_dashapp(app):
         dashapp1.title = "Test"
         define_layout(dashapp1)
         define_callbacks(dashapp1)
-        
+
     # protect_dashviews(dashapp1)
 
 def register_extensions(app):
     from extensions import db
     db.init_app(app)
-    
-    
+
+
 def register_context_processors(app):
     """
     ref: flask.palletsprojects.com/en/1.1.x/templating/#context-processors
@@ -89,23 +89,24 @@ def register_context_processors(app):
         """
         urls_info = {
             "main": {
-                "google_scholar": "https://scholar.google.com/citations?user=95tccioAAAAJ&hl=en", 
+                "google_scholar": "https://scholar.google.com/citations?user=95tccioAAAAJ&hl=en",
+                "github": "https://github.com/jkedmiston",
             }
         }
         return {'urls':urls_info}
-        
-    
+
+
 def create_app():
     from views.main_bp import main_bp
     from config import Config
 
-    app = Flask(__name__, instance_relative_config=False)
+    app = Flask(__name__, instance_relative_config=False, template_folder="templates", static_folder="static")
     app.config.from_object(Config)
     app.logger.setLevel(logging.INFO)
     with app.app_context():
-        register_extensions(app)        
+        register_extensions(app)
         register_request_logger(app)
         app.register_blueprint(main_bp)
-        register_context_processors(app)        
+        register_context_processors(app)
         register_stylized_dashapp(app)
         return app
