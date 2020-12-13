@@ -22,7 +22,5 @@ class Config:
     DB_PASSWORD = fetch_from_env_or_fail("DB_PASSWORD")
     FLASK_DEBUG = fetch_from_env_or_fail("FLASK_DEBUG")
     SQLALCHEMY_DATABASE_URI = fetch_from_env_or_fail('DATABASE_URL')
-    SQLALCHEMY_TRACK_MODIFICATIONS = False     
-    pass
-    # SQLALCHEMY_TRACK_MODIFICATIONS = False  # quiet deprecation warnings
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     # LOG_LEVEL = 'debug'  # fetch_from_env_or_fail('LOG_LEVEL')

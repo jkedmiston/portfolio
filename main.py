@@ -4,6 +4,7 @@ import time
 import datetime
 from flask import current_app
 import logging
+from flask_talisman import Talisman
 
 
 def register_request_logger(app):
@@ -73,9 +74,10 @@ def register_stylized_dashapp(app):
     # protect_dashviews(dashapp1)
 
 def register_extensions(app):
-    from extensions import db
+    from extensions import db, migrate
     db.init_app(app)
-
+    migrate.init_app(app, db)
+    import database.schema # link in models, c.f. https://github.com/miguelgrinberg/Flask-Migrate/issues/50
 
 def register_context_processors(app):
     """
@@ -101,8 +103,10 @@ def create_app():
     from config import Config
 
     app = Flask(__name__, instance_relative_config=False, template_folder="templates", static_folder="static")
+    #Talisman(app)
     app.config.from_object(Config)
-    app.logger.setLevel(logging.INFO)
+
+    #app.logger.setLevel(logging.INFO)
     with app.app_context():
         register_extensions(app)
         register_request_logger(app)
