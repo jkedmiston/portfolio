@@ -2,3 +2,5 @@
 
 set -euo pipefail
 
+
+flask db upgrade
