@@ -106,7 +106,7 @@ def create_app():
     #Talisman(app)
     app.config.from_object(Config)
 
-    #app.logger.setLevel(logging.INFO)
+    app.logger.setLevel(logging.INFO)
     with app.app_context():
         register_extensions(app)
         register_request_logger(app)
