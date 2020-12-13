@@ -2,13 +2,7 @@
 
 ;; INSTALL PACKAGES
 ;; --------------------------------------
-;; REFS:
-;; https://east.fm/posts/configuring-gnu-emacs-with-elpy-on-macos/index.html#
-;; https://github.com/porterjamesj/virtualenvwrapper.el
-;; https://www.reddit.com/r/emacs/comments/i4886k/trouble_setting_up_elpy_part_2_total_noob_please/
-;; https://realpython.com/emacs-the-best-python-editor/
-;; key command was (setq elpy-rpc-virtualenv-path 'current) to silenve venv errors
-;; and then (pyvenv-activate "/Users/johnedmiston/anaconda3/envs/myco") to point at the conda env
+
 
 (require 'package)
 
@@ -40,6 +34,6 @@
 (require 'py-autopep8)
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 
-
 (global-set-key (kbd "\C-c l") 'goto-line)
 (global-set-key "\M-\r" 'shell-resync-dirs)
+(setq-default indent-tabs-mode nil)
