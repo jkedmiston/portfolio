@@ -24,13 +24,56 @@ services:
             - DB_USER
             - CLOUD_SQL_CONNECTION_NAME
             - FLASK_DEBUG=1
+            - REDIS_URL
             - FLASK_ENV=development
+        stdin_open: true
+        tty: true
         ports:
             - "5000:5000"
 
         volumes:
             - .:/app
 
+    worker:
+        image: etl
+        container_name: etl-worker
+        command: ./scripts/start-celery-worker.sh
+        restart: on-failure
+        depends_on:
+            - database
+            - redis
+            - web
+            - beat
+            
+        environment:
+            - SECRET_KEY
+            - REDIS_URL
+            - DB_PASSWORD
+            - FLASK_DEBUG=1
+            - DATABASE_URL=postgresql://postgres_user:postgres_password@database:5432            
+    beat:
+        image: etl
+        container_name: etl-beat
+        command: ./scripts/start-celery-beat.sh
+        restart: on-failure
+        depends_on:
+            - database
+            - redis
+            - web
+        environment:
+            - SECRET_KEY
+            - REDIS_URL
+            - DB_PASSWORD            
+            - FLASK_DEBUG=1
+            - DATABASE_URL=postgresql://postgres_user:postgres_password@database:5432            
+    redis:
+        image: redis:5.0
+        container_name: etl-redis
+        ports:
+          - '6579:6379'
+        volumes:
+          - persistent_redis:/var/lib/redis/data
+        
     database:
         environment:
           POSTGRES_USER: postgres_user
@@ -46,3 +89,4 @@ services:
           
 volumes:
   persistent_database_postgres:
+  persistent_redis:
