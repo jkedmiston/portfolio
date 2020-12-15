@@ -1,7 +1,6 @@
-
 {% extends 'layout.html' %}
 {% block nav_bar_content %}
-      <a href="/" class="btn btn-info">Home</a>  
+<a href="/" class="btn btn-info">Home</a>  
 {% endblock %}
 {% block content %}
 <div class="container">
@@ -10,17 +9,27 @@
     Links for John Edmiston!
     
     <div class="col-12">
-
       <a href="{{url_for('main_bp.index_gentelella')}}" class="btn btn-info btn-block">Flask-Gentelella Landing page frontend</a>
    <a href="/admin" class="btn btn-info btn-block">Admin panel integration</a>                  
       <a href="/pk" class="btn btn-info btn-block">Plotly Dash Dashboard example</a>
-      <a href="http://www.gaitanalyzer.info" class="btn btn-info btn-block">Bootcamp project</a>
-      <a href="http://www.linkedin.com/in/jkedmiston" class="btn btn-info btn-block">LinkedIn</a>
-      <a href="{{urls.main.google_scholar}}" class="btn btn-info btn-block">Google Scholar publications</a>
+      
+      
       <a href="{{urls.main.github}}" class="btn btn-info btn-block">Github for this app</a>            
-      <a href="{{url_for('main_bp.download_cv')}}" class="btn btn-info btn-block">Download resume</a>      
+      <a href="{{url_for('main_bp.download_cv')}}" class="btn btn-info btn-block">Download resume</a>
+      <br>
     </div>
+  <div class="dropdown">
+    <button class="btn btn-info btn-block dropdown-toggle" type="button" data-toggle="dropdown">External links
+      <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+      <li><a href="http://www.linkedin.com/in/jkedmiston" class="btn btn-info">LinkedIn</a></li>
+      <li><a href="{{urls.main.google_scholar}}" class="btn btn-info btn-block">Google Scholar publications</a></li>
+      <li><a href="http://www.gaitanalyzer.info" class="btn btn-info btn-block">Bootcamp project</a></li>
+    </ul>
   </div>
+    
   </div>
+  
+</div>
 
 {% endblock %}

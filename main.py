@@ -73,11 +73,14 @@ def register_stylized_dashapp(app):
 
     # protect_dashviews(dashapp1)
 
+
 def register_extensions(app):
     from extensions import db, migrate
     db.init_app(app)
     migrate.init_app(app, db)
-    import database.schema # link in models, c.f. https://github.com/miguelgrinberg/Flask-Migrate/issues/50
+    # link in models, c.f. https://github.com/miguelgrinberg/Flask-Migrate/issues/50
+    import database.schema
+
 
 def register_context_processors(app):
     """
@@ -92,22 +95,30 @@ def register_context_processors(app):
         urls_info = {
             "main": {
                 "google_scholar": "https://scholar.google.com/citations?user=95tccioAAAAJ&hl=en",
-                "github": "https://github.com/jkedmiston",
+                "github": "https://github.com/jkedmiston/portfolio",
             }
         }
-        return {'urls':urls_info}
+        return {'urls': urls_info}
+
 
 def register_admin_panel(app):
     from admin_panel import add_admin_app
     add_admin_app(app)
 
+
 def create_app():
     from views.main_bp import main_bp
     from config import Config
 
-    app = Flask(__name__, instance_relative_config=False, template_folder="templates", static_folder="static")
-    csp = {'default-src':["'self'", "'unsafe-inline'"]}
-    Talisman(app, content_security_policy=csp) # Talisman(app, content_security_policy=csp)
+    app = Flask(__name__, instance_relative_config=False,
+                template_folder="templates", static_folder="static")
+    csp = {'default-src': ['\'self\'', '\'unsafe-inline\'', 'https://cdnjs.cloudflare.com'],
+           'font-src': ['\'self\'', 'data', '*', 'https://use.fontawesome.com'],
+           'script-src': ['\'self\'', ],
+           'script-src-elem': ['\'self\'', 'https://cdnjs.cloudflare.com'],
+           'style-src-elem': ['\'self\'', 'https://cdnjs.cloudflare.com', 'https://use.fontawesome.com', 'https://fonts.googleapis.com']}
+
+    #Talisman(app, content_security_policy=csp)
     app.config.from_object(Config)
 
     app.logger.setLevel(logging.INFO)
