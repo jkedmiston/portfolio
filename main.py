@@ -47,7 +47,7 @@ def register_request_logger(app):
 
 
 def register_stylized_dashapp(app):
-    from dashboards.dash_files.dash_pk_calc.app import (
+    from dashboards.dash_pk_calc.app import (
         define_layout,
         define_callbacks,
     )
@@ -108,6 +108,7 @@ def register_admin_panel(app):
 
 def create_app():
     from views.main_bp import main_bp
+    from views.reports_bp import reports_bp
     from config import Config
 
     app = Flask(__name__, instance_relative_config=False,
@@ -127,6 +128,7 @@ def create_app():
         register_request_logger(app)
         register_admin_panel(app)
         app.register_blueprint(main_bp)
+        app.register_blueprint(reports_bp)
         register_context_processors(app)
         register_stylized_dashapp(app)
         return app

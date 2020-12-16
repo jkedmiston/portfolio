@@ -20,7 +20,7 @@ import plotly.graph_objs as go
 import pandas as pd
 from dash.dependencies import Input, Output, State
 
-import dashboards.dash_files.dash_pk_calc.utils as utils
+import dashboards.dash_pk_calc.utils as utils
 
 table_header_style = {
     "backgroundColor": "rgb(2,21,70)",
@@ -48,7 +48,7 @@ def define_layout(app):
                     html.A(
                         id="dash-logo",
                         children=[
-                            html.Img(src="/static/%s" % "download.png")], 
+                            html.Img(src="/static/%s" % "download.png")],
                         href="/Portal",
                     ),
                     html.H2("Noncompartmental Pharmacokinetics Analysis"),
@@ -58,7 +58,7 @@ def define_layout(app):
                         href="https://github.com/plotly/dash-sample-apps/tree/master/apps/dash-pk-calc",
                         style={"color": "white", "border": "solid 1px white"},
                     ),
-                    html.Img(src="/static/%s" % "download.png"), 
+                    html.Img(src="/static/%s" % "download.png"),
                 ],
             ),
             html.Div(
