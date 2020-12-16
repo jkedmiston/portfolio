@@ -75,9 +75,11 @@ def register_stylized_dashapp(app):
 
 
 def register_extensions(app):
-    from extensions import db, migrate
+    from extensions import db, migrate, csrf
     db.init_app(app)
     migrate.init_app(app, db)
+    csrf.init_app(app)
+
     # link in models, c.f. https://github.com/miguelgrinberg/Flask-Migrate/issues/50
     import database.schema
 
@@ -119,7 +121,7 @@ def create_app():
            'script-src-elem': ['\'self\'', 'https://cdnjs.cloudflare.com'],
            'style-src-elem': ['\'self\'', 'https://cdnjs.cloudflare.com', 'https://use.fontawesome.com', 'https://fonts.googleapis.com']}
 
-    #Talisman(app, content_security_policy=csp)
+    Talisman(app, content_security_policy=csp)
     app.config.from_object(Config)
 
     app.logger.setLevel(logging.INFO)

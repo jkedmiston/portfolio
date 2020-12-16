@@ -21,3 +21,8 @@ Starting up the app so that breakpoints are easy to work in:
 # Flask migrate
 Setting up flask migrate took a bit. This was helpful. 
 * https://blog.miguelgrinberg.com/post/how-to-add-flask-migrate-to-an-existing-project
+
+# Flask forms
+- https://hackersandslackers.com/flask-wtforms-forms/
+- https://flask.palletsprojects.com/en/1.1.x/patterns/wtforms/#the-forms
+
