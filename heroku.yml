@@ -1,24 +1,14 @@
-# 'setup' is being ignored by heroku when following documentation steps for
-# creating/provisioning docker application.
-# (see: https://devcenter.heroku.com/articles/build-docker-images-heroku-yml)
-# This is most likely because this feature is still in beta. I have an email
-# out to heroku/salesforce using the address provided in the docs and hopefully
-# they'll provide a workaround or let us know when we can expect a fix.
-# In the meantime, the solution is to manually set the stack
 # (`heroku stack:set container`), config values and provision the add-ons.
-# Once that's resolved, we should also look into how to conditionally provision
-# addons -- we'll want to use different variants in staging/production.
 setup:
   addons:
     - plan: heroku-postgresql:hobby-dev
     - plan: honeybadger:free
   config:
-#    APP_CONFIG_FILE: config.py
     APP_NAME: portfolio-app
     FLASK_APP: wsgi.py
     FLASK_ENV: production
     LOG_LEVEL: info
-    SECRET_KEY: 1Aa567o6su2t73rouo68
+    SECRET_KEY: 1Ajfjfjf838383838
 build:
   docker:
     web:
@@ -29,18 +19,15 @@ run:
     command:
       - ./start-flask.sh
     image: web
-#  worker:
-#    command:
-#      - ./scripts/start-celery-worker.sh
-#    image: web
-  # Temporarily decommission Celery beat worker since it's not being used
-  # (#557).
-  # If/when it is reintroduced, the beat worker should use RedBeat as its
-  # back-end (#523).
-  # beat:
-  #   command:
-  #     - ./scripts/start-celery-beat.sh
-  #   image: web
+  worker:
+    command:
+      - ./scripts/start-celery-worker.sh
+    image: web
+  beat:
+    command:
+      - ./scripts/start-celery-beat.sh
+    image: web
+
 release:
   image: web
   command:
