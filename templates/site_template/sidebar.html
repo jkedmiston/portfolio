@@ -1,6 +1,6 @@
 <div class="left_col scroll-view">
   <div class="navbar nav_title" style="border: 0;">
-    <a href="" class="site_title"><i class="fa fa-spinner"></i> <span>Admin landing page</span></a>
+    <a href="" class="site_title"><i class="fa fa-spinner"></i> <span>Landing page/Dashboard</span></a>
   </div>
 
   <div class="clearfix"></div>
@@ -24,42 +24,41 @@
     <div class="menu_section">
       <h3>General</h3>
       <ul class="nav side-menu">
-        <li><a><i class="fa fa-sitemap"></i> Landing pages <span class="fa fa-chevron-down"></span></a>
+        <li><a><i class="fa fa-sitemap"></i> Front end <span class="fa fa-chevron-down"></span></a>
+
           <ul class="nav child_menu">
-            <li><a href="{{ url_for("main_bp.index_gentelella") }}" >Home </a></li>                        
+            <li><a href='{{ url_for("main_bp.index_gentelella") }}' >Home </a></li>                        
+          </ul>
+        </li>
+        <li><a><i class="fa fa-database"></i> Database <span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a href='/admin' >Admin panel </a></li>                        
           </ul>
         </li>
       </ul>
     </div>
-
-
-
     
     <div class="menu_section">
       <h3>Work history</h3>
       <ul class="nav side-menu">
       <li><a><i class="fa fa-calendar"></i> CV <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
-            <li><a href=#>Resume</a></li>
-            <li><a href=#>Statement of interests</a></li>
+            <li><a href="{{url_for('main_bp.download_cv')}}">Resume</a></li>
+            <li><a href="{{urls.main.github}}">Github for this app</a></li>            
             <li><a href="{{urls.main.google_scholar}}">Google Scholar citations</a></li>
           </ul>
         </li>
         <li><a><i class="fa fa-table"></i> Publications <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
-            <li><a href="#">Pub1</a></li>
-            <li><a href="#">Pub2</a></li>
-            <li><a href="#">Pub3</a></li>            
+            <li><a href="#">Coming soon</a></li>
           </ul>
         </li>
         <li><a><i class="fa fa-bar-chart-o"></i> Dashboards <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
-            <li><a href="/pk">Plotly Dash Dashboard</a></li>
+            <li><a href="/pk">Plotly Dash Dashboard, embedded in Flask app</a></li>
           </ul>
         </li>
         <!-- fa-database -->
-        <li><a href="/admin"><i class="fa fa-database"></i> Admin </a>
-        </li>
         
       </ul>
     </div>
@@ -70,16 +69,7 @@
       <ul class="nav side-menu">
         <li><a><i class="fa fa-sitemap"></i> Computer vision <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
-            <li><a href="#">Gait analysis</a>
-                <ul class="nav child_menu">
-                  <li class="sub_menu"><a href="/level2">WWW</a>
-                  </li>
-                  </li>
-                  <li><a href="#level2_2">Level Two</a>
-                  </li>
-                </ul>
-              </li>
-              <li><a href="#level1_2">Level One</a>
+            <li><a href="http://www.gaitanalyzer.info">Gait analysis POC, from 2017</a>
               </li>
           </ul>
         </li>
