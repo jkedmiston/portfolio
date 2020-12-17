@@ -114,7 +114,7 @@ def create_app():
                 template_folder="templates", static_folder="static")
     csp = {'default-src': ['\'self\'', '\'unsafe-inline\'', 'https://cdnjs.cloudflare.com', "cdnjs.cloudflare.com", "'unsafe-eval'", "*.gstatic.com", "*.fontawesome.com", "data:"],
            'font-src': ['\'self\'', 'data', '*', 'https://use.fontawesome.com'],
-           'script-src': ['\'self\'', "'unsafe-eval'"],
+           'script-src': ['\'self\'', "'unsafe-eval'", "'unsafe-inline'"],
            'script-src-elem': ['\'self\'', 'https://cdnjs.cloudflare.com', "'unsafe-inline'"],
            'style-src-elem': ['\'self\'', 'https://cdnjs.cloudflare.com', 'https://use.fontawesome.com', 'https://fonts.googleapis.com', "'unsafe-inline'"]}
 
