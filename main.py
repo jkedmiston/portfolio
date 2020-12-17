@@ -2,7 +2,7 @@ import dash
 from flask import Flask, request, g
 import time
 import datetime
-from flask import current_app
+from flask import current_app, redirect
 import logging
 from flask_talisman import Talisman
 
@@ -10,15 +10,12 @@ from flask_talisman import Talisman
 def register_request_logger(app):
     def _before_request():
         g.request_start_time = time.time()
+        if request.headers.get('X-Forwarded-Proto') == 'http':
+            url = request.url.replace('http://', 'https://', 1)
+            code = 301
+            return redirect(url, code=code)
 
     def _after_request(response):
-        """ Logging useful information after every request. """
-
-        # if current_user.is_authenticated:
-        #    requester_email = current_user.email
-        # else:
-        #    requester_email = 'unauthenticated user'
-
         request_end_time = time.time()
         seconds = request_end_time - g.request_start_time
         request_duration = datetime.timedelta(seconds=seconds).total_seconds()
@@ -60,7 +57,7 @@ def register_stylized_dashapp(app):
     dashapp1 = dash.Dash(__name__,
                          server=app,
                          url_base_pathname='/pk/',
-                         assets_folder="dashboards/dash_files/dash_pk_calc/assets",
+                         assets_folder="dashboards/dash_pk_calc/assets",
                          meta_tags=[meta_viewport])
 
     if (dashapp1.logger.hasHandlers()):
@@ -79,7 +76,7 @@ def register_extensions(app):
     db.init_app(app)
     migrate.init_app(app, db)
     csrf.init_app(app)
-
+    csrf._exempt_views.add('dash.dash.dispatch')
     # link in models, c.f. https://github.com/miguelgrinberg/Flask-Migrate/issues/50
     import database.schema
 
@@ -115,15 +112,14 @@ def create_app():
 
     app = Flask(__name__, instance_relative_config=False,
                 template_folder="templates", static_folder="static")
-    csp = {'default-src': ['\'self\'', '\'unsafe-inline\'', 'https://cdnjs.cloudflare.com'],
+    csp = {'default-src': ['\'self\'', '\'unsafe-inline\'', 'https://cdnjs.cloudflare.com', "cdnjs.cloudflare.com", "'unsafe-eval'", "*.gstatic.com", "*.fontawesome.com", "data:"],
            'font-src': ['\'self\'', 'data', '*', 'https://use.fontawesome.com'],
-           'script-src': ['\'self\'', ],
-           'script-src-elem': ['\'self\'', 'https://cdnjs.cloudflare.com'],
-           'style-src-elem': ['\'self\'', 'https://cdnjs.cloudflare.com', 'https://use.fontawesome.com', 'https://fonts.googleapis.com']}
+           'script-src': ['\'self\'', "'unsafe-eval'"],
+           'script-src-elem': ['\'self\'', 'https://cdnjs.cloudflare.com', "'unsafe-inline'"],
+           'style-src-elem': ['\'self\'', 'https://cdnjs.cloudflare.com', 'https://use.fontawesome.com', 'https://fonts.googleapis.com', "'unsafe-inline'"]}
 
     Talisman(app, content_security_policy=csp)
     app.config.from_object(Config)
-
     app.logger.setLevel(logging.INFO)
     with app.app_context():
         register_extensions(app)

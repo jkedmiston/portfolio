@@ -48,8 +48,9 @@ def define_layout(app):
                     html.A(
                         id="dash-logo",
                         children=[
-                            html.Img(src="/static/%s" % "download.png")],
-                        href="/Portal",
+                            #html.Img(src="/static/%s" % "download.png")
+                        ],
+                        href="#",
                     ),
                     html.H2("Noncompartmental Pharmacokinetics Analysis"),
                     html.A(
@@ -58,7 +59,7 @@ def define_layout(app):
                         href="https://github.com/plotly/dash-sample-apps/tree/master/apps/dash-pk-calc",
                         style={"color": "white", "border": "solid 1px white"},
                     ),
-                    html.Img(src="/static/%s" % "download.png"),
+                    #html.Img(src="/static/%s" % "download.png"),
                 ],
             ),
             html.Div(
