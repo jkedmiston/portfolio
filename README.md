@@ -26,3 +26,5 @@ Setting up flask migrate took a bit. This was helpful.
 - https://hackersandslackers.com/flask-wtforms-forms/
 - https://flask.palletsprojects.com/en/1.1.x/patterns/wtforms/#the-forms
 
+# Plotly Dash integration
+* CSRF issue resolved by this solution https://stackoverflow.com/a/51618986
