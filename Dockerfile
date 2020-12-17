@@ -10,6 +10,8 @@ ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY . ./
 
+RUN apt-get update && apt-get install texlive-latex-extra -y && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 # Install production dependencies.
 RUN pip install -r requirements.txt
 
