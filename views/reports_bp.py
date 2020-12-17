@@ -1,11 +1,16 @@
 # basic flask form, WIP
-from flask import request
+import os
+from flask import request, flash
 from flask import Blueprint, render_template
 from flask_wtf import FlaskForm
 from flask import url_for, redirect
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
-import os
+import pandas as pd
+import pygsheets
+from googleapiclient.errors import HttpError
+import requests
+import json
 
 reports_bp = Blueprint(
     'reports_bp',
@@ -13,6 +18,48 @@ reports_bp = Blueprint(
     template_folder='templates',
     static_folder='static'
 )
+
+
+@reports_bp.route('/present_sheet', methods=['GET', 'POST'])
+def present_sheet():
+    """
+    Takes in a url 
+    Upload pandas df to a google sheet and redirect there
+    """
+    class SheetForm(FlaskForm):
+        name = StringField('Sheet URL', validators=[DataRequired()])
+        submit = SubmitField("Submit")
+
+    form = SheetForm(request.form)
+    if form.validate_on_submit():
+        gsheets = pygsheets.authorize(
+            service_account_env_var="GOOGLE_APPLICATION_CREDENTIALS")
+        url = form.data["name"]
+        slug = os.path.basename(os.path.split(url)[0])
+        try:
+            sheet = gsheets.open_by_key(slug)
+            wks = sheet.worksheet_by_title(title="Sheet-test")
+        except pygsheets.exceptions.WorksheetNotFound:
+            sheet = gsheets.open_by_key(slug)
+            wks = sheet.add_worksheet(title="Sheet-test")
+        except HttpError as err:
+            env_vars = json.loads(os.getenv('GOOGLE_APPLICATION_CREDENTIALS'))
+            email = env_vars["client_email"]
+            flash("Permission is needed to modify %s" % email)
+            return redirect(url_for('reports_bp.present_sheet'))
+
+        # placeholder for more complicated function
+        df = pd.DataFrame.from_dict({'x': [1, 2, 3],
+                                     'y': ['a', 'b', 'c']})
+        wks.set_dataframe(df, (1, 1), fit=True, nan='')
+        return redirect(url)
+
+    html = render_template('partials/reports/basic_form.html',
+                           form=form,
+                           action=url_for('reports_bp.success'))
+
+    return render_template('html.html',
+                           html=html)
 
 
 @reports_bp.route('/success', methods=['POST'])
@@ -28,7 +75,7 @@ def latex_demo():
 \usepackage{graphicx}
 \begin{document}
 \section{Introduction}
-An example of LaTeX usage, which may be integrated with python for reports easily. 
+An example of LaTeX usage, which may be integrated with python for reports easily.
 \begin{enumerate}
 \item{This}
 \item{Next, see Figure \ref{fig:label}}
