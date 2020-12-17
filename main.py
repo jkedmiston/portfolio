@@ -39,8 +39,8 @@ def register_request_logger(app):
 
         return response
 
-    # app.before_request(_before_request)
-    app.after_request(_after_request)
+    app.before_request(_before_request)
+    # app.after_request(_after_request)
 
 
 def register_stylized_dashapp(app):
