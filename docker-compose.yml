@@ -1,0 +1,94 @@
+version: '3.4'
+
+services:
+    web: 
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: etl
+        container_name: etl-compose
+        restart: always
+        command: ./scripts/start-flask.sh -d 1
+        depends_on:
+            - database
+        environment:
+            - GOOGLE_APPLICATION_CREDENTIALS
+            - ETL_SUBSCRIPTION_NAME
+            - DATABASE_URL=postgresql://postgres_user:postgres_password@database:5432
+            - PORT=5000
+            - DB_PASSWORD
+            - DB_CONN
+            - DB_NAME
+            - DB_PASS
+            - SECRET_KEY
+            - DB_USER
+            - CLOUD_SQL_CONNECTION_NAME
+            - FLASK_DEBUG=1
+            - REDIS_URL
+            - FLASK_ENV=development
+        stdin_open: true
+        tty: true
+        ports:
+            - "5000:5000"
+
+        volumes:
+            - .:/app
+
+    worker:
+        image: etl
+        container_name: etl-worker
+        command: ./scripts/start-celery-worker.sh
+        restart: on-failure
+        depends_on:
+            - database
+            - redis
+            - web
+            - beat
+            
+        environment:
+            - GOOGLE_APPLICATION_CREDENTIALS    
+            - SECRET_KEY
+            - REDIS_URL
+            - DB_PASSWORD
+            - FLASK_DEBUG=1
+            - DATABASE_URL=postgresql://postgres_user:postgres_password@database:5432            
+    beat:
+        image: etl
+        container_name: etl-beat
+        command: ./scripts/start-celery-beat.sh
+        restart: on-failure
+        depends_on:
+            - database
+            - redis
+            - web
+        environment:
+            - GOOGLE_APPLICATION_CREDENTIALS            
+            - SECRET_KEY
+            - REDIS_URL
+            - DB_PASSWORD            
+            - FLASK_DEBUG=1
+            - DATABASE_URL=postgresql://postgres_user:postgres_password@database:5432            
+    redis:
+        image: redis:5.0
+        container_name: etl-redis
+        ports:
+          - '6579:6379'
+        volumes:
+          - persistent_redis:/var/lib/redis/data
+        
+    database:
+        environment:
+          POSTGRES_USER: postgres_user
+          POSTGRES_PASSWORD: postgres_password
+        container_name: etl-compose-database
+        expose:
+          - "5432"
+        image: postgres:11.5
+        ports:
+          - "127.0.0.1:5444:5432"
+        volumes:
+          - persistent_database_postgres:/var/lib/postgresql/data
+          
+volumes:
+  persistent_database_postgres:
+  persistent_redis:

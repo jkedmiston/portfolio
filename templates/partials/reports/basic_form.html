@@ -1,0 +1,5 @@
+<form method="POST" >
+  {{ form.csrf_token }}
+  {{ form.name.label }} {{ form.name(size=40) }}
+{{ form.submit}} <!--  <input type="submit" value="Go">-->
+</form>

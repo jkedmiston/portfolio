@@ -1,0 +1,34 @@
+# (`heroku stack:set container`), config values and provision the add-ons.
+setup:
+  addons:
+    - plan: heroku-postgresql:hobby-dev
+    - plan: honeybadger:free
+  config:
+    APP_NAME: portfolio-app
+    FLASK_APP: wsgi.py
+    FLASK_ENV: production
+    LOG_LEVEL: info
+    SECRET_KEY: 1Ajfjfjf838383838
+build:
+  docker:
+    web:
+      dockerfile: Dockerfile
+
+run:
+  web:
+    command:
+      - ./start-flask.sh
+    image: web
+  worker:
+    command:
+      - ./scripts/start-celery-worker.sh
+    image: web
+  beat:
+    command:
+      - ./scripts/start-celery-beat.sh
+    image: web
+
+release:
+  image: web
+  command:
+    - ./heroku-release-command.sh
