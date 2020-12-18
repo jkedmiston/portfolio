@@ -10,4 +10,4 @@ rm -f /tmp/celerybeat-schedule
 # See: https://github.com/celery/celery/issues/5761#issuecomment-551089852
 echo "Beat"
 echo $PWD
-PYTHONPATH=/app COLUMNS=80 celery -A tasks beat --loglevel=info --pidfile=/tmp/celery_beat.pid --schedule=/tmp/celerybeat-schedule
+PYTHONPATH=/app COLUMNS=80 celery -A tasks.celery beat --loglevel=info --pidfile=/tmp/celery_beat.pid --schedule=/tmp/celerybeat-schedule

@@ -1,17 +1,18 @@
+from celery.signals import task_prerun, task_postrun
+from celery import Celery
 import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
-from celery import Celery
-from celery.signals import task_prerun, task_postrun
 
 db = SQLAlchemy()
 migrate = Migrate()
 csrf = CSRFProtect()
+
+
 redis_url = os.getenv('REDIS_URL')
 redis_db_0 = redis_url + '/0'
 celery = Celery(__name__, broker=redis_db_0)
-# celery.config_from_object(__name__)
 
 
 @task_prerun.connect

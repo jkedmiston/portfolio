@@ -10,4 +10,4 @@ sleep 10
 # See: https://github.com/celery/celery/issues/5761#issuecomment-551089852
 echo "Worker"
 echo $PWD
-PYTHONPATH=/app COLUMNS=80 celery -A tasks worker --loglevel=info --concurrency=6 --pidfile=/tmp/celery_worker.pid 
+PYTHONPATH=/app COLUMNS=80 celery -A tasks.celery worker --loglevel=info --concurrency=6 --pidfile=/tmp/celery_worker.pid 
