@@ -8,7 +8,25 @@
   <div class="row">
     <h3>John Edmiston</h3>
 
-    Welcome! Regarding the front end-- I am many things, but an expert in front end design is not one of them. However, I am an experienced generalist programmer and engineer, who loves integrating across software/hardware levels, and from backend to front end. For a collection of proof of concept/starter work I put together for this site, please peruse below. This is a highly active WIP! 
+    Welcome! Regarding the front end-- I am many things, but an expert in front end design is not one of them. However, I am an experienced generalist programmer and engineer, who loves integrating across software/hardware levels, and from backend to front end. For a collection of proof of concept/starter work I put together for this site, please peruse below. This is a highly active WIP!<br><br>
+
+    The app demonstrates a few backend resources/combinations typical of SaaS apps.<br>
+    * <a href="https://flask.palletsprojects.com/en/1.1.x/">Flask</a>, for setting up web services<br>
+    * <a href="https://docs.celeryproject.org/en/stable/getting-started/introduction.html">Celery</a>, for background tasks, also featuring a regular task scheduler (see Heroku configuration)<br>
+    * <a href="https://flask-admin.readthedocs.io/en/latest/">Flask-Admin</a> for DB management<br>
+    * <a href="https://plotly.com/dash/">Plotly Dash</a>, for interactive plotting/dashboards<br>
+    * <a href="https://www.heroku.com">Heroku</a>, for quick building of apps. See the configuration screenshot below: <br>
+    <figure>
+      <img src="{{url_for('static', filename='figures/heroku_config.png')}}" width=600px alt="Heroku configuration">
+      <figcaption>
+         <a href="https://www.heroku.com" >Heroku</a> configuration screenshot, showing background workers. The Beat worker adjusts a value in the database every 10 seconds (you can see this via refreshing the Flask-Admin page at this <a href="/admin/randomdata">endpoint</a>.
+      </figcaption>
+      
+      </figure>
+    
+
+   
+    
     <div class="col-12">
       <a href="{{urls.main.github}}" class="btn btn-info btn-block">Github for this app</a>
       <a href="{{url_for('main_bp.index_gentelella')}}" class="btn btn-info btn-block">Flask-Gentelella Landing page frontend</a>
