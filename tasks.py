@@ -6,8 +6,8 @@ from extensions import celery
 
 # celery.config_from_object(__name__)
 # https://docs.celeryproject.org/en/stable/userguide/periodic-tasks.html#beat-entries
-# celery.conf.beat_schedule = {'start-work': {'task': 'tasks.celery_add_ex',
-#                                            'schedule': timedelta(seconds=10)}}
+celery.conf.beat_schedule = {'start-work': {'task': 'tasks.celery_add_ex',
+                                            'schedule': timedelta(seconds=10)}}
 
 celery.conf.timezone = 'UTC'
 flask_app = create_app()
@@ -33,12 +33,3 @@ def celery_add_ex():
 
 
 from celery_jobs import *  # noqa
-# @celery.task
-# def celery_delay_method():
-#    import datetime
-#    f = open("tmp.txt", "a")
-#    now = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
-#    f.write("%s" % now)
-#    f.close()
-#    print("now", now)
-#    return 0
