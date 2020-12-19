@@ -4,50 +4,74 @@
 {% endblock %}
 {% block content %}
 <div class="container">
-  
+
   <div class="row">
     <h3>John Edmiston</h3>
 
-    Welcome! Regarding the front end-- I am many things, but an expert in front end design is not one of them. However, I am an experienced generalist programmer and engineer, who loves integrating across software/hardware levels, and from backend to front end. For a collection of proof of concept/starter work I put together for this site, please peruse below. This is a highly active WIP!<br><br>
+    <p>
+      Welcome! I am an experienced generalist programmer and engineer, who loves integrating across software/hardware
+      levels, and from backend to frontend. I put together for this site for a collection of proof of concept/starter
+      work. The app demonstrates a few backend resources/combinations typical of SaaS apps.
+    </p>
 
-    The app demonstrates a few backend resources/combinations typical of SaaS apps.<br>
-    * <a href="https://flask.palletsprojects.com/en/1.1.x/">Flask</a>, for setting up web services<br>
-    * <a href="https://docs.celeryproject.org/en/stable/getting-started/introduction.html">Celery</a>, for background tasks, also featuring a regular task scheduler (see Heroku configuration)<br>
-    * <a href="https://flask-admin.readthedocs.io/en/latest/">Flask-Admin</a> for DB management<br>
-    * <a href="https://plotly.com/dash/">Plotly Dash</a>, for interactive plotting/dashboards<br>
-    * <a href="https://www.heroku.com">Heroku</a>, for quick building of apps. See the configuration screenshot below: <br>
+    <h4>Tech Stack</h4>
+
+    <ul>
+      <li>
+        <a href="https://flask.palletsprojects.com/en/1.1.x/" target="_blank">Flask</a>, for setting up web services
+      </li>
+      <li>
+        <a href="https://docs.celeryproject.org/en/stable/getting-started/introduction.html" target="_blank">Celery</a>, for background tasks, also featuring a regular task scheduler (see Heroku configuration).
+      </li>
+      <li>
+        <a href="https://flask-admin.readthedocs.io/en/latest/">Flask-Admin</a> for DB management
+      </li>
+      <li>
+        <a href="https://plotly.com/dash/" target="_blank">Plotly Dash</a>, for interactive plotting/dashboards
+      </li>
+      <li>
+        <a href="https://www.heroku.com" target="_blank">Heroku</a>, for quick building of apps. See the configuration screenshot below:
+      </li>
+    </ul>
+
     <figure>
       <img src="{{url_for('static', filename='figures/heroku_config.png')}}" width=600px alt="Heroku configuration">
       <figcaption>
-         <a href="https://www.heroku.com" >Heroku</a> configuration screenshot, showing background workers. The Beat worker adjusts a value in the database every 10 seconds (you can see this via refreshing the Flask-Admin page at this <a href="/admin/randomdata">endpoint</a>.
+        <a href="https://www.heroku.com" target="_blank">Heroku</a> configuration screenshot, showing background workers. The Beat
+        worker adjusts a value in the database every 10 seconds (you can see this via refreshing the Flask-Admin page at
+        this <a href="/admin/randomdata">endpoint</a>.
       </figcaption>
-      
-      </figure>
-    
+    </figure>
 
-   
-    
     <div class="col-12">
-      <a href="{{urls.main.github}}" class="btn btn-info btn-block">Github for this app</a>
-      <a href="{{url_for('main_bp.index_gentelella')}}" class="btn btn-info btn-block">Flask-Gentelella Landing page frontend</a>
-      <a href="{{url_for('reports_bp.latex_demo')}}" class="btn btn-info btn-block">LaTeX report generation (see source code)</a>      
-   <a href="/admin" class="btn btn-info btn-block">Admin panel integration</a>                  
-   <a href="/pk" class="btn btn-info btn-block">Plotly Dash Dashboard example</a>
+      <a href="{{urls.main.github}}" target="_blank" class="btn btn-info btn-block">Github for this app</a>
+      <a href="{{url_for('main_bp.index_gentelella')}}" class="btn btn-info btn-block">Flask-Gentelella Landing page
+        frontend</a>
+      <a href="{{url_for('reports_bp.latex_demo')}}" class="btn btn-info btn-block">LaTeX report generation (see source
+        code)</a>
+      <a href="/admin" class="btn btn-info btn-block">Admin panel integration</a>
+      <a href="/pk" class="btn btn-info btn-block">Plotly Dash Dashboard example</a>
       <a href="{{url_for('main_bp.download_cv')}}" class="btn btn-info btn-block">Download resume</a>
       <br>
     </div>
-  <div class="dropdown">
-    <button class="btn btn-info btn-block dropdown-toggle" type="button" data-toggle="dropdown">External links
-      <span class="caret"></span></button>
-    <ul class="dropdown-menu">
-      <li><a href="http://www.linkedin.com/in/jkedmiston" class="btn btn-info">LinkedIn</a></li>
-      <li><a href="{{urls.main.google_scholar}}" class="btn btn-info btn-block">Google Scholar publications</a></li>
-      <li><a href="http://www.gaitanalyzer.info" class="btn btn-info btn-block">Bootcamp project</a></li>
-    </ul>
+    <div class="dropdown">
+      <button class="btn btn-info btn-block dropdown-toggle" type="button" data-toggle="dropdown">External links
+        <span class="caret"></span></button>
+      <ul class="dropdown-menu">
+        <li>
+          <a href="http://www.linkedin.com/in/jkedmiston" target="_blank" lass="btn btn-info">LinkedIn</a>
+        </li>
+        <li>
+          <a href="{{urls.main.google_scholar}}" target="_blank" class="btn btn-info btn-block">Google Scholar publications</a>
+        </li>
+        <li>
+          <a href="http://www.gaitanalyzer.info" target="_blank" class="btn btn-info btn-block">Bootcamp project</a>
+        </li>
+      </ul>
+    </div>
+
   </div>
-    
-  </div>
-  
+
 </div>
 
 {% endblock %}
