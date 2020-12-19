@@ -28,3 +28,4 @@ flask-admin==1.5.7
 celery==5.0.4
 redis==3.5.3
 flask-wtf==0.14.3
+pytest==6.2.1

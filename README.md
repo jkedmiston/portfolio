@@ -11,6 +11,11 @@ This Python/Flask application itself features the following:
 - SQLAlchemy, Flask-Migrate for version tracking database updates
 - Flask Admin, for quick DBAdmin as well as useful features for startup stage companies. 
 
+# First usage
+Build and test: 
+* `docker-compose build`
+* `docker-compose run --rm web python -m pytest`
+
 # Heroku setup
 * `heroku stack:set container --app jke-portfolio`
 
@@ -28,3 +33,4 @@ Setting up flask migrate took a bit. This was helpful.
 
 # Plotly Dash integration
 * CSRF issue resolved by this solution https://stackoverflow.com/a/51618986
+
