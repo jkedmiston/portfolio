@@ -48,7 +48,8 @@ Configuration with web dyno, worker dyno, and beat dyno. The Beat
       <a href="{{url_for('main_bp.index_gentelella')}}" class="btn btn-info btn-block">Flask-Gentelella 
         frontend</a>
       <a href="{{url_for('reports_bp.latex_demo')}}" class="btn btn-info btn-block">Generate an example LaTeX report</a>
-      <a href="/present_sheet" class="btn btn-info btn-block">Interact with Google sheets</a>      
+      <a href="/present_sheet" class="btn btn-info btn-block">Interact with Google sheets</a>
+      <a href="{{url_for('reports_bp.analyze_user_sheet')}}" class="btn btn-info btn-block">Automatic data analysis</a>      
       <a href="/admin" class="btn btn-info btn-block">Admin panel (Proof of concept)</a>
 
       <a href="/pk" class="btn btn-info btn-block" target="_blank">Plotly Dash (Proof of concept)</a>
