@@ -20,10 +20,111 @@ reports_bp = Blueprint(
 )
 
 
+def get_gsheets_slug_from_url(url):
+    """
+    Get the gsheets key , e.g. 
+    turns https://docs.google.com/spreadsheets/d/1u9**abcdefg**61mqkg/edit#gid=0 into 1u9**abcdefg**61mqkg
+
+    """
+    return os.path.basename(os.path.split(url)[0])
+
+
 def get_service_account_email():
     env_vars = json.loads(os.getenv('GOOGLE_APPLICATION_CREDENTIALS'))
     email = env_vars["client_email"]
     return email
+
+
+def clean_df(df):
+    """
+    Don't return a bunch of blank columns
+    """
+    import numpy as np
+    col1 = df.columns[0]
+    tmp = df[df[col1] != ""].copy()
+    cols, = np.where(df.columns != '')
+    tmp = tmp.iloc[:, cols].copy()
+    return tmp
+
+
+def get_df_from_worksheet(wks, cleaning):
+    """
+    Returns pandas dataframe from a pygsheets worksheet
+    """
+    try:
+        df = wks.get_as_df()
+    except AssertionError:
+        df = wks.get_as_df(has_header=False)
+
+    if cleaning:
+        df = clean_df(df)
+    return df
+
+
+def get_writeable_worksheet(sheet, sheet_name):
+    try:
+        wks_in = sheet.worksheet_by_title(title=sheet_name)
+        return {'sheet': wks_in, 'exit_code': 0}
+    except pygsheets.exceptions.WorksheetNotFound:
+        wks_in = sheet.add_worksheet(title=sheet_name)
+        return {'sheet': wks_in, 'exit_code': 0}
+    except HttpError as err:
+        return {'exit_code': -1, 'error_message': 'Permission needed'}
+    return {'exit_code': -1, 'error_message': 'Unknown'}
+
+
+@reports_bp.route('/analyze_user_sheet', methods=['GET', 'POST'])
+def analyze_user_sheet():
+    """
+    Takes in google sheet url, uploads automatic analysis and produces LaTeX report of the same. 
+    """
+    class SheetForm(FlaskForm):
+        name = StringField('Sheet URL', validators=[DataRequired()])
+        sheet_name = StringField('Targeted tab name to analyze',
+                                 validators=[DataRequired()])
+        submit = SubmitField("Analyze")
+
+    form = SheetForm(request.form)
+    if form.validate_on_submit():
+        gsheets = pygsheets.authorize(
+            service_account_env_var="GOOGLE_APPLICATION_CREDENTIALS")
+        url = form.data["name"]
+        sheet_name = form.data["sheet_name"]
+        slug = get_gsheets_slug_from_url(url)
+        try:
+            sheet = gsheets.open_by_key(slug)
+            wks_in = sheet.worksheet_by_title(title=sheet_name)
+        except pygsheets.exceptions.WorksheetNotFound:
+            flash(Markup("Sheet %s not found, check URL and sheet name" % sheet_name))
+            return redirect(url_for('reports_bp.analyze_user_sheet'))
+        except HttpError as err:
+            email = get_service_account_email()
+            flash(Markup(
+                "Permission is needed to modify the sheet. Give this email: %s permission to edit the sheet. " % email))
+            return redirect(url_for('reports_bp.analyze_user_sheet'))
+
+        info = get_writeable_worksheet(
+            sheet, sheet_name=sheet_name + '-analysis')
+        if info['exit_code'] == 0:
+            wks_out = info['sheet']
+        else:
+            flash(Markup(info['error_message']))
+            return redirect(url_for('reports_bp.analyze_user_sheet'))
+
+        df = get_df_from_worksheet(wks_in, cleaning=True)
+        basic_describe = df.describe()
+        wks_out.set_dataframe(basic_describe, (1, 1),
+                              fit=True, nan='', copy_index=True)
+        flash(Markup('Success, click <a href="%s">here</a>' % url))
+        return redirect(url_for('reports_bp.analyze_user_sheet'))
+
+    form_html = render_template('partials/reports/basic_form.html',
+                                form=form,
+                                action=url_for('reports_bp.success'))
+
+    return render_template('reports/analyze_user_sheet.html',
+                           service_email=get_service_account_email(),
+                           form_html=form_html)
 
 
 @reports_bp.route('/present_sheet', methods=['GET', 'POST'])
