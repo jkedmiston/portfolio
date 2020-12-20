@@ -23,6 +23,31 @@ reports_bp = Blueprint(
 )
 
 
+def perform_automatic_analysis(df):
+    import matplotlib
+    import seaborn as sns
+    sns.set_style('ticks')
+    import matplotlib.pyplot as plt
+
+    basic_describe = df.describe()
+    fignames = []
+    for i, c in enumerate(df.columns):
+        if c not in basic_describe.columns:
+            continue
+        valid_data = df[df[c].notnull()][c]
+        count_invalid_data = df[c].isnull().sum()  # TODO
+        count_valid_data = valid_data.sum()  # TODO
+        fig, ax = plt.subplots(1, 1)
+        ax.hist(valid_data.values)
+        figname = "tmp/fig%d.png" % i
+        fig.savefig(figname)
+        if os.path.isfile(figname):
+            fignames.append([c, figname])
+
+    return {'basic_describe': basic_describe,
+            'figures': fignames}
+
+
 def get_gsheets_slug_from_url(url):
     """
     Get the gsheets key , e.g. 
@@ -116,8 +141,10 @@ def analyze_user_sheet():
 
         # do the automatic analysis
         df = get_df_from_worksheet(wks_in, cleaning=True)
-        basic_describe = df.describe()
+        analysis = perform_automatic_analysis(df)
 
+        basic_describe = analysis["basic_describe"]
+        figures = analysis["figures"]
         # write out latex file
         auto_report = latex_reports.latex_doc.LatexDoc(
             "tmp/latex_files.tex",
@@ -131,13 +158,17 @@ def analyze_user_sheet():
 Analysis date: %(analysis_date)s \\
 Data source:  \href{%(url)s}{Google sheet}, tab:%(sheet_name)s \\
 
-\section{Results}
+\section{Overall results}
 %(table)s
+""")
+        auto_report.add_clearpage()
+        for colname, fig in figures:
+            auto_report.add_figure(fig, caption="Data column %s" % colname)
+            auto_report.add_clearpage()
 
-\section{Appendix}
+        auto_report.add_contents(r"""\section{Appendix}
 - full url to data source: \href{%(url)s}{\url{%(url)s}}
-""" % doc_info
-                                 )
+""" % doc_info)
         pdfname = auto_report.write()
 
         # set the new output dataframe
