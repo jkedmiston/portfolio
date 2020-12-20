@@ -135,7 +135,7 @@ Data source:  \href{%(url)s}{Google sheet}, tab:%(sheet_name)s \\
 %(table)s
 
 \section{Appendix}
-- full url to data source: \href{%(url)s}{%(url)s}
+- full url to data source: \href{%(url)s}{\url{%(url)s}}
 """ % doc_info
                                  )
         pdfname = auto_report.write()
