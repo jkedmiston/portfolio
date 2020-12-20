@@ -262,14 +262,14 @@ An example of LaTeX usage, which may be integrated with python for reports easil
 \end{figure}
 \end{document}
     """
-    f = open("tmp/dummy.tex", "w")
+    f = open("tmp/example_report.tex", "w")
     f.write(dummy_file)
     f.close()
     for j in range(3):
         out = os.system(
-            "pdflatex -output-directory=/app/tmp /app/tmp/dummy.tex")
+            "pdflatex -output-directory=/app/tmp /app/tmp/example_report.tex")
     if out == 0:
-        return send_from_directory("/app/tmp", "dummy.pdf", as_attachment=True)
+        return send_from_directory("/app/tmp", "example_report.pdf", as_attachment=True)
     else:
         return "Error"
 
