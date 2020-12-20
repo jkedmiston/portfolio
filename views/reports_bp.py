@@ -1,16 +1,19 @@
 # basic flask form, WIP
 import os
 import json
+import datetime
 from flask import request, flash, Markup
 from flask import Blueprint, render_template
 from flask_wtf import FlaskForm
-from flask import url_for, redirect
+from flask import (url_for, redirect, send_from_directory)
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 from googleapiclient.errors import HttpError
 import pandas as pd
 import pygsheets
 
+import latex_reports.latex_doc
+import latex_reports.latex_utilities
 
 reports_bp = Blueprint(
     'reports_bp',
@@ -111,12 +114,40 @@ def analyze_user_sheet():
             flash(Markup(info['error_message']))
             return redirect(url_for('reports_bp.analyze_user_sheet'))
 
+        # do the automatic analysis
         df = get_df_from_worksheet(wks_in, cleaning=True)
         basic_describe = df.describe()
+
+        # write out latex file
+        auto_report = latex_reports.latex_doc.LatexDoc(
+            "tmp/latex_files.tex",
+            preamble=latex_reports.STANDARD_PREAMBLE)
+
+        doc_info = {'analysis_date': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    'url': latex_reports.latex_utilities.make_latex_safe(url).replace('#', '\#'),
+                    'sheet_name': sheet_name,
+                    'table': basic_describe.to_latex()}
+        auto_report.add_contents(r"""\section{Analysis of sheet}
+Analysis date: %(analysis_date)s \\
+Data source:  \href{%(url)s}{Google sheet}, tab:%(sheet_name)s \\
+
+\section{Results}
+%(table)s
+
+\section{Appendix}
+- full url to data source: \href{%(url)s}{%(url)s}
+""" % doc_info
+                                 )
+        pdfname = auto_report.write()
+
+        # set the new output dataframe
         wks_out.set_dataframe(basic_describe, (1, 1),
                               fit=True, nan='', copy_index=True)
-        flash(Markup('Success, click <a href="%s">here</a>' % url))
-        return redirect(url_for('reports_bp.analyze_user_sheet'))
+        flash(Markup(
+            '<div style="color:white;">Success, click <a href="%s">here</a></div>' % url))
+        pdfname_only = os.path.basename(pdfname)
+        assert os.path.isfile(os.path.join("tmp", pdfname_only))
+        return send_from_directory("tmp", pdfname_only, as_attachment=True)
 
     form_html = render_template('partials/reports/basic_form.html',
                                 form=form,
