@@ -160,7 +160,7 @@ Data source:  \href{%(url)s}{Google sheet}, tab:%(sheet_name)s \\
 
 \section{Overall results}
 %(table)s
-""")
+""" % doc_info)
         auto_report.add_clearpage()
         for colname, fig in figures:
             auto_report.add_figure(fig, caption="Data column %s" % colname)
