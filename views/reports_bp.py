@@ -124,7 +124,7 @@ def analyze_user_sheet():
             preamble=latex_reports.STANDARD_PREAMBLE)
 
         doc_info = {'analysis_date': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    'url': latex_reports.latex_utilities.make_latex_safe(url).replace('#', '\#'),
+                    'url': url,
                     'sheet_name': sheet_name,
                     'table': basic_describe.to_latex()}
         auto_report.add_contents(r"""\section{Analysis of sheet}
