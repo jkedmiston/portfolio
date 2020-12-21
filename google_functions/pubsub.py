@@ -1,6 +1,5 @@
 import os
 import json
-import logging
 from google.cloud import pubsub_v1
 from google.oauth2 import service_account
 

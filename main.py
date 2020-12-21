@@ -3,8 +3,25 @@ from flask import Flask, request, g
 import time
 import datetime
 from flask import current_app, redirect
-import logging
+
 from flask_talisman import Talisman
+import logging
+from logging import Formatter, FileHandler
+
+logger = logging.getLogger('logger')
+file_handler = FileHandler('logger.log')
+handler = logging.StreamHandler()
+file_handler.setFormatter(Formatter(
+    '%(asctime)s %(levelname)s: %(message)s '
+    '[in %(pathname)s:%(lineno)d]'
+))
+handler.setFormatter(Formatter(
+    '%(asctime)s %(levelname)s: %(message)s '
+    '[in %(pathname)s:%(lineno)d]'
+))
+logger.addHandler(file_handler)
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
 
 
 def register_request_logger(app):
@@ -19,11 +36,11 @@ def register_request_logger(app):
         request_end_time = time.time()
         seconds = request_end_time - g.request_start_time
         request_duration = datetime.timedelta(seconds=seconds).total_seconds()
-        requester_email = "email"
+
         current_app.logger.info(
-            "%s [%s] %s %s %s %s %s %s %s %s %s %s %ss",
+            "%s [%s] %s %s %s %s %s %s %s %s %s %ss",
             request.remote_addr,
-            datetime.datetime.utcnow().strftime("%d/%b/%Y:%H:%M:%S.%f")[:-3],
+            datetime.datetime.utcnow().strftime("%d/%b/%Y:%H:%M:%S"),
             request.method,
             request.path,
             request.scheme,
@@ -33,14 +50,13 @@ def register_request_logger(app):
             request.user_agent,
             request.data,
             request.form,
-            requester_email,
             request_duration
         )
 
         return response
 
     app.before_request(_before_request)
-    # app.after_request(_after_request)
+    app.after_request(_after_request)
 
 
 def register_stylized_dashapp(app):
@@ -133,4 +149,5 @@ def create_app():
         app.register_blueprint(pubsub_bp)
         register_context_processors(app)
         register_stylized_dashapp(app)
+        app.logger = logger
         return app
