@@ -109,6 +109,7 @@ def create_app():
     from views.main_bp import main_bp
     from views.reports_bp import reports_bp
     from views.games_bp import games_bp
+    from views.pubsub_bp import pubsub_bp
     from config import Config
 
     app = Flask(__name__, instance_relative_config=False,
@@ -129,6 +130,7 @@ def create_app():
         app.register_blueprint(main_bp)
         app.register_blueprint(reports_bp)
         app.register_blueprint(games_bp)
+        app.register_blueprint(pubsub_bp)
         register_context_processors(app)
         register_stylized_dashapp(app)
         return app

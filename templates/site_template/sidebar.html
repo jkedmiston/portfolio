@@ -1,6 +1,6 @@
 <div class="left_col scroll-view">
   <div class="navbar nav_title" style="border: 0;">
-    <a href="" class="site_title"><i class="fa fa-spinner"></i> <span>Landing page/Dashboard</span></a>
+    <a href="" class="site_title"><i class="fa fa-spinner"></i> <span>JE's SaaS</span></a>
   </div>
 
   <div class="clearfix"></div>
@@ -12,7 +12,7 @@
     </div> TODO: how to add image icon -->
     <div class="profile_info">
       <span>Welcome,</span>
-      <h2> User </h2>
+      <h2> Visitor </h2>
     </div>
   </div>
   <!-- /menu profile quick info -->
@@ -24,13 +24,15 @@
     <div class="menu_section">
       <h3>General</h3>
       <ul class="nav side-menu">
-        <li><a><i class="fa fa-sitemap"></i> Front end <span class="fa fa-chevron-down"></span></a>
+        <li><a><i class="fa fa-sitemap"></i> Landing pages <span class="fa fa-chevron-down"></span></a>
 
           <ul class="nav child_menu">
-            <li><a href='{{ url_for("main_bp.index_gentelella") }}' >Home </a></li>                        
+            <li><a href="{{ url_for('main_bp.index') }}" >Portfolio Home </a></li>                        
+            <li><a href="{{ url_for('main_bp.index_gentelella') }}" >Flask-Gentelella Home </a></li>                                    
+
           </ul>
         </li>
-        <li><a><i class="fa fa-database"></i> Database <span class="fa fa-chevron-down"></span></a>
+        <li><a><i class="fa fa-database"></i> Database admin <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
             <li><a href='/admin' >Admin panel </a></li>                        
           </ul>
@@ -41,11 +43,11 @@
     <div class="menu_section">
       <h3>Work history</h3>
       <ul class="nav side-menu">
-      <li><a><i class="fa fa-calendar"></i> CV <span class="fa fa-chevron-down"></span></a>
+      <li><a><i class="fa fa-calendar"></i> CV and work examples<span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
             <li><a href="{{url_for('main_bp.download_cv')}}">Resume</a></li>
-            <li><a href="{{urls.main.github}}">Github for this app</a></li>            
-            <li><a href="{{urls.main.google_scholar}}">Google Scholar citations</a></li>
+            <li><a href="{{urls.main.github}}" target="_blank">Github for this app</a></li>            
+            <li><a href="{{urls.main.google_scholar}}" target="_blank">Google Scholar citations</a></li>
           </ul>
         </li>
         <li><a><i class="fa fa-table"></i> Publications <span class="fa fa-chevron-down"></span></a>
@@ -55,7 +57,7 @@
         </li>
         <li><a><i class="fa fa-bar-chart-o"></i> Dashboards <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
-            <li><a href="/pk">Plotly Dash Dashboard, embedded in Flask app</a></li>
+            <li><a href="/pk" target="_blank">Plotly Dash Dashboard, embedded in Flask app</a></li>
           </ul>
         </li>
         <!-- fa-database -->
@@ -69,11 +71,11 @@
       <ul class="nav side-menu">
         <li><a><i class="fa fa-sitemap"></i> Computer vision <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
-            <li><a href="http://www.gaitanalyzer.info">Gait analysis POC, from 2017</a>
+            <li><a href="http://www.gaitanalyzer.info" target="_blank">Gait analysis POC, from 2017</a>
               </li>
           </ul>
         </li>
-        <li><a><i class="fa fa-sitemap"></i> Hobbies <span class="fa fa-chevron-down"></span></a>
+<!--        <li><a><i class="fa fa-sitemap"></i> Hobbies <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
               <li><a href="#level1_1">Music</a>
               <li><a>Music<span class="fa fa-chevron-down"></span></a>
@@ -89,7 +91,7 @@
               <li><a href="#level1_2">Level One</a>
               </li>
           </ul>
-        </li>
+        </li> -->
       </ul>
     </div>
   </div>

@@ -12,6 +12,11 @@ This Python/Flask application itself features the following:
 - Flask Admin, for quick DBAdmin as well as useful features for startup stage companies. 
 
 # First usage
+For local development, the GCP configuration for credentials and Pub/Sub must be set up on your own. 
+* Create a GCP project.
+* Create a service account for the project, and download the `json` key. 
+* Create a GCP Pub/Sub topic `portfolio-demo` and subscription `portfolio-subscription` subscribed to that topic with pull mode. 
+Copy `.env.sample` to `.env`. Populate with credentials from the `json` key if exercising the Google integrations (primarily `GOOGLE_APPLICATION_CREDENTIALS`. 
 Build and test: 
 * `docker-compose build`
 * `docker-compose run --rm web python -m pytest`
