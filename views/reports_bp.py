@@ -249,10 +249,10 @@ def latex_demo():
 \usepackage{graphicx}
 \begin{document}
 \section{Introduction}
-An example of LaTeX usage, which may be integrated with python for reports easily.
+This document is prepared in LaTeX, which may be integrated with python for automated reports easily.
 \begin{enumerate}
-\item{This}
-\item{Next, see Figure \ref{fig:label}}
+\item{Item 1 - [Text here]}
+\item{Item 2 - for an example ofembedded graphics, see Figure \ref{fig:label}}
 \end{enumerate}
 \begin{figure}
   \centering
