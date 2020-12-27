@@ -2,17 +2,16 @@
 
 {% block content %}
 <div class="right_col" role="main">
-  This demos a Google sheet integrations showing download, analysis, and upload, facilitated by the <a href="https://pygsheets.readthedocs.io/en/stable/#" target="_blank"><i class="fa fa-star"></i>Pygsheets</a> library.
+  This demos a Google sheet integrations showing download, analysis, upload, and production of a Google slide deck of basic plots from the data set, facilitated by the <a href="https://pygsheets.readthedocs.io/en/stable/#" target="_blank"><i class="fa fa-star"></i>Pygsheets</a> library.
 
   <br>
   <h5>Instructions for use.</h5>
   <ul>
     <li>Prepare some numerical data you would like to analyze in a Google sheet. </li>
     <li>Give this app permission to edit the sheet, the email to use is {{service_email}}</li>
-    <li>In the form below, enter in the URL for your sheet, and the name of the tab where your data resides. </li>
+    <li>In the form below, enter in the URL for your sheet, and the name of the tab where your data resides, and your email (which must be a G-suite email) </li>
     <li>Click analyze!</li>
-    <li>Basic analysis of each column of data will be provided at the tab with the same name + "analysis". </li>    
-    <li>Additionally, a LaTeX document will be generated and delivered with similar summary information.</li>
+    <li>Results will be provided via G-suite slide deck and LaTeX pdf report. 
     </ul>
   <div class="row">
     {{form_html|safe}}

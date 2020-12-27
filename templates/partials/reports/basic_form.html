@@ -3,7 +3,7 @@
   <table>
   {% for field in form if field.id != 'csrf_token' and field.id != 'submit' %}
   <tr>
-    <td> {{ field.label }} </td><td>{{ field(size=40) }} </td>
+    <td> {{ field.label }} </td><td>&nbsp;  &nbsp;  </td>  <td>{{ field(size=40) }} </td>
     </tr>
  {% endfor %}
  </table>
