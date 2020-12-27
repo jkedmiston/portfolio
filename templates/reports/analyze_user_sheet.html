@@ -1,4 +1,16 @@
 {% extends "layouts/base_site.html" %}
+{% block stylesheets %}
+{{super()}}
+<style>
+div#loading {
+    width: 525px;
+    height: 525px;
+    display: none;
+    background: url(/static/figures/ajax-loader.gif) no-repeat;
+    cursor: wait;
+}
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="right_col" role="main">
@@ -12,9 +24,33 @@
     <li>In the form below, enter in the URL for your sheet, and the name of the tab where your data resides, and your email (which must be a G-suite email) </li>
     <li>Click analyze!</li>
     <li>Results will be provided via G-suite slide deck and LaTeX pdf report. 
-    </ul>
+  </ul>
+  <div id="loading"></div>
+  <div id="content">
   <div class="row">
-    {{form_html|safe}}
+<form method="POST" >
+  {{ form.csrf_token }}
+  <table>
+  {% for field in form if field.id != 'csrf_token' and field.id != 'submit' %}
+  <tr>
+    <td> {{ field.label }} </td><td>&nbsp;  &nbsp;  </td>  <td>{{ field(size=40) }} </td>
+    </tr>
+ {% endfor %}
+ </table>
+{{ form.submit(class="btn btn-info btn-lg", onclick="loading();")}} <!--  <input type="submit" value="Go">-->
+</form>
+
   </div>
+  </div><!-- content -->
 </div>
+{% endblock %}
+
+{% block javascripts %}
+{{super()}}
+<script>
+function loading(){
+$("#loading").show();
+$("#content").hide();       
+}
+</script>
 {% endblock %}
