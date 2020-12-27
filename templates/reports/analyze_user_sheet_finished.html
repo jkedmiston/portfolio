@@ -1,0 +1,16 @@
+{% extends "layouts/base_site.html" %}
+
+{% block content %}
+<div class="right_col" role="main">
+  <div class="row">
+  <h3>Results</h3>
+  <a class="btn btn-info btn-lg btn-block" role="button" href="{{url_for('reports_bp.analyze_user_sheet')}}">Back to start</a>
+  </div>
+  <div class="row">
+    <h5> Links to reports </h5>
+    <a class="btn btn-info btn-lg btn-block" target="_blank" href="{{slides_link}}" role="button">Google slides</a>
+    <a class="btn btn-info btn-lg btn-block" href="{{url_for('reports_bp.retrieve_pdf', fname=pdf_filename)}}" target="_blank" role="button">LaTeX PDF</a>    
+
+  </div>
+</div>
+{% endblock %}

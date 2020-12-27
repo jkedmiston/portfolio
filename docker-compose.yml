@@ -17,6 +17,7 @@ services:
             - PORT=5000
             - SECRET_KEY
             - FLASK_DEBUG=1
+            - STORAGE_BUCKET
             - REDIS_URL
         stdin_open: true
         tty: true
