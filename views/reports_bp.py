@@ -1,4 +1,7 @@
-# basic flask form, WIP
+"""
+Functions for producing reports, generally taking in a Google sheet URL and returning
+analyzed results in PDF or Google slides forms. 
+"""
 import os
 import copy
 import json
@@ -26,15 +29,13 @@ reports_bp = Blueprint(
 )
 
 
-@reports_bp.route('/retrieve_pdf', methods=["GET"])
-def retrieve_pdf():
-    pdfname_only = request.args.get('fname')
-    return send_from_directory("tmp", pdfname_only, as_attachment=True)
-
-
 def perform_automatic_analysis(df, unique_tag, sheet_url, sheet_name):
     """
-    From the dataframe, produce plots and summary stats, and present findings as a list of dictionary
+    From the dataframe, produce plots and summary stats, and present 
+    findings as a list of dictionary with {'basic_describe': summary_df,
+                                           'figures': [{'figure': pathname,
+                                                        'description': text on figure,
+                                                        'xlabel', 'ylabel', 'slide_title'}, ...]
     """
     import seaborn as sns
     import matplotlib.pyplot as plt
@@ -67,7 +68,9 @@ def perform_automatic_analysis(df, unique_tag, sheet_url, sheet_name):
                 fig, ax = plt.subplots(1, 1, figsize=(
                     6.67, 5))  # fontFamily is serif
                 ax.hist(valid_data.values)
-                # keep the plots bare bones, so that labels are added at Google slides layer
+                # keep the plots bare bones, so that labels are added
+                # at Google slides layer
+                # basically just change the size of fonts
                 fig.savefig(figname)
                 plt.close(fig)
             except:
@@ -82,8 +85,8 @@ def perform_automatic_analysis(df, unique_tag, sheet_url, sheet_name):
                 fignames.append({'figure': figname,
                                  'description': description,
                                  'xlabel': colname,
-                                 "slide_title": "Exploratory plots - histograms",
-                                 'ylabel': 'Counts'})
+                                 'ylabel': 'Counts',
+                                 "slide_title": "Exploratory plots - histograms"})
 
     return {'basic_describe': basic_describe,
             'figures': fignames}
@@ -108,7 +111,7 @@ def clean_df(df):
     """
     Don't return a bunch of blank columns
     """
-    import numpy as np
+
     col1 = df.columns[0]
     tmp = df[df[col1] != ""].copy()
     cols, = np.where(df.columns != '')
@@ -156,15 +159,16 @@ def get_worksheet_from_url(url, sheet_name):
                 'worksheet': worksheet_to_read,
                 'exit_code': 0}
     except pygsheets.exceptions.WorksheetNotFound:
-        flash(Markup("Sheet %s not found, check URL and sheet name" % sheet_name))
+        error_message = "Sheet %s not found, check URL and sheet name" % sheet_name
         return {'exit_code': -1,
+                'error_message': error_message,
                 'redirect': url_for('reports_bp.analyze_user_sheet')
                 }
     except HttpError as err:
         email = get_service_account_email()
-        flash(Markup(
-            "Permission is needed to modify the sheet. Give this email: %s permission to edit the sheet. " % email))
+        error_message = "Permission is needed to modify the sheet. Give this email: %s permission to edit the sheet. " % email
         return {'exit_code': -1,
+                'error_message': error_message,
                 'redirect': url_for('reports_bp.analyze_user_sheet')}
 
 
@@ -180,13 +184,22 @@ def replace_figures_with_urls(figures):
     return figures2
 
 
+@reports_bp.route('/retrieve_pdf', methods=["GET"])
+def retrieve_pdf():
+    """
+    Helper to download the local file produced by an analysis run. 
+    """
+    pdfname_only = request.args.get('fname')
+    return send_from_directory("tmp", pdfname_only, as_attachment=True)
+
+
 @reports_bp.route('/poc')
 def poc():
     """
     A POC of google slides, for testing
     """
     doc_info = {
-        'url': 'https://www.cnn.com/2020/12/23/politics/trump-ndaa-veto/index.html',
+        'url': 'https://www.google.com',
         'email': os.environ["TEST_EMAIL"]}
     figures = [{'figure': 'tmp/fig0.png'},
                {'figure': 'tmp/fig1.png'},
@@ -211,7 +224,9 @@ def analyze_user_sheet_results():
 @reports_bp.route('/analyze_user_sheet', methods=['GET', 'POST'])
 def analyze_user_sheet():
     """
-    Takes in google sheet url, uploads automatic analysis and produces LaTeX report of the same. 
+    Takes in google sheet url, uploads automatic analysis and produces 
+    LaTeX report of the same. Also produces Google slides of the images 
+    and transfers ownership over. 
     """
     class SheetForm(FlaskForm):
         name = StringField('Sheet URL', validators=[DataRequired()])
@@ -226,12 +241,14 @@ def analyze_user_sheet():
         url = form.data["name"]
         sheet_name = form.data["sheet_name"]
         email = form.data["email"]
+
         info = get_worksheet_from_url(
             url=url, sheet_name=sheet_name)
         if info['exit_code'] == 0:
             sheet = info['sheet']
             worksheet_to_read = info['worksheet']
         else:
+            flash(Markup(info['error_message']))
             return redirect(info["redirect"])
 
         info = get_writeable_worksheet(
@@ -251,7 +268,7 @@ def analyze_user_sheet():
         basic_describe = analysis["basic_describe"]
         figures = analysis["figures"]
 
-        # write out latex file
+        # write out latex file using the unique id.
         tex_filename = "tmp/latex_files_%s.tex" % unique_tag
         auto_report = latex_reports.latex_doc.LatexDoc(
             tex_filename,
@@ -300,20 +317,15 @@ Data source:  \href{%(url)s}{Google sheet}, tab:%(sheet_name)s \\
         return redirect(url_for("reports_bp.analyze_user_sheet_results", slides_url=slides_url,
                                 pdf_filename=pdfname_only))
 
-    form_html = render_template('partials/reports/basic_form.html',
-                                form=form,
-                                action=url_for('reports_bp.success'))
-
     return render_template('reports/analyze_user_sheet.html',
                            service_email=get_service_account_email(),
-                           form_html=form_html)
+                           form=form, action="")
 
 
 @reports_bp.route('/present_sheet', methods=['GET', 'POST'])
 def present_sheet():
     """
-    Takes in a url 
-    Upload pandas df to a google sheet and redirect there
+    Takes in a url, upload pandas df to a google sheet and redirect there
     """
     class SheetForm(FlaskForm):
         name = StringField('Sheet URL', validators=[DataRequired()])
