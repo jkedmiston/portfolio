@@ -29,6 +29,9 @@ Build and test:
 Starting up the app so that breakpoints are easy to work in: 
 * `docker-compose run --rm -p 5000:5000 web python3 -m pdb wsgi.py`
 
+## Testing plots
+For adjusting the `matplotlib` plots by trial-and-error, I run the plotting funcations via an Anaconda environment outside the Docker container. To run tests in this way, once `PYTHONPATH` is set up, and `requirements.txt` is installed with `pip install -r requirements.txt`, then use e.g. `python -m pytest -k test_basic_bar_plots`. The logic in `conftest.py` sets up `sys._called_from_test` as suggested in the `pytest` docs [here](https://docs.pytest.org/_/downloads/en/3.0.1/pdf/). 
+
 # Flask migrate
 Setting up flask migrate took a bit. This was helpful. 
 * https://blog.miguelgrinberg.com/post/how-to-add-flask-migrate-to-an-existing-project

@@ -34,7 +34,11 @@ def register_request_logger(app):
 
     def _after_request(response):
         request_end_time = time.time()
-        seconds = request_end_time - g.request_start_time
+        try:
+            seconds = request_end_time - g.request_start_time
+        except:
+            current_app.logger.error("Exception in after request")
+            seconds = 10
         request_duration = datetime.timedelta(seconds=seconds).total_seconds()
 
         current_app.logger.info(
@@ -56,7 +60,7 @@ def register_request_logger(app):
         return response
 
     app.before_request(_before_request)
-    # app.after_request(_after_request)
+    app.after_request(_after_request)
 
 
 def register_stylized_dashapp(app):

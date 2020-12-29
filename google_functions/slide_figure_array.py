@@ -52,7 +52,7 @@ class SlideFigureArray:
                                                                        "transform": {"scaleX": 1,
                                                                                      "scaleY": 1,
                                                                                      "translateX": (3.05-1.3)*72,
-                                                                                     "translateY": -130+(.07*72),
+                                                                                     "translateY": -130+(.09*72),
                                                                                      "unit": "PT"}
                                                                        }}
                                        ]
@@ -76,7 +76,7 @@ class SlideFigureArray:
                                                                         "transform": {"scaleX": 1,
                                                                                       "scaleY": 1,
                                                                                       "translateX": 300 + (3.05-1.03)*72,
-                                                                                      "translateY": 4.9*72+.07*72,
+                                                                                      "translateY": 4.9*72+.09*72,
                                                                                       "unit": "PT"},
                                                                         },
                                                   }},
@@ -144,7 +144,7 @@ class SlideFigureArray:
 
     def generate_slide_creation_requests(self, slide_id):
         n_figures = self.number_of_figures()
-        upper_left_corner = np.array([1.3 + (3.05-1.3), +.07]) * 72.0
+        upper_left_corner = np.array([1.3 + (3.05-1.3), +.09]) * 72.0
 
         if n_figures < 2:
             # basic
