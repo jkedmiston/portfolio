@@ -1,12 +1,14 @@
 """
 Functions for producing reports, generally taking in a Google sheet URL and returning
-analyzed results in PDF or Google slides forms. 
+analyzed results in PDF or Google slides forms.
 """
 import os
+import sys
 import copy
 import json
 import numpy as np
 import datetime
+import collections
 from misc_utilities import generate_uuid
 from flask import request, flash, Markup
 from flask import Blueprint, render_template
@@ -27,21 +29,120 @@ reports_bp = Blueprint(
     template_folder='templates',
     static_folder='static'
 )
+# fontsize here found by trial and error with Gslides format and how large
+# the matplotlib figures were.
+MATPLOTLIB_FONTSIZE_FOR_GSLIDES = 16
 
 
-def perform_automatic_analysis(df, unique_tag, sheet_url, sheet_name):
+def get_column_info(df):
+    categorical_columns = []
+    numerical_columns = []
+    for i, colname in enumerate(df.columns):
+        if not np.issubdtype(df[colname].dtype, np.number):
+            categorical_columns.append(colname)
+        else:
+            numerical_columns.append(colname)
+
+    return {'categorical_columns': categorical_columns,
+            'numerical_columns': numerical_columns}
+
+
+def basic_grouping_plots(df, unique_tag, sheet_url, sheet_name):
+    # group by categories, then run the histograms on the grouping
+
+    column_info = get_column_info(df)
+    categorical_columns = column_info["categorical_columns"]
+
+    all_figures = collections.defaultdict(list)
+    for cat in categorical_columns:
+        grps = df.groupby(cat)
+
+        counts = df[cat].value_counts().reset_index()
+        counts = counts.sort_values(by=[cat, 'index'], ascending=False)
+        for g in counts["index"]:
+            dg = grps.get_group(g)
+            if g == "" or g == np.nan:
+                g_label = "Null-or-empty"
+            else:
+                g_label = g.replace(' ', '_')
+
+            output = basic_histograms(dg,
+                                      unique_tag=unique_tag,
+                                      sheet_url=sheet_url,
+                                      sheet_name=sheet_name,
+                                      subtag=cat,
+                                      grouping_label="%s" % (g_label),
+                                      slide_title="Exploratory plots - histograms, on subgroup %s in %s" % (g_label, cat))
+            all_figures["figures"].extend(output["figures"])
+
+    return all_figures
+
+
+def basic_bar_plots_for_categorical_features(df, unique_tag, sheet_url, sheet_name):
     """
-    From the dataframe, produce plots and summary stats, and present 
-    findings as a list of dictionary with {'basic_describe': summary_df,
-                                           'figures': [{'figure': pathname,
-                                                        'description': text on figure,
-                                                        'xlabel', 'ylabel', 'slide_title'}, ...]
+    For categorical features only, do horizontal bar chart of counts
     """
     import seaborn as sns
     import matplotlib.pyplot as plt
-    #from pandas.api.types import is_numeric_dtype
+
     sns.set_style('ticks')  # darkgrid, whitegrid, dark, white, ticks}
-    plt.rcParams.update({'font.size': 16})
+
+    plt.rcParams.update({'font.size': MATPLOTLIB_FONTSIZE_FOR_GSLIDES})
+    fignames = []
+    for i, colname in enumerate(df.columns):
+        if not np.issubdtype(df[colname].dtype, np.number):
+            # do categorical analysis, basic counts
+            # make bar plot of counts
+            nrows = len(df)
+            empty = df.loc[df[colname].notnull(), colname].apply(
+                lambda x: x.strip() == "").sum()
+            count_invalid_data = df[colname].isnull().sum() + empty
+            count_valid_data = len(df) - count_invalid_data
+            fig, ax = plt.subplots(1, 1, figsize=(
+                6.67, 5))  # fontFamily is serif
+            counts = df[colname].value_counts().reset_index()
+            counts = counts.sort_values(by=[colname, 'index'], ascending=True)
+            counts.loc[counts["index"].isin(
+                ["", np.nan]), "index"] = "<Null or empty>"
+            ax.barh(counts["index"], counts[colname])
+            ax.set_ylabel("  ")
+            ax.set_title(" ")
+            fig.tight_layout()
+            left = fig.subplotpars.left
+            fig.subplots_adjust(left=left + left * 0.15)
+            fig.subplots_adjust(top=fig.subplotpars.top*0.95)
+            # fig.subplots_adjust(left=0.5)
+            figname = "tmp/basic_bar_plot_%s_%d.png" % (unique_tag, i)
+            if hasattr(sys, '_called_from_test'):
+                fig.show()
+                import pdb
+                pdb.set_trace()
+
+            fig.savefig(figname)
+            plt.close(fig)
+
+            if os.path.isfile(figname):
+                description = f'Basic counts of {colname}, from the data source <linked here>\nTab: {sheet_name}\n\nNumber of rows: {nrows}\nNon-null data counts: {count_valid_data}\nNull or empty data counts: {count_invalid_data}\n'
+
+                fignames.append({'figure': figname,
+                                 'description': description,
+                                 'xlabel': 'Counts',
+                                 'ylabel': 'Category',
+                                 "slide_title": "Exploratory plots - categories"})
+    return {'figures': fignames}
+
+
+def basic_histograms(df, unique_tag, sheet_url, sheet_name, all_figures=None, mode=None, subtag="", grouping_label=None, slide_title="Exploratory plots - histograms"):
+    """
+    For numerical data, product histograms of non-null results.
+    """
+    import seaborn as sns
+    import matplotlib.pyplot as plt
+
+    # from pandas.api.types import is_numeric_dtype
+    sns.set_style('ticks')  # darkgrid, whitegrid, dark, white, ticks}
+    # found by trial and error with Gslides
+    plt.rcParams.update({'font.size': MATPLOTLIB_FONTSIZE_FOR_GSLIDES})
     basic_describe = df.describe(include='all')
     fignames = []
 
@@ -53,7 +154,7 @@ def perform_automatic_analysis(df, unique_tag, sheet_url, sheet_name):
             print("categorical detected, %s" % colname)
             continue
         else:
-            # numeric analysisn
+            # numeric analysis
             valid_data = df[df[colname].notnull()][colname]
             count_invalid_data = df[colname].isnull().sum()  # TODO, add to tabular output # noqa
             count_valid_data = len(valid_data)  # TODO, add to tabular output # noqa
@@ -62,7 +163,13 @@ def perform_automatic_analysis(df, unique_tag, sheet_url, sheet_name):
             stdev = np.std(valid_data)
 
             # make a single basic histogram of this variable
-            figname = "tmp/fig%s_%d.png" % (unique_tag, i)
+            if grouping_label is None:
+                figname = "tmp/basic_histograms_%s%s_%d.png" % (
+                    subtag, unique_tag, i)
+            else:
+                figname = "tmp/basic_histograms_%s%s%s_%d.png" % (
+                    subtag, grouping_label, unique_tag, i)
+
             try:
                 # TODO: add test for categorical / string features
                 fig, ax = plt.subplots(1, 1, figsize=(
@@ -71,6 +178,18 @@ def perform_automatic_analysis(df, unique_tag, sheet_url, sheet_name):
                 # keep the plots bare bones, so that labels are added
                 # at Google slides layer
                 # basically just change the size of fonts
+                ax.set_title(" ")
+                ax.set_ylabel(" ")
+                fig.tight_layout()
+                left = fig.subplotpars.left
+                fig.subplots_adjust(left=left + left * 0.1)
+                fig.subplots_adjust(top=fig.subplotpars.top*0.95)
+                # fig.tight_layout()
+                if hasattr(sys, '_called_from_test'):
+                    fig.show()
+                    import pdb
+                    pdb.set_trace()
+
                 fig.savefig(figname)
                 plt.close(fig)
             except:
@@ -80,23 +199,48 @@ def perform_automatic_analysis(df, unique_tag, sheet_url, sheet_name):
                 pass
 
             if os.path.isfile(figname):
-                description = f'Basic histogram of {colname}, from the data source <linked here>\ntab {sheet_name}\n\nValid data counts: {count_valid_data}\nInvalid data counts: {count_invalid_data}\nMean: {mean:.2f}\nMedian: {median:.2f}\nStd. dev: {stdev:.2f}\n'
+                if grouping_label is not None:
+                    hist_description = "%s, subgroup(%s)" % (
+                        colname, grouping_label)
+                else:
+                    hist_description = colname
+
+                description = f'Basic histogram of {hist_description}, from the data source <linked here>\nTab: {sheet_name}\n\nValid data counts: {count_valid_data}\nInvalid data counts: {count_invalid_data}\nMean: {mean:.2f}\nMedian: {median:.2f}\nStd. dev: {stdev:.2f}\n'
 
                 fignames.append({'figure': figname,
                                  'description': description,
                                  'xlabel': colname,
                                  'ylabel': 'Counts',
-                                 "slide_title": "Exploratory plots - histograms"})
+                                 "slide_title": slide_title})
 
     return {'basic_describe': basic_describe,
             'figures': fignames}
 
 
+def perform_automatic_analysis(df, unique_tag, sheet_url, sheet_name):
+    """
+    From the dataframe, produce plots and summary stats, and present
+    findings as a list of dictionary with {'basic_describe': summary_df,
+                                           'figures': [{'figure': pathname,
+                                                        'description': text on figure,
+                                                        'xlabel', 'ylabel', 'slide_title'}, ...]
+    """
+    info = basic_histograms(df, unique_tag, sheet_url, sheet_name)
+    category_info = basic_bar_plots_for_categorical_features(
+        df,  unique_tag, sheet_url, sheet_name)
+    grouping_info = basic_grouping_plots(df, unique_tag, sheet_url, sheet_name)
+    final = info.copy()
+    final["figures"].extend(category_info["figures"])
+    final["figures"].extend(grouping_info["figures"])
+
+    return final
+
+
 def get_gsheets_slug_from_url(url):
     """
-    Get the gsheets key , e.g. 
-    turns https://docs.google.com/spreadsheets/d/1u9**abcdefg**61mqkg/edit#gid=0 into 1u9**abcdefg**61mqkg
-
+    Get the gsheets key , e.g.
+    turns https://docs.google.com/spreadsheets/d/1u9**abcdefg**61mqkg/edit#gid=0 # noqa
+    into 1u9**abcdefg**61mqkg
     """
     return os.path.basename(os.path.split(url)[0])
 
@@ -187,7 +331,7 @@ def replace_figures_with_urls(figures):
 @reports_bp.route('/retrieve_pdf', methods=["GET"])
 def retrieve_pdf():
     """
-    Helper to download the local file produced by an analysis run. 
+    Helper to download the local file produced by an analysis run.
     """
     pdfname_only = request.args.get('fname')
     return send_from_directory("tmp", pdfname_only, as_attachment=True)
@@ -224,9 +368,9 @@ def analyze_user_sheet_results():
 @reports_bp.route('/analyze_user_sheet', methods=['GET', 'POST'])
 def analyze_user_sheet():
     """
-    Takes in google sheet url, uploads automatic analysis and produces 
-    LaTeX report of the same. Also produces Google slides of the images 
-    and transfers ownership over. 
+    Takes in google sheet url, uploads automatic analysis and produces
+    LaTeX report of the same. Also produces Google slides of the images
+    and transfers ownership over.
     """
     class SheetForm(FlaskForm):
         name = StringField('Sheet URL', validators=[DataRequired()])
@@ -285,7 +429,7 @@ def analyze_user_sheet():
 
         auto_report.add_contents(r"""\section{Analysis of sheet}
 Analysis date: %(analysis_date)s \\
-Data source:  \href{%(url)s}{Google sheet}, tab:%(sheet_name)s \\
+Data source:  \href{%(url)s}{Google sheet}, Tab:%(sheet_name)s \\
 
 \section{Overall results}
 %(table)s
