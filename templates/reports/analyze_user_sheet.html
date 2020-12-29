@@ -23,7 +23,7 @@ div#loading {
     <li>Give this app permission to edit the sheet, the email to use is {{service_email}}</li>
     <li>In the form below, enter in the URL for your sheet, and the name of the tab where your data resides, and your email (which must be a G-suite email) </li>
     <li>Click analyze!</li>
-    <li>Results will be provided via G-suite slide deck and LaTeX pdf report. 
+    <li>If the data is large, the app will have to complete the work in the background minutes after clicking Analyze. In that case, you may have to check your spam folder at the email you provided for notification of the slide deck being completed and ownership transferred to you.</li>
   </ul>
   <div id="loading"></div>
   <div id="content">
@@ -37,7 +37,7 @@ div#loading {
     </tr>
  {% endfor %}
  </table>
-{{ form.submit(class="btn btn-info btn-lg", onclick="loading();")}} <!--  <input type="submit" value="Go">-->
+{{ form.submit(class="btn btn-info btn-lg", onclick="loading();")}}
 </form>
 
   </div>
