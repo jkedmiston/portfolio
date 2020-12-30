@@ -27,13 +27,6 @@ def background_analyze_user_sheet(url, sheet_name, email, unique_tag, report_res
         flash(Markup(info['error_message']))
         raise Exception(info['error_message'])
 
-    info = get_writeable_worksheet(
-        sheet=sheet, sheet_name=sheet_name + '-analysis')
-    if info['exit_code'] == 0:
-        wks_out = info['sheet']
-    else:
-        raise Exception(info['error_message'])
-
     # do the automatic analysis
     df = get_df_from_worksheet(worksheet_to_read, cleaning=True)
 
