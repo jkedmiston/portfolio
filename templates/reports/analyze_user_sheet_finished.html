@@ -4,8 +4,11 @@
 <div class="right_col" role="main">
   <div class="row">
   <h3>Automatic data analysis - Results</h3>
-
-    <a class="btn btn-info btn-lg btn-block" target="_blank" href="{{slides_link}}" role="button">Google slides</a>
+  {% if slides_url %}
+  <a class="btn btn-info btn-lg btn-block" target="_blank" href="{{slides_url}}" role="button">Google slides</a>
+  {% else %}
+  Google slides preparation in progress... check email (possibly spam filter) for messages from {{service_email}} to {{user_email}}. If the dataset is large, it may take a few minutes. This text will be replaced with a button when completed (reload the page to try). 
+  {% endif %}
     <a class="btn btn-info btn-lg btn-block" href="{{url_for('reports_bp.retrieve_pdf', fname=pdf_filename)}}" target="_blank" role="button">LaTeX PDF</a>    
   <a class="btn btn-info btn-lg btn-block" role="button" href="{{url_for('reports_bp.analyze_user_sheet')}}">Back to start</a>
   </div>

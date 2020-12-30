@@ -33,3 +33,4 @@ def celery_add_ex():
 
 
 from celery_jobs import *  # noqa
+from celery_jobs.background_analyze_user_sheet import *  # noqa

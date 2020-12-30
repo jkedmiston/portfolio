@@ -1,4 +1,13 @@
 from extensions import db
+from sqlalchemy_utils import URLType, EmailType, UUIDType
+
+
+class ReportResult(db.Model):
+    __tablename__ = "report_results"
+    user_email = db.Column(EmailType)
+    service_email = db.Column(EmailType)
+    slides_url = db.Column(URLType)
+    unique_tag = db.Column(UUIDType(binary=False))
 
 
 class ExampleData(db.Model):

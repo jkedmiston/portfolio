@@ -1,11 +1,31 @@
+import os
+import datetime
+import sqlalchemy
 from celery.signals import task_prerun, task_postrun
 from celery import Celery
-import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
+from flask_sqlalchemy import Model
+from sqlalchemy.ext.declarative import declared_attr
 
-db = SQLAlchemy()
+
+class BaseModel(Model):
+    """
+    The base model for all database models. This will include some common
+    columns for all tables:
+    """
+
+    @declared_attr
+    def id(self):
+        return sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, nullable=False)
+
+    @declared_attr
+    def created_at(self):
+        return sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.utcnow, nullable=True)
+
+
+db = SQLAlchemy(model_class=BaseModel)
 migrate = Migrate()
 csrf = CSRFProtect()
 

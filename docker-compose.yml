@@ -11,6 +11,7 @@ services:
         command: ./scripts/start-flask.sh -d 1
         depends_on:
             - database
+            - worker
         environment:
             - GOOGLE_APPLICATION_CREDENTIALS
             - DATABASE_URL=postgresql://postgres_user:postgres_password@database:5432
@@ -19,6 +20,7 @@ services:
             - FLASK_DEBUG=1
             - STORAGE_BUCKET
             - REDIS_URL
+            - DIABETES_DATA_URL
         stdin_open: true
         tty: true
         ports:
@@ -35,7 +37,6 @@ services:
         depends_on:
             - database
             - redis
-            - web
             - beat
             
         environment:
@@ -44,6 +45,7 @@ services:
             - GOOGLE_APPLICATION_CREDENTIALS    
             - SECRET_KEY
             - REDIS_URL
+            - STORAGE_BUCKET            
 
     beat:
         image: etl
@@ -53,13 +55,14 @@ services:
         depends_on:
             - database
             - redis
-            - web
+
         environment:
             - DATABASE_URL=postgresql://postgres_user:postgres_password@database:5432            
             - FLASK_DEBUG=1        
             - GOOGLE_APPLICATION_CREDENTIALS            
             - SECRET_KEY
             - REDIS_URL
+            - STORAGE_BUCKET
     redis:
         image: redis:5.0
         container_name: etl-redis

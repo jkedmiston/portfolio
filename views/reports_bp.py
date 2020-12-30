@@ -5,11 +5,12 @@ analyzed results in PDF or Google slides forms.
 import os
 import sys
 import copy
-import json
 import numpy as np
 import datetime
 import collections
+import flask
 from misc_utilities import generate_uuid
+
 from flask import request, flash, Markup
 from flask import Blueprint, render_template
 from flask_wtf import FlaskForm
@@ -21,8 +22,10 @@ import pandas as pd
 import pygsheets
 import google_functions.google_slides
 import latex_reports.latex_doc
-import latex_reports.latex_utilities
+from latex_reports.latex_utilities import make_latex_safe
 from flask import current_app
+from google_functions import get_service_account_email
+
 reports_bp = Blueprint(
     'reports_bp',
     __name__,
@@ -48,7 +51,8 @@ def get_column_info(df):
 
 
 def basic_grouping_plots(df, unique_tag, sheet_url, sheet_name):
-    # group by categories, then run the histograms on the grouping
+    """group by categories, then run the histograms on the grouping
+    """
 
     column_info = get_column_info(df)
     categorical_columns = column_info["categorical_columns"]
@@ -71,8 +75,9 @@ def basic_grouping_plots(df, unique_tag, sheet_url, sheet_name):
                                       sheet_url=sheet_url,
                                       sheet_name=sheet_name,
                                       subtag=cat,
-                                      grouping_label="%s" % (g_label),
-                                      slide_title="Exploratory plots - histograms, on subgroup %s in %s" % (g_label, cat))
+                                      grouping_label="%s = %s" % (
+                                          cat, g_label),
+                                      slide_title="Exploratory plots - histograms, on subgroup (%s = %s)" % (cat, g_label))
             all_figures["figures"].extend(output["figures"])
 
     return all_figures
@@ -111,8 +116,9 @@ def basic_bar_plots_for_categorical_features(df, unique_tag, sheet_url, sheet_na
             left = fig.subplotpars.left
             fig.subplots_adjust(left=left + left * 0.15)
             fig.subplots_adjust(top=fig.subplotpars.top*0.95)
-            # fig.subplots_adjust(left=0.5)
             figname = "tmp/basic_bar_plot_%s_%d.png" % (unique_tag, i)
+            # currently, using scripts in the test folder to adjust
+            # plotting positions, etc.
             if hasattr(sys, '_called_from_test'):
                 fig.show()
                 import pdb
@@ -127,6 +133,7 @@ def basic_bar_plots_for_categorical_features(df, unique_tag, sheet_url, sheet_na
                 fignames.append({'figure': figname,
                                  'description': description,
                                  'xlabel': 'Counts',
+                                 'caption': make_latex_safe(description).replace('<linked here>', r'\href{%(url)s}{\underline{linked here}}' % dict(url=sheet_url)).replace('\n', r'\\'),
                                  'ylabel': 'Category',
                                  "slide_title": "Exploratory plots - categories"})
     return {'figures': fignames}
@@ -151,7 +158,8 @@ def basic_histograms(df, unique_tag, sheet_url, sheet_name, all_figures=None, mo
             continue
         if not np.issubdtype(df[colname].dtype, np.number):
             # do categorical
-            print("categorical detected, %s" % colname)
+            current_app.logger.info(
+                "categorical feature detected on column %s" % colname)
             continue
         else:
             # numeric analysis
@@ -168,7 +176,7 @@ def basic_histograms(df, unique_tag, sheet_url, sheet_name, all_figures=None, mo
                     subtag, unique_tag, i)
             else:
                 figname = "tmp/basic_histograms_%s%s%s_%d.png" % (
-                    subtag, grouping_label, unique_tag, i)
+                    subtag, grouping_label.replace(' ', '').replace('=', '').replace('.', ''), unique_tag, i)
 
             try:
                 # TODO: add test for categorical / string features
@@ -209,6 +217,7 @@ def basic_histograms(df, unique_tag, sheet_url, sheet_name, all_figures=None, mo
 
                 fignames.append({'figure': figname,
                                  'description': description,
+                                 'caption': make_latex_safe(description).replace('<linked here>', r'\href{%(url)s}{\underline{linked here}}' % dict(url=sheet_url)).replace('\n', r'\\'),
                                  'xlabel': colname,
                                  'ylabel': 'Counts',
                                  "slide_title": slide_title})
@@ -243,12 +252,6 @@ def get_gsheets_slug_from_url(url):
     into 1u9**abcdefg**61mqkg
     """
     return os.path.basename(os.path.split(url)[0])
-
-
-def get_service_account_email():
-    env_vars = json.loads(os.getenv('GOOGLE_APPLICATION_CREDENTIALS'))
-    email = env_vars["client_email"]
-    return email
 
 
 def clean_df(df):
@@ -357,11 +360,27 @@ def poc():
 
 @reports_bp.route('/analyze_user_sheet_results', methods=['GET'])
 def analyze_user_sheet_results():
-    # TODO, make this retreive from db.
-    slides_url = request.args.get('slides_url')
-    pdf_filename = request.args.get('pdf_filename')
+    # TODO, make this spin until the background job is complete
+    from database.schema import ReportResult
+    unique_tag = request.args.get('unique_tag')
+    report_result = ReportResult.query.filter(
+        ReportResult.unique_tag == unique_tag).first()
+    service_email = get_service_account_email()
+    if report_result is None:
+        slides_url = ""
+        user_email = flask.session.get("user_email", "")
+    else:
+        slides_url = report_result.slides_url
+        user_email = report_result.user_email
+        # Todo, make it so that people have to create an account
+        # to access results
+
+    pdf_filename = "tmp/latex_files_%s.pdf" % unique_tag
+    pdf_filename = os.path.basename(pdf_filename)
     return render_template('reports/analyze_user_sheet_finished.html',
-                           slides_link=slides_url,
+                           slides_url=slides_url,
+                           user_email=user_email,
+                           service_email=service_email,
                            pdf_filename=pdf_filename)
 
 
@@ -372,6 +391,9 @@ def analyze_user_sheet():
     LaTeX report of the same. Also produces Google slides of the images
     and transfers ownership over.
     """
+    from extensions import db
+    from database.schema import ReportResult
+
     class SheetForm(FlaskForm):
         name = StringField('Sheet URL', validators=[DataRequired()])
         sheet_name = StringField('Targeted tab name to analyze',
@@ -381,10 +403,27 @@ def analyze_user_sheet():
         submit = SubmitField("Analyze")
 
     form = SheetForm(request.form)
+
     if form.validate_on_submit():
+        from celery_jobs.background_analyze_user_sheet import background_analyze_user_sheet
+        service_email = get_service_account_email()
         url = form.data["name"]
         sheet_name = form.data["sheet_name"]
         email = form.data["email"]
+
+        # use background job to do the Google slides report
+        unique_tag = generate_uuid()
+
+        report_result = ReportResult(unique_tag=unique_tag,
+                                     user_email=email,
+                                     service_email=service_email)
+        db.session.add(report_result)
+        db.session.commit()
+
+        background_analyze_user_sheet.delay(
+            url, sheet_name, email, unique_tag, report_result.id)
+        flash("Check email %s for messages from %s" % (email,
+                                                       service_email))
 
         info = get_worksheet_from_url(
             url=url, sheet_name=sheet_name)
@@ -404,10 +443,14 @@ def analyze_user_sheet():
             return redirect(url_for('reports_bp.analyze_user_sheet'))
 
         # do the automatic analysis
-        df = get_df_from_worksheet(worksheet_to_read, cleaning=True)
-        unique_tag = generate_uuid()
+        df = get_df_from_worksheet(worksheet_to_read,
+                                   cleaning=True)
+
         analysis = perform_automatic_analysis(
-            df, unique_tag=unique_tag, sheet_url=url, sheet_name=sheet_name)  # generate figures and labels
+            df,
+            unique_tag=unique_tag,
+            sheet_url=url,
+            sheet_name=sheet_name)  # generate figures, save them on container with fig.savefig()
 
         basic_describe = analysis["basic_describe"]
         figures = analysis["figures"]
@@ -437,7 +480,7 @@ Data source:  \href{%(url)s}{Google sheet}, Tab:%(sheet_name)s \\
         auto_report.add_clearpage()
         for fig in figures:
             auto_report.add_figure(
-                fig["figure"], caption="Data column %s" % fig["xlabel"])
+                fig["figure"], caption=fig["caption"])
             auto_report.add_clearpage()
 
         auto_report.add_contents(r"""\section{Appendix}
@@ -446,20 +489,14 @@ Data source:  \href{%(url)s}{Google sheet}, Tab:%(sheet_name)s \\
         pdfname = auto_report.write()
 
         # Produce Google slides version of the report.
-        figures2 = replace_figures_with_urls(figures)
-        doc_info_slides = doc_info.copy()
-        doc_info_slides["figures"] = figures2
-        slides_url = google_functions.google_slides.make_slideshow(
-            doc_info_slides)
-
-        # gsheets_functions.append_summary(basic_describe)
+        # slides_url = ""
         # set the new output dataframe
         wks_out.set_dataframe(basic_describe, (1, 1),
                               fit=True, nan='', copy_index=True)
         pdfname_only = os.path.basename(pdfname)
         assert os.path.isfile(os.path.join("tmp", pdfname_only))
-        return redirect(url_for("reports_bp.analyze_user_sheet_results", slides_url=slides_url,
-                                pdf_filename=pdfname_only))
+        flask.session["user_email"] = email
+        return redirect(url_for("reports_bp.analyze_user_sheet_results", unique_tag=unique_tag))
 
     return render_template('reports/analyze_user_sheet.html',
                            service_email=get_service_account_email(),

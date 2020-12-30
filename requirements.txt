@@ -32,3 +32,5 @@ pytest==6.2.1
 -e git+https://github.com/jkedmiston/latex-ds.git@master#egg=latex-ds
 seaborn==0.11.0
 matplotlib==3.3.3
+sqlalchemy_utils
+scikit-learn==0.23.2
