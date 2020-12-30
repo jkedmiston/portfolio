@@ -21,6 +21,9 @@
         <a href="https://flask.palletsprojects.com/en/1.1.x/" target="_blank">Flask</a>, for setting up web services
       </li>
       <li>
+        Front end template based on <a href="https://github.com/afourmy/flask-gentelella" target="_blank">Flask-Gentelella</a>, for dashboard friendly apps. 
+      </li>
+      <li>
         <a href="https://docs.celeryproject.org/en/stable/getting-started/introduction.html" target="_blank">Celery</a>, for background tasks, also featuring a regular task scheduler (see Heroku configuration).
       </li>
       <li>
@@ -45,8 +48,8 @@ Configuration with web dyno, worker dyno, and beat dyno. The Beat
 <br>
     <div class="col-12">
 <h4>Things to do within this app</h4>
-      <a href="{{url_for('main_bp.index_gentelella')}}" class="btn btn-info btn-block">Flask-Gentelella 
-        frontend</a>
+<!-- <a href="{{url_for('main_bp.index_gentelella')}}" class="btn btn-info btn-block">Flask-Gentelella 
+        frontend</a> -->
       <a href="{{url_for('reports_bp.latex_demo')}}" class="btn btn-info btn-block">Generate an example LaTeX report</a>
       <a href="{{url_for('reports_bp.present_sheet')}}" class="btn btn-info btn-block">Interact with Google sheets</a>
       <a href="{{url_for('reports_bp.analyze_user_sheet')}}" class="btn btn-info btn-block">Automatic data analysis</a>      
