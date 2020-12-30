@@ -112,11 +112,14 @@ def create_blank_slide_template(slideId, title_id, body_id, text="", text_url=""
 
 def make_slideshow(form_info):
     """
-    Assemble figures and tables into a google slideshow
+    Assemble figures and tables into a google slideshow. 
     @form_info['figures']: list of [{'figure': 'url or path',
-    'xlabel': 'Xlabel',
-    'ylabel': 'Ylabel}, ...]
-
+                                     'xlabel': 'Xlabel',
+                                     'ylabel': 'Ylabel}, ...]
+    @form_info['email']: email to send ownership to
+    The labels are added as separate text boxes on the Google slides. 
+    After the slides are created, transfer ownership of the slides to the email
+    in @form_info. 
     """
     service_account_info = json.loads(
         os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
@@ -127,6 +130,7 @@ def make_slideshow(form_info):
     slides_service = build(
         'slides', 'v1', credentials=credentials, cache_discovery=False)
     # https://developers.google.com/slides/?hl=en_US
+
     utcnow = datetime.datetime.utcnow().strftime(
         "%Y-%m-%d %H:%M:%S [UTC]")
     body = {'title': 'Autogen-%s' % utcnow}
