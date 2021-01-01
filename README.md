@@ -18,7 +18,18 @@ For local development, the GCP configuration for credentials and Pub/Sub must be
 * Create a GCP Pub/Sub topic `portfolio-demo` and subscription `portfolio-subscription` subscribed to that topic with pull mode. 
 Copy `.env.sample` to `.env`. Populate with credentials from the `json` key if exercising the Google integrations (primarily `GOOGLE_APPLICATION_CREDENTIALS`. 
 
-Build and test: 
+Build and test:
+On Mac OS
+* `docker-compose build`
+* `docker-compose run --rm web python -m pytest`
+
+On a clean ubuntu install, I had to do the following, based on
+[instructions here](https://docs.docker.com/engine/install/linux-postinstall/)
+* `sudo groupadd docker`
+* `sudo usermod -aG docker $USER`
+* Log out and back in.
+
+Then, one can run the following without `sudo`.
 * `docker-compose build`
 * `docker-compose run --rm web python -m pytest`
 

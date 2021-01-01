@@ -2,7 +2,7 @@
 # start-flask.sh
 
 set -euo pipefail
-
+flask db upgrade
 FLASK_APP="main:create_app()"
 
 ARGS=(
