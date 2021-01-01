@@ -9,6 +9,7 @@ ENV PYTHONUNBUFFERED True
 ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY . ./
+COPY entrypoint.sh /entrypoint.sh
 
 RUN apt-get update && apt-get install texlive-latex-extra -y && apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -21,6 +22,7 @@ ENV PYTHONPATH "${PYTHONPATH}:/app"
 # webserver, with one worker process and 8 threads.
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
+ENTRYPOINT ["/entrypoint.sh"]
 
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 "main:create_app()"
 
