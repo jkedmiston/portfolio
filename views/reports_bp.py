@@ -90,17 +90,25 @@ def basic_bar_plots_for_categorical_features(df, unique_tag, sheet_url, sheet_na
     import seaborn as sns
     import matplotlib.pyplot as plt
 
+    def xstrip(x):
+        try:
+            if x.strip() == "":
+                return True
+        except:
+            current_app.logger.warning("data type %s is not a str" % x)
+        return False
+
     sns.set_style('ticks')  # darkgrid, whitegrid, dark, white, ticks}
 
     plt.rcParams.update({'font.size': MATPLOTLIB_FONTSIZE_FOR_GSLIDES})
     fignames = []
     for i, colname in enumerate(df.columns):
-        if not np.issubdtype(df[colname].dtype, np.number):
+        if np.issubdtype(df[colname].dtype, np.number) == False:
             # do categorical analysis, basic counts
             # make bar plot of counts
             nrows = len(df)
             empty = df.loc[df[colname].notnull(), colname].apply(
-                lambda x: x.strip() == "").sum()
+                xstrip).sum()
             count_invalid_data = df[colname].isnull().sum() + empty
             count_valid_data = len(df) - count_invalid_data
             fig, ax = plt.subplots(1, 1, figsize=(
