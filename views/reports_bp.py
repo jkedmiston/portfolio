@@ -106,6 +106,7 @@ def basic_bar_plots_for_categorical_features(df, unique_tag, sheet_url, sheet_na
         if np.issubdtype(df[colname].dtype, np.number) == False:
             # do categorical analysis, basic counts
             # make bar plot of counts
+            df[colname] = df[colname].astype(str)
             nrows = len(df)
             empty = df.loc[df[colname].notnull(), colname].apply(
                 xstrip).sum()
@@ -141,7 +142,7 @@ def basic_bar_plots_for_categorical_features(df, unique_tag, sheet_url, sheet_na
                 fignames.append({'figure': figname,
                                  'description': description,
                                  'xlabel': 'Counts',
-                                 'caption': make_latex_safe(description).replace('<linked here>', r'\href{%(url)s}{\underline{linked here}}' % dict(url=sheet_url)).replace('\n', r'\\'),
+                                 'caption': description.replace('<linked here>', r'\href{%(url)s}{\underline{linked here}}' % dict(url=sheet_url)).replace('\n', r'\\'),
                                  'ylabel': 'Category',
                                  "slide_title": "Exploratory plots - categories"})
     return {'figures': fignames}
@@ -167,7 +168,7 @@ def basic_histograms(df, unique_tag, sheet_url, sheet_name, all_figures=None, mo
         if not np.issubdtype(df[colname].dtype, np.number):
             # do categorical
             current_app.logger.info(
-                "categorical feature detected on column %s" % colname)
+                "categorical feature detected on column %s, skipping" % colname)
             continue
         else:
             # numeric analysis
@@ -225,7 +226,7 @@ def basic_histograms(df, unique_tag, sheet_url, sheet_name, all_figures=None, mo
 
                 fignames.append({'figure': figname,
                                  'description': description,
-                                 'caption': make_latex_safe(description).replace('<linked here>', r'\href{%(url)s}{\underline{linked here}}' % dict(url=sheet_url)).replace('\n', r'\\'),
+                                 'caption': description.replace('<linked here>', r'\href{%(url)s}{\underline{linked here}}' % dict(url=sheet_url)).replace('\n', r'\\'),
                                  'xlabel': colname,
                                  'ylabel': 'Counts',
                                  "slide_title": slide_title})
