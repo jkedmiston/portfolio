@@ -1,0 +1,10 @@
+google-api-core==1.22.1
+google-api-python-client==1.7.9
+google-auth-httplib2==0.0.3
+google-auth-oauthlib==0.4.0
+google-auth==1.21.0
+google-cloud-pubsub==1.6.*
+google-cloud-storage==1.15.*
+matplotlib==3.3.3
+pandas==1.*
+pytest==6.2.1

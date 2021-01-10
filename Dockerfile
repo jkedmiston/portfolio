@@ -8,20 +8,24 @@ ENV PYTHONUNBUFFERED True
 # Copy local code to the container image.
 ENV APP_HOME /app
 WORKDIR $APP_HOME
-COPY . ./
-COPY entrypoint.sh /entrypoint.sh
+COPY requirements.txt .
 
 RUN apt-get update && apt-get install texlive-latex-extra -y && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install production dependencies.
-RUN pip install -r requirements.txt
+RUN python3 -m pip install -r requirements.txt
+
+# In order to have similar builds for local dev on MacOS and Ubuntu,
+# and deployment on Heroku, this custom library here needs a separate
+# line item currently. 
+RUN cd /root/ && git clone https://github.com/jkedmiston/latex-ds.git && cd latex-ds && python setup.py build && python setup.py install 
 
 ENV PYTHONPATH "${PYTHONPATH}:/app"
-
+COPY . /app/.
 # Run the web service on container startup. Here we use the gunicorn
 # webserver, with one worker process and 8 threads.
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
+COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 "main:create_app()"

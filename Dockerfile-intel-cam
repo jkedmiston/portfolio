@@ -1,0 +1,39 @@
+# Build instructions just to be able to compile and run code on the Intel realsense depth camera. 
+FROM ubuntu:20.04
+
+# Allow statements and log messages to immediately appear in the Knative logs
+ENV PYTHONUNBUFFERED True
+
+# Copy local code to the container image.
+ENV APP_HOME /app
+WORKDIR $APP_HOME
+
+# For tzdata to run non interactive, see https://serverfault.com/questions/949991/how-to-install-tzdata-on-a-ubuntu-docker-image
+# install librealsense, see https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md @ commit 34fc284 
+
+RUN DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install --no-install-recommends -y tzdata && apt-get install -y --no-install-recommends \
+python3-minimal \
+git \
+python3-pip \
+python-is-python3 \
+software-properties-common \
+kdialog \
+libopencv-dev \
+dirmngr \
+gpg-agent \
+build-essential && apt-key adv --keyserver keys.gnupg.net --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE || apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE && add-apt-repository "deb http://realsense-hw-public.s3.amazonaws.com/Debian/apt-repo focal main" -u && apt-get install --no-install-recommends -y \
+librealsense2-dkms \
+librealsense2-utils \
+librealsense2-dev \
+librealsense2-dbg && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+COPY realsense/basic_measurement.cpp /app/realsense/basic_measurement.cpp
+RUN cd /app/realsense && g++ basic_measurement.cpp -o run_d435 -I/usr/include/opencv4 -lrealsense2 -lopencv_core -lopencv_imgproc -lopencv_highgui && cp run_d435 /usr/bin/run_d435
+
+COPY requirements-intel.txt .
+RUN python3 -m pip install -r requirements-intel.txt
+COPY . /app/.
+
+# TODO - replace with Pub/Sub command
+CMD ["realsense-viewer"]
+

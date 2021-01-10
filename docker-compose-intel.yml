@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+    intel-cam:
+        build:
+            context: .
+            dockerfile: Dockerfile-intel-cam
+        environment:
+          - QR_X11_NO_MITSHM=1
+          - QT_GRAPHICSSYSTEM=native
+          - DISPLAY=:1
+        privileged: true
+        cap_add:
+            - ALL
+        image: intel-cam-image
+        container_name: intel-cam-container
+        command: realsense-viewer
+        volumes:
+          - .:/app
+          - /dev:/dev
+          - /lib/modules:/lib/modules
+          - /tmp/.X11-unix:/tmp/.X11-unix
+          
+        stdin_open: true
+        tty: true
+
+
