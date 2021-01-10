@@ -1,11 +1,9 @@
 #!/bin/bash
-# load custom libraries which create folders like src/
-# When this was added to requirements.txt, the folder wasn't being created inside the container
 
 if [[ "$@" == *"celery"* ]]; then
-    echo "Running from celery"
+    echo "Running entrypoint from celery"
 else
-    pip install -e git+https://github.com/jkedmiston/latex-ds.git@master#egg=latex-ds
+    echo "Running entrypoint from main app"
 fi
 
 echo "entry point done"

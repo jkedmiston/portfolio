@@ -83,7 +83,8 @@ services:
           - "127.0.0.1:5444:5432"
         volumes:
           - persistent_database_postgres:/var/lib/postgresql/data
-          
+
+
 volumes:
   persistent_database_postgres:
   persistent_redis:
