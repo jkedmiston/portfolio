@@ -6,3 +6,5 @@ tmp/*
 *.json
 src
 
+depth0*
+a.out

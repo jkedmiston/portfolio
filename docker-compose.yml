@@ -21,6 +21,9 @@ services:
             - STORAGE_BUCKET
             - REDIS_URL
             - DIABETES_DATA_URL
+            - SERVER_TO_DEPTH_CAM_TOPIC
+            - DEPTH_CAM_TO_SERVER_SUBSCRIPTION
+            
         stdin_open: true
         tty: true
         ports:
@@ -46,6 +49,8 @@ services:
             - SECRET_KEY
             - REDIS_URL
             - STORAGE_BUCKET            
+            - SERVER_TO_DEPTH_CAM_TOPIC
+            - DEPTH_CAM_TO_SERVER_SUBSCRIPTION
 
     beat:
         image: etl

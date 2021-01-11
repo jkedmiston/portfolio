@@ -16,7 +16,7 @@ from views.reports_bp import (
 def background_analyze_user_sheet(url, sheet_name, email, unique_tag, report_result_id):
     """
     Background job uploads figures to Google cloud storage, then places them in 
-    Gslides presentations. 
+    Gslides presentations, then transfers ownership. 
     """
     info = get_worksheet_from_url(
         url=url, sheet_name=sheet_name)

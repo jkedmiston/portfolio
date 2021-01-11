@@ -6,6 +6,7 @@ Take a basic sample from an Intel Realsense D435, with setting custom configurat
 #include <librealsense2/rs.hpp> // Include RealSense Cross Platform API
 #include <opencv2/opencv.hpp>   // Include OpenCV API
 #include <librealsense2/rs_advanced_mode.hpp> // Settings from JSON
+#include <opencv2/imgcodecs.hpp>
 
 // from cv-helpers
 static cv::Mat frame_to_mat(const rs2::frame& f)
@@ -25,7 +26,7 @@ static cv::Mat frame_to_mat(const rs2::frame& f)
   else if (f.get_profile().format() == RS2_FORMAT_RGB8)
     {
       auto r_rgb = Mat(Size(w, h), CV_8UC3, (void*)f.get_data(), Mat::AUTO_STEP);
-      Mat r_bgr;
+      cv::Mat r_bgr;
       cvtColor(r_rgb, r_bgr, COLOR_RGB2BGR);
       return r_bgr;
     }
@@ -78,14 +79,38 @@ int main(int argc, char * argv[]) try
   
   int ct =0;
   std::string filename;
+  rs2::colorizer color_map;
+  
   {
     rs2::frameset data = pipe.wait_for_frames(); // Wait for next set of frames from the camera
+    rs2::frame depth = data.get_depth_frame().apply_filter(color_map);
+    const int w = depth.as<rs2::video_frame>().get_width();
+    const int h = depth.as<rs2::video_frame>().get_height();
+    cv::Mat image(cv::Size(w, h), CV_8UC3, (void*)depth.get_data(), cv::Mat::AUTO_STEP);
+    
+    
     rs2::depth_frame depth_base = data.get_depth_frame();
     cv::Mat depth_in_meters = depth_frame_to_meters(depth_base, "CV_64F");
-    
+    // https://stackoverflow.com/questions/7899108/opencv-get-pixel-channel-value-from-mat-image
+
+
+
+    /* 
+       Basic BGR save of cv image 
+     */
+    char cvbuff[100];
+    sprintf(cvbuff, "depth%d.bmp", ct);
+    std::string cvfilename = cvbuff;
+    cv::imwrite(cvfilename, image);
+
+
+    /*
+      Save a raw map of the depth frame 
+     */
     char buff[100];
     sprintf(buff, "depth%d.txt", ct);
     filename = buff;
+    
     std::ofstream fout(filename);
     for(int i=0; i < depth_in_meters.rows; ++i){
       for(int j = 0; j < depth_in_meters.cols; ++j){

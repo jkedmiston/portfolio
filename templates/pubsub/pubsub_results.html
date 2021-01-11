@@ -1,0 +1,22 @@
+{% extends "layouts/base_site.html" %}
+
+{% block content %}
+<div class="right_col" role="main">
+  This demos a Google Pub/Sub integration - a camera is connected to a laptop at
+  my home. The colorized depth map is shown. 
+  <br>
+  <h5>Results. <h5>
+  <ul>
+    <li> Taken at {{time_of_photo}} </li>
+  </ul>
+  
+  <div class="row">
+    <figure>
+      <img src="{{url}}" width=100% alt="alt" />
+      <figcaption>
+        <a href="{{url}}" target="_blank">{{link}}</a>
+        </figcaption>
+    </figure>
+  </div>
+</div>
+{% endblock %}
