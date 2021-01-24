@@ -573,15 +573,20 @@ def latex_demo():
 \section{Introduction}
 This document is prepared in LaTeX, which may be integrated with python for automated reports easily.
 \begin{enumerate}
-\item{Item 1 - [Text here]}
-\item{Item 2 - for an example ofembedded graphics, see Figure \ref{fig:label}}
+\item{Item 1 - [Python generated text here...]}
+\item{Item 2 - for an example of embedded graphics, see Figure \ref{fig:label}}
 \end{enumerate}
 \begin{figure}
   \centering
 \includegraphics[width=1\textwidth]{figures/getty_images.jpg}
-\caption{Caption}
+\caption{Caption here...}
 \label{fig:label}
 \end{figure}
+\subsection{A subsection}
+\subsubsection{Another section}
+
+\section{Appendix}
+Final results here. 
 \end{document}
     """
     f = open("tmp/example_report.tex", "w")
