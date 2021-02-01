@@ -11,7 +11,7 @@
 
 (setq inhibit-startup-message t) ;; hide the startup message
 ;;(custom-set-variables
-;; (pyvenv-activate "/Users/johnedmiston/anaconda3/envs/myco")
+
 ;; https://github.com/jorgenschaefer/elpy
 (package-initialize)
 (elpy-enable)
@@ -22,9 +22,9 @@
 ;; note that setting `venv-location` is not necessary if you
 ;; use the default location (`~/.virtualenvs`), or if the
 ;; the environment variable `WORKON_HOME` points to the right place
-(setq venv-location "/Users/johnedmiston/anaconda3/envs/myco")
+(setq venv-location "/Users/johnedmiston/anaconda3/envs/portfolio")
 
-(pyvenv-activate "/Users/johnedmiston/anaconda3/envs/myco")
+(pyvenv-activate "/Users/johnedmiston/anaconda3/envs/portfolio")
 ;; Enable Flycheck
 (when (require 'flycheck nil t)
   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))

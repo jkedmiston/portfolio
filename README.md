@@ -82,3 +82,17 @@ root@6956ef978d70:/app# realsense-viewer
 jedmiston@je-hp: $ xhost -local:root
 non-network local connections being removed from access control list
 ```
+
+# Emacs
+* emacs.el contains a config file for environments.
+* From a quick standpoint, in early 2021 this is what worked for me:
+* `sudo apt-get install emacs python3 python-is-python3`
+* Move start file to emacs home. 
+* `cp emacs.el ~/.`
+* Download Anaconda, set up `conda create -n portfolio python==3.8`
+* Then load the environment and do `(portfolio)$ pip install jedi flake8 yapf autopep8 black rope`
+* In emacs session, install MELPA packages using `M-x list-packages` and then searching for and selecting
+* `elpy`
+* `virtualenvwrapper`
+* `py-autopep8`
+* You can use in emacs, `M-x elpy-config` to list out the configuration for the loaded environments. 
