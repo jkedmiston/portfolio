@@ -21,7 +21,7 @@ Copy `.env.sample` to `.env`. Populate with credentials from the `json` key if e
 
 ## Intel realsense
 For local development with a realsense camera, the command `xhost +local:root` must be used to enable `realsense-viewer` to work in the Docker container.
-
+* Do not install Docker with `snap install docker`. 
 # Build and test:
 On Mac OS
 * `docker-compose build`
@@ -67,14 +67,16 @@ See [here](https://github.com/IntelRealSense/librealsense/blob/master/doc/instal
 * Inspired by instructions [here](https://github.com/edowson/docker-intel)
 On a straight Ubuntu 20.04 machine, the following worked. 
 ```
-jedmiston@je-hp: $ xhost local:root
+jedmiston@je-hp: $ docker-compose -f docker-compose-intel.yml build
+jedmiston@je-hp: $ xhost +local:root
 non-network local connections being added to access control list
-jedmiston@je-hp: $ docker-compose up intel-cam
+jedmiston@je-hp: $ docker-compose -f docker-compose-intel.yml up
 [opens up intel GUI]
+jedmiston@je-hp: $ xhost -local:root
 ```
 In terms of docker cli commands:
 ```
-jedmiston@je-hp: $ xhost local:root
+jedmiston@je-hp: $ xhost +local:root
 non-network local connections being added to access control list
 jedmiston@je-hp: $ docker run -it -e DISPLAY=$DISPLAY -e QT_GRAPHICSSYSTEM=native -e QT_X11_NO_MITSHM=1 -v /dev:/dev -v /lib/modules:/lib/modules -v /tmp/.X11-unix:/tmp/.X11-unix --privileged --cap-add=ALL --rm etl:latest /bin/bash
 root@6956ef978d70:/app# realsense-viewer
