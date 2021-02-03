@@ -1,0 +1,24 @@
+# Use the official lightweight Python image.
+# https://hub.docker.com/_/python
+FROM python:3.7-buster
+
+# Allow statements and log messages to immediately appear in the Knative logs
+ENV PYTHONUNBUFFERED True
+
+# Copy local code to the container image.
+ENV APP_HOME /app
+WORKDIR $APP_HOME
+COPY requirements-pylint.txt requirements.txt
+
+RUN apt-get update && apt-get install pylint -y && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN python3 -m pip install -r requirements.txt
+
+ENV PYTHONPATH "${PYTHONPATH}:/app"
+COPY . /app/.
+
+COPY entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+
+# CMD exec python 
+
