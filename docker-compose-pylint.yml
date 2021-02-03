@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+    pylint-app:
+        build:
+            context: .
+            dockerfile: Dockerfile-pylint
+        environment:
+            - DISPLAY=:1
+        image: pylint-app-image
+        container_name: pylint-app-container
+        command: python pylint_app.py
+        volumes:
+          - .:/app
+          
+        stdin_open: true
+        tty: true
+
+
