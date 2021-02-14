@@ -54,7 +54,10 @@ def pubsub_demo():
 
 @pubsub_bp.route("/pubsub_depth_cam", methods=["GET", "POST"])
 def pubsub_depth_cam():
-    # trigger a depth camera photo, and present to screen
+    """
+    triggers a depth camera photo, and presents the result to screen
+    """
+
     from celery_jobs import catch_pubsub_message
 
     class SheetForm(FlaskForm):
@@ -62,7 +65,6 @@ def pubsub_depth_cam():
 
     form = SheetForm(request.form)
     if form.validate_on_submit():
-        # send pub subfig
         unique_tag = generate_uuid()
         publish_message(
             topic_name=os.environ["SERVER_TO_DEPTH_CAM_TOPIC"], data={'unique_tag': unique_tag})
@@ -86,7 +88,7 @@ def pubsub_depth_cam():
             break
 
         return render_template('pubsub/pubsub_results.html',
-                               link="Link",
+                               link="Link to photo",
                                time_of_photo=time_of_photo,
                                url=url)
 
