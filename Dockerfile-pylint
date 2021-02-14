@@ -15,10 +15,10 @@ RUN apt-get update && apt-get install pylint -y && apt-get clean && rm -rf /var/
 RUN python3 -m pip install -r requirements.txt
 
 ENV PYTHONPATH "${PYTHONPATH}:/app"
-COPY . /app/.
+COPY pylint_app.py /app/.
 
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
 # CMD exec python 
-
+CMD ["python pylint_app.py"]
