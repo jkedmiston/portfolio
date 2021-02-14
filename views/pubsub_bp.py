@@ -86,7 +86,7 @@ def pubsub_depth_cam():
             break
 
         return render_template('pubsub/pubsub_results.html',
-                               link="Link",
+                               link="Link to photo",
                                time_of_photo=time_of_photo,
                                url=url)
 

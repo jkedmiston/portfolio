@@ -5,6 +5,5 @@ __pycache__
 tmp/*
 *.json
 src
+realsense/run_d435
 
-depth0*
-a.out
