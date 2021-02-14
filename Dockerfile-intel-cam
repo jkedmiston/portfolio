@@ -33,10 +33,6 @@ COPY realsense/basic_measurement.cpp /app/realsense/basic_measurement.cpp
 
 RUN cd /app/realsense && g++ basic_measurement.cpp -o run_d435 -I/usr/include/opencv4 -lrealsense2 -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_imgcodecs && cp run_d435 /usr/bin/run_d435
 
-#RUN apt-get update && apt-get install -y usbutils pciutils
-#COPY realsense/usbreset.c /app/realsense/usbreset.c
-#RUN cd /app/realsense && gcc usbreset.c -o usbreset && cp usbreset /usr/bin/usbreset
-
 COPY requirements-intel.txt .
 RUN python3 -m pip install -r requirements-intel.txt
 COPY . /app/.
