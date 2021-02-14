@@ -21,7 +21,8 @@ Copy `.env.sample` to `.env`. Populate with credentials from the `json` key if e
 
 ## Intel realsense
 For local development with a realsense camera, the command `xhost +local:root` must be used to enable `realsense-viewer` to work in the Docker container.
-* Do not install Docker with `snap install docker`. 
+* Speaking from experience on Ubuntu 20.04, do not install Docker with `snap install docker`, instead use `apt-get install docker`.
+
 # Build and test:
 On Mac OS
 * `docker-compose build`
@@ -29,8 +30,7 @@ On Mac OS
 * `docker-compose -f docker-compose-intel.yml build`
 * `docker-compose -f docker-compose-intel.yml up`
 
-On a clean ubuntu install, I had to do the following to avoid using `sudo`, based on
-[instructions here](https://docs.docker.com/engine/install/linux-postinstall/)
+On a clean ubuntu install, I had to do the following to avoid using `sudo` in subsequence `docker-compose` commands, e.g. `docker-compose build`, this is based on [instructions here](https://docs.docker.com/engine/install/linux-postinstall/)
 * `sudo groupadd docker`
 * `sudo usermod -aG docker $USER`
 * Log out and back in.
@@ -40,7 +40,7 @@ Then, one can run the same commands as above in the MacOS section without `sudo`
 # Features
 
 ## Testing plots
-For adjusting the `matplotlib` plots by trial-and-error, I run the plotting funcations via an Anaconda environment outside the Docker container. To run tests in this way, once `PYTHONPATH` is set up, and `requirements.txt` is installed with `pip install -r requirements.txt`, then use e.g. `python -m pytest -k test_basic_bar_plots`. The logic in `conftest.py` sets up `sys._called_from_test` as suggested in the `pytest` docs [here](https://docs.pytest.org/_/downloads/en/3.0.1/pdf/). 
+For adjusting the `matplotlib` plots produced in the Google slides demo part of the app, by trial-and-error, I run the plotting functions via an Anaconda environment outside the Docker container. To run tests in this way, once `PYTHONPATH` is set up, and `requirements.txt` is installed with `pip install -r requirements.txt`, then use e.g. `python -m pytest -k test_basic_bar_plots`. The logic in `conftest.py` sets up `sys._called_from_test` as suggested in the `pytest` docs [here](https://docs.pytest.org/_/downloads/en/3.0.1/pdf/). 
 
 ## Flask migrate
 Setting up flask migrate took a bit. This was helpful. 
@@ -57,15 +57,18 @@ Setting up flask migrate took a bit. This was helpful.
 ## Python side
 Starting up the app so that breakpoints are easy to work in can be done with: 
 * `docker-compose run --rm -p 5000:5000 web python3 -m pdb wsgi.py`
+* Then open up `localhost:5000` in a browser and you can interact with the front end/back end functionality.
+
 ## Docker iterations
-Start up the app with `/bin/bash`, then run the `apt-get install` packages needed to compile codes, etc. e.g. for the `realsense` tests, `g++ rs-imshow.cpp  -I/usr/include/opencv4 -lrealsense2 -lopencv_core -lopencv_imgproc -lopencv_highgui` was found with some iteration.
+For iterating on the `Dockerfile` (e.g. what packages are needed in the container, etc), start up the app with the command `/bin/bash`, e.g. `docker-compose run --rm web /bin/bash` then when in that container run the `apt-get install` packages needed to compile codes, etc. e.g. for the `realsense` tests, `g++ rs-imshow.cpp  -I/usr/include/opencv4 -lrealsense2 -lopencv_core -lopencv_imgproc -lopencv_highgui` was found with some iteration of this nature.
 
 
 # Installing `librealsense`
-See [here](https://github.com/IntelRealSense/librealsense/blob/master/doc/installation.md)
+Setting up the Intel realsense camera took a bit, for a good starting point the github page for `librealsense` is [here](https://github.com/IntelRealSense/librealsense/blob/master/doc/installation.md)
 * To run:
-* Inspired by instructions [here](https://github.com/edowson/docker-intel)
-On a straight Ubuntu 20.04 machine, the following worked. 
+* Inspired by instructions [here](https://github.com/edowson/docker-intel).
+
+If the client computer (connected to the camera) is an Ubuntu 20.04 machine, the following worked to start up the `realsense-viewer` gui and confirm that the application is working. 
 ```
 jedmiston@je-hp: $ docker-compose -f docker-compose-intel.yml build
 jedmiston@je-hp: $ xhost +local:root
@@ -74,7 +77,7 @@ jedmiston@je-hp: $ docker-compose -f docker-compose-intel.yml up
 [opens up intel GUI]
 jedmiston@je-hp: $ xhost -local:root
 ```
-In terms of docker cli commands:
+In terms of raw docker cli commands instead of `docker-compose`: 
 ```
 jedmiston@je-hp: $ xhost +local:root
 non-network local connections being added to access control list
@@ -85,9 +88,9 @@ jedmiston@je-hp: $ xhost -local:root
 non-network local connections being removed from access control list
 ```
 
-# Emacs
-* emacs.el contains a config file for environments.
-* From a quick standpoint, in early 2021 this is what worked for me:
+# Emacs setup
+* `emacs.el` in this repository contains a config file for environments.
+* From a quick standpoint, in early 2021 this is what worked for me to set up on Ubuntu 20.04: 
 * `sudo apt-get install emacs python3 python-is-python3`
 * Move start file to emacs home. 
 * `cp emacs.el ~/.`
@@ -97,4 +100,4 @@ non-network local connections being removed from access control list
 * `elpy`
 * `virtualenvwrapper`
 * `py-autopep8`
-* You can use in emacs, `M-x elpy-config` to list out the configuration for the loaded environments. 
+* You can use in emacs, `M-x elpy-config` to list out the configuration for the loaded environments and make sure the virtual environment is detected. 
