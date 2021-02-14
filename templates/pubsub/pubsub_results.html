@@ -1,0 +1,24 @@
+{% extends "layouts/base_site.html" %}
+
+{% block content %}
+<div class="right_col" role="main">
+  This demos a Google Pub/Sub integration - a camera is connected to a computer running the container (defined by docker-compose-intel.yml in this repository). The camera is attached to an oscillating fan so the image may change from time to time. <br>
+  The colorized depth map is shown here and a link to the photo in storage is below the image. 
+  <br>
+  <h5>Results. <h5>
+  <ul>
+    <li> Taken at {{time_of_photo}} </li>
+    <li><a href="{{url}}" target="_blank">{{link}}</a> </li>
+    <li> <a href="{{ url_for('pubsub_bp.pubsub_depth_cam') }}" >Retake photo</a> </li>
+  </ul>
+  
+  <div class="row">
+    <figure>
+      <img src="{{url}}" width=100% alt="alt" />
+      <figcaption>
+        <a href="{{url}}" target="_blank">{{link}}</a>     
+      </figcaption>
+    </figure>
+  </div>
+</div>
+{% endblock %}

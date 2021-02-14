@@ -6,15 +6,19 @@ services:
             context: .
             dockerfile: Dockerfile-intel-cam
         environment:
+          - GOOGLE_APPLICATION_CREDENTIALS
+          - SERVER_TO_DEPTH_CAM_SUBSCRIPTION
+          - DEPTH_CAM_TO_SERVER_TOPIC
           - QR_X11_NO_MITSHM=1
           - QT_GRAPHICSSYSTEM=native
-          - DISPLAY=:0
+          - STORAGE_BUCKET
+          - DISPLAY
         privileged: true
         cap_add:
             - ALL
         image: intel-cam-image
         container_name: intel-cam-container
-        command: realsense-viewer
+        command: python hardware/pubsub_depth_cam_pull.py
         volumes:
           - .:/app
           - /dev:/dev

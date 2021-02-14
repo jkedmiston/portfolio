@@ -2,11 +2,10 @@
 
 {% block content %}
 <div class="right_col" role="main">
-  This demos a Google Pub/Sub integration. 
-  <br>
+  This demos a Google Pub/Sub integration - a camera (Intel RealSense depth camera) is connected to a computer running the container (defined by docker-compose-intel.yml in this repository). The camera is attached to an oscillating fan so the image may change from time to time. <br>
   <h5>Instructions for use.</h5>
   <ul>
-    <li> TBD </li>
+    <li> Click the button below to trigger the remote photo to be taken and then uploaded to storage. Shortly thereafter, the result of the image will be presented to this screen.  </li>
   </ul>
   <div class="row">
     {{form_html|safe}}

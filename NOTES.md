@@ -10,6 +10,7 @@ The list of opencv libraries which can be linked in is large. A list of librarie
   -lopencv_core
   -lopencv_imgproc
   -lopencv_highgui
+  -lopencv_imagecodecs
   -lopencv_ml
   -lopencv_video
   -lopencv_features2d
