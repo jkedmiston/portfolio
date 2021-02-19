@@ -22,7 +22,7 @@ RUN cd /root/ && git clone https://github.com/jkedmiston/latex-ds.git && cd late
 
 ENV PYTHONPATH "${PYTHONPATH}:/app"
 COPY . /app/.
-MKDIR /app/tmp
+RUN mkdir /app/tmp
 
 # Run the web service on container startup. Here we use the gunicorn
 # webserver, with one worker process and 8 threads.
