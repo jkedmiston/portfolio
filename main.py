@@ -34,12 +34,11 @@ def register_request_logger(app):
 
     def _after_request(response):
         request_end_time = time.time()
-        try:
+        if hasattr(g, "request_start_time"):
             seconds = request_end_time - g.request_start_time
-        except Exception as e:
-            import traceback
-            tb = traceback.format_exc()
-            current_app.logger.error("Exception in after request %s" % tb)
+        else:
+            current_app.logger.error(
+                "_after_request has no attribute request_start_time")
             seconds = 10
         request_duration = datetime.timedelta(seconds=seconds).total_seconds()
 
