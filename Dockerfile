@@ -10,6 +10,7 @@ ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY requirements.txt .
 
+
 RUN apt-get update && apt-get install texlive-latex-extra -y && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN python3 -m pip install -r requirements.txt
@@ -21,6 +22,8 @@ RUN cd /root/ && git clone https://github.com/jkedmiston/latex-ds.git && cd late
 
 ENV PYTHONPATH "${PYTHONPATH}:/app"
 COPY . /app/.
+MKDIR /app/tmp
+
 # Run the web service on container startup. Here we use the gunicorn
 # webserver, with one worker process and 8 threads.
 # For environments with multiple CPU cores, increase the number of workers
