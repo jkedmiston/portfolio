@@ -36,8 +36,10 @@ def register_request_logger(app):
         request_end_time = time.time()
         try:
             seconds = request_end_time - g.request_start_time
-        except:
-            current_app.logger.error("Exception in after request")
+        except Exception as e:
+            import traceback
+            tb = traceback.format_exc()
+            current_app.logger.error("Exception in after request %s" % tb)
             seconds = 10
         request_duration = datetime.timedelta(seconds=seconds).total_seconds()
 
