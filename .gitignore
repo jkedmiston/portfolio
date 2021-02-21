@@ -1,9 +1,12 @@
 *~
-.env
+.env*
 *logtxt
 __pycache__
 tmp/*
 *.json
 src
 realsense/run_d435
-
+app.yaml
+a.out
+depth0.*
+auxiliary.py

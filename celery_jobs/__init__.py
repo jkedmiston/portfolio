@@ -6,24 +6,16 @@ from extensions import celery
 
 
 @celery.task
-def celery_delay_method():
-    f = open("tmp.txt", "a")
-    now = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
-    f.write("%s" % now)
-    f.close()
-    print("now", now)
-    return 0
-
-
-@celery.task
 def catch_pubsub_message(subscription_id):
     """
-    Pulls messages from the channel and executes a basic DB write
+    Pulls messages from the channel @subscription_id, and executes a basic DB write of the message to demonstrate its retreival by viewing in admin panel. 
     """
+
     from google.cloud import pubsub_v1
     from concurrent.futures import TimeoutError
-    from extensions import db
+
     from database.schema import PubSubMessage
+    from extensions import db
     from main import create_app
 
     service_account_info = json.loads(
@@ -42,7 +34,7 @@ def catch_pubsub_message(subscription_id):
             data = json.loads(message.data.decode('utf-8'))
             publish_time = message.publish_time
             record = PubSubMessage(data=data,
-                                   unique_tag=data["unique_tag"], 
+                                   unique_tag=data["unique_tag"],
                                    publish_time=publish_time)
             db.session.add(record)
             db.session.commit()
