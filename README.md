@@ -101,3 +101,31 @@ non-network local connections being removed from access control list
 * `virtualenvwrapper`
 * `py-autopep8`
 * You can use in emacs, `M-x elpy-config` to list out the configuration for the loaded environments and make sure the virtual environment is detected. 
+
+# GCP Pub/Sub
+For command line input for a new Pub/Sub combination: 
+```
+$ gcloud pubsub topics create mpi-pubsub-topic
+$ gcloud pubsub subscriptions create mpi-pubsub-topic-subscription --topic=portfolio-topic --ack-deadline=10 --expiration-period=never
+```
+
+## GCP Cloud Functions
+The directory to be uploaded should contain a function with the given name (e.g. `run(event, context)`). 
+These require a `.env.yaml` file with the format
+$ cat .env.yaml
+```
+SECRET: my_secret
+GOOGLE_APPLICATION_CREDENTIALS: ...
+RETURN_TOPIC: pubsub-return-topic
+```
+
+```
+* Create topic and cloud function on the topic
+$ gcloud pubsub topics create mpi-cloud-function-topic
+$ gcloud pubsub topics create mpi-cloud-function-topic-return
+```
+
+The `mpi-cloud-function-topic-return` should be set as `RETURN_TOPIC` in `.env.yaml`
+```
+$ gcloud functions deploy mpi-cloud-function --runtime python38 --trigger-topic=mpi-cloud-function-topic --memory=1GB --source=/home/jedmiston/projects/portfolio/google_functions/deployment/mpi_cloud_function --entry-point=run --timeout=540 --env-vars-file=/home/jedmiston/projects/portfolio/google_functions/deployment/mpi_cloud_function/.env.yaml
+```
