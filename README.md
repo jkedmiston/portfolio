@@ -60,8 +60,21 @@ Starting up the app so that breakpoints are easy to work in can be done with:
 * Then open up `localhost:5000` in a browser and you can interact with the front end/back end functionality.
 
 ## Docker iterations
-For iterating on the `Dockerfile` (e.g. what packages are needed in the container, etc), start up the app with the command `/bin/bash`, e.g. `docker-compose run --rm web /bin/bash` then when in that container run the `apt-get install` packages needed to compile codes, etc. e.g. for the `realsense` tests, `g++ rs-imshow.cpp  -I/usr/include/opencv4 -lrealsense2 -lopencv_core -lopencv_imgproc -lopencv_highgui` was found with some iteration of this nature.
-
+For iterating on the `Dockerfile` (e.g. what packages are needed in the container, etc), start up the app with the command `/bin/bash`, e.g. `docker-compose run --rm web /bin/bash` then when in that container run the `apt-get install` packages needed to compile codes, etc. e.g. for the `realsense` tests, `g++ rs-imshow.cpp  -I/usr/include/opencv4 -lrealsense2 -lopencv_core -lopencv_imgproc -lopencv_highgui` was found with some iteration of this nature. The order of `opencv` libraries to add in order of common use is given [here](https://stackoverflow.com/questions/9094941/compiling-opencv-in-c)
+```
+  -lopencv_core
+  -lopencv_imgproc
+  -lopencv_highgui
+  -lopencv_imagecodecs
+  -lopencv_ml
+  -lopencv_video
+  -lopencv_features2d
+  -lopencv_calib3d
+  -lopencv_objdetect
+  -lopencv_contrib
+  -lopencv_legacy
+  -lopencv_flann
+```
 
 # Installing `librealsense`
 Setting up the Intel realsense camera took a bit, for a good starting point the github page for `librealsense` is [here](https://github.com/IntelRealSense/librealsense/blob/master/doc/installation.md)
