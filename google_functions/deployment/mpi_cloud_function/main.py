@@ -1,13 +1,19 @@
+"""
+General purpose cloud function 
+"""
 import os
 import base64
 import json
+import time
 from google.cloud import pubsub_v1
 from google.oauth2 import service_account
-import numpy as np
-import time
+from auxiliary import process_data
 
 
 def return_pubsub_message(data):
+    """
+    Send pub/sub message to the return topic from within the cloud function
+    """
     service_account_info = json.loads(
         os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
     project_id = service_account_info["project_id"]
@@ -22,7 +28,7 @@ def return_pubsub_message(data):
     for key in tmp:
         data[key] = tmp[key]
 
-    data["result"] = np.mean(data["datain"])
+    data["result"] = process_data(data["data_into_cloud_function"])
     data = json.dumps(data).encode('utf-8')
     max_ntrials = 10
     for j in range(max_ntrials):
@@ -37,7 +43,6 @@ def return_pubsub_message(data):
 
 
 def run(event, context):
-    # https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/functions/helloworld/main.py
     """
 Background Cloud Function to be triggered by Pub/Sub.
     Args:
