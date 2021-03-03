@@ -9,9 +9,11 @@ ENV PYTHONUNBUFFERED True
 ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY requirements.txt .
-
+COPY gcp_service_account.json .
 
 RUN apt-get update && apt-get install texlive-latex-extra -y && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" |  tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && apt-get install apt-transport-https ca-certificates gnupg && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg |  apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && apt-get update && apt-get -y install google-cloud-sdk && gcloud auth activate-service-account --key-file gcp_service_account.json
 
 RUN python3 -m pip install -r requirements.txt
 
