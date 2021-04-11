@@ -68,7 +68,7 @@ def parse_file_for_function(fname, funcname):
 
 def callback(message, agg_struct):
     """
-    Meant to pulling one chunk of work from cloud function.
+    Pull in results from a return cloud function message
     """
     data = json.loads(message)
     index = data["index"]
@@ -108,10 +108,13 @@ gcloud_subscription = """gcloud pubsub subscriptions create %(return_subscriptio
 # this is a custom function which the cloud function calls
 function_to_upload = parse_file_for_function(__file__, "process_data")
 
+# extract the text of the function definition, and write it in the new file.
+
 write_function_to_file(
     function_to_upload,
     "google_functions/deployment/mpi_cloud_function/auxiliary.py")
 
+# Deploy the cloud build function, including the new function definition
 if redeploy_cloud_build:
     commands = [gcloud_init,
                 gcloud_topic,
