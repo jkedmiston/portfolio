@@ -142,3 +142,24 @@ The `mpi-cloud-function-topic-return` should be set as `RETURN_TOPIC` in `.env.y
 ```
 $ gcloud functions deploy mpi-cloud-function --runtime python38 --trigger-topic=mpi-cloud-function-topic --memory=1GB --source=/home/jedmiston/projects/portfolio/google_functions/deployment/mpi_cloud_function --entry-point=run --timeout=540 --env-vars-file=/home/jedmiston/projects/portfolio/google_functions/deployment/mpi_cloud_function/.env.yaml
 ```
+
+If this is all working, then running
+```
+docker-compose run --rm web python -i scripts/upload_to_cloud_function_and_aggregate.py
+```
+will produce the output
+```
+Message 0 2267090376785753 published
+Message 1 2267083187798302 published
+Message 2 2267078805545247 published
+Message 3 2267091059140614 published
+Cloud function results......
+cloud function's process_data([1, 10, 100]) -> 74.0
+local process_data([1, 10, 100]) -> 74.0
+cloud function's process_data([4, 5, 6]) -> 10.0
+local process_data([4, 5, 6]) -> 10.0
+cloud function's process_data([10, 11, 12]) -> 22.0
+local process_data([10, 11, 12]) -> 22.0
+cloud function's process_data([3, 5, 10]) -> 12.0
+local process_data([3, 5, 10]) -> 12.0
+```
