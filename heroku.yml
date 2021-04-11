@@ -12,7 +12,7 @@ setup:
 build:
   docker:
     web:
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-heroku
 
 run:
   web:
