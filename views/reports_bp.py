@@ -53,7 +53,18 @@ def get_column_info(df):
 def basic_grouping_plots(df, unique_tag, sheet_url, sheet_name):
     """
     Group by all categorical columns' data, then run the histograms on the grouping
-    E.g. 
+    E.g. see test_basic_grouping_plots.
+
+    On a dataframe like:
+    column-name1,column-name2
+    Apple,2.0
+    Pear,3.0
+    Apple,1.0
+
+    This would produce a histogram of the data:
+      column-name1, Apple, : histogram of column-name2 on values (2.0, 1.0)
+      column-name1, Pear,  : histogram of column-name2 on values 3.0
+
     """
 
     column_info = get_column_info(df)
