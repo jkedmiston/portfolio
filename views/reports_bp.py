@@ -1,6 +1,6 @@
 """
-Functions for producing reports, generally taking in a Google sheet URL and returning
-analyzed results in PDF or Google slides forms.
+Functions for producing reports, generally taking in a Google sheet URL 
+and returning analyzed results in PDF or Google slides forms.
 """
 import os
 import sys
@@ -51,54 +51,67 @@ def get_column_info(df):
 
 
 def basic_grouping_plots(df, unique_tag, sheet_url, sheet_name):
-    """group by categories, then run the histograms on the grouping
+    """
+    Group by all categorical columns' data, then run the histograms on the grouping
+    E.g. see test_basic_grouping_plots.
+
+    On a dataframe like:
+    column-name1,column-name2
+    Apple,2.0
+    Pear,3.0
+    Apple,1.0
+
+    This would produce a histogram of the data:
+      column-name1, Apple, : histogram of column-name2 on values (2.0, 1.0)
+      column-name1, Pear,  : histogram of column-name2 on values 3.0
+
     """
 
     column_info = get_column_info(df)
     categorical_columns = column_info["categorical_columns"]
 
     all_figures = collections.defaultdict(list)
-    for cat in categorical_columns:
-        grps = df.groupby(cat)
+    histogram_data = {}
+    for category in categorical_columns:
+        grps = df.groupby(category)
 
-        counts = df[cat].value_counts().reset_index()
-        counts = counts.sort_values(by=[cat, 'index'], ascending=False)
+        counts = df[category].value_counts().reset_index()
+        counts = counts.sort_values(by=[category, 'index'], ascending=False)
         for g in counts["index"]:
             dg = grps.get_group(g)
             if g == "" or g == np.nan:
                 g_label = "Null-or-empty"
             else:
                 g_label = g.replace(' ', '_')
-
+            histogram_data[(category, g)] = dg
             output = basic_histograms(dg,
                                       unique_tag=unique_tag,
                                       sheet_url=sheet_url,
                                       sheet_name=sheet_name,
-                                      subtag=cat,
+                                      subtag=category,
                                       grouping_label="%s = %s" % (
-                                          cat, g_label),
-                                      slide_title="Exploratory plots - histograms, on subgroup (%s = %s)" % (cat, g_label))
+                                          category, g_label),
+                                      slide_title="Exploratory plots - histograms, on subgroup (%s = %s)" % (category, g_label))
             all_figures["figures"].extend(output["figures"])
 
-    return all_figures
+    return all_figures, histogram_data
 
 
 def basic_bar_plots_for_categorical_features(df, unique_tag, sheet_url, sheet_name):
     """
-    For categorical features only, do horizontal bar chart of counts
+    For categorical features only, do horizontal bar chart of counts of the categories 
     """
     import seaborn as sns
     import matplotlib.pyplot as plt
+    sns.set_style('ticks')  # darkgrid, whitegrid, dark, white, ticks}
 
-    def xstrip(x):
+    def apply_strip_to_strings(x):
         try:
             if x.strip() == "":
                 return True
         except:
             current_app.logger.warning("data type %s is not a str" % x)
         return False
-
-    sns.set_style('ticks')  # darkgrid, whitegrid, dark, white, ticks}
 
     plt.rcParams.update({'font.size': MATPLOTLIB_FONTSIZE_FOR_GSLIDES})
     fignames = []
@@ -109,7 +122,7 @@ def basic_bar_plots_for_categorical_features(df, unique_tag, sheet_url, sheet_na
             df[colname] = df[colname].astype(str)
             nrows = len(df)
             empty = df.loc[df[colname].notnull(), colname].apply(
-                xstrip).sum()
+                apply_strip_to_strings).sum()
             count_invalid_data = df[colname].isnull().sum() + empty
             count_valid_data = len(df) - count_invalid_data
             fig, ax = plt.subplots(1, 1, figsize=(
@@ -122,17 +135,11 @@ def basic_bar_plots_for_categorical_features(df, unique_tag, sheet_url, sheet_na
             ax.set_ylabel("  ")
             ax.set_title(" ")
             fig.tight_layout()
+            # adjustments to work with Gslides.
             left = fig.subplotpars.left
             fig.subplots_adjust(left=left + left * 0.15)
             fig.subplots_adjust(top=fig.subplotpars.top*0.95)
             figname = "tmp/basic_bar_plot_%s_%d.png" % (unique_tag, i)
-            # currently, using scripts in the test folder to adjust
-            # plotting positions, etc.
-            if hasattr(sys, '_called_from_test'):
-                fig.show()
-                import pdb
-                pdb.set_trace()
-
             fig.savefig(figname)
             plt.close(fig)
 
@@ -150,14 +157,13 @@ def basic_bar_plots_for_categorical_features(df, unique_tag, sheet_url, sheet_na
 
 def basic_histograms(df, unique_tag, sheet_url, sheet_name, all_figures=None, mode=None, subtag="", grouping_label=None, slide_title="Exploratory plots - histograms"):
     """
-    For numerical data, product histograms of non-null results.
+    For numerical data, product histograms of non-null floating point results.
     """
     import seaborn as sns
     import matplotlib.pyplot as plt
+    sns.set_style('ticks')
 
-    # from pandas.api.types import is_numeric_dtype
-    sns.set_style('ticks')  # darkgrid, whitegrid, dark, white, ticks}
-    # found by trial and error with Gslides
+    # font size here found by trial and error with Gslides
     plt.rcParams.update({'font.size': MATPLOTLIB_FONTSIZE_FOR_GSLIDES})
     basic_describe = df.describe(include='all')
     fignames = []
@@ -166,9 +172,7 @@ def basic_histograms(df, unique_tag, sheet_url, sheet_name, all_figures=None, mo
         if colname not in basic_describe.columns:
             continue
         if not np.issubdtype(df[colname].dtype, np.number):
-            # do categorical
-            current_app.logger.info(
-                "categorical feature detected on column %s, skipping" % colname)
+            # TODO: do categorical logic
             continue
         else:
             # numeric analysis
@@ -179,7 +183,7 @@ def basic_histograms(df, unique_tag, sheet_url, sheet_name, all_figures=None, mo
             median = np.median(valid_data)
             stdev = np.std(valid_data)
 
-            # make a single basic histogram of this variable
+            # make a single basic histogram of this variable and store the file
             if grouping_label is None:
                 figname = "tmp/basic_histograms_%s%s_%d.png" % (
                     subtag, unique_tag, i)
@@ -188,10 +192,11 @@ def basic_histograms(df, unique_tag, sheet_url, sheet_name, all_figures=None, mo
                     subtag, grouping_label.replace(' ', '').replace('=', '').replace('.', ''), unique_tag, i)
 
             try:
-                # TODO: add test for categorical / string features
+                # TODO: add test for categorical / string features, here just for floating point.
                 fig, ax = plt.subplots(1, 1, figsize=(
                     6.67, 5))  # fontFamily is serif
                 ax.hist(valid_data.values)
+
                 # keep the plots bare bones, so that labels are added
                 # at Google slides layer
                 # basically just change the size of fonts
@@ -201,20 +206,14 @@ def basic_histograms(df, unique_tag, sheet_url, sheet_name, all_figures=None, mo
                 left = fig.subplotpars.left
                 fig.subplots_adjust(left=left + left * 0.1)
                 fig.subplots_adjust(top=fig.subplotpars.top*0.95)
-                # fig.tight_layout()
-                if hasattr(sys, '_called_from_test'):
-                    fig.show()
-                    import pdb
-                    pdb.set_trace()
-
                 fig.savefig(figname)
                 plt.close(fig)
             except:
-                # Log error TODO
                 current_app.logger.warning(
                     "Error occured on column %s" % colname)
                 pass
 
+            # store figure filename and caption to present on the slide.
             if os.path.isfile(figname):
                 if grouping_label is not None:
                     hist_description = "%s, subgroup(%s)" % (
@@ -238,19 +237,20 @@ def basic_histograms(df, unique_tag, sheet_url, sheet_name, all_figures=None, mo
 def perform_automatic_analysis(df, unique_tag, sheet_url, sheet_name):
     """
     From the dataframe, produce plots and summary stats, and present
-    findings as a list of dictionary with {'basic_describe': summary_df,
-                                           'figures': [{'figure': pathname,
-                                                        'description': text on figure,
-                                                        'xlabel', 'ylabel', 'slide_title'}, ...]
+    findings as a list of dictionary with information like: {'basic_describe': summary_df,
+                                                             'figures': [{'figure': path_to_file,
+                                                                         'description': text on figure,
+                                                                         'xlabel':, 'ylabel':, 'slide_title':}, ...]
     """
-    info = basic_histograms(df, unique_tag, sheet_url, sheet_name)
+
     category_info = basic_bar_plots_for_categorical_features(
         df,  unique_tag, sheet_url, sheet_name)
-    grouping_info = basic_grouping_plots(df, unique_tag, sheet_url, sheet_name)
-    final = info.copy()
+    grouping_info, _ = basic_grouping_plots(
+        df, unique_tag, sheet_url, sheet_name)
+
+    final = basic_histograms(df, unique_tag, sheet_url, sheet_name)
     final["figures"].extend(category_info["figures"])
     final["figures"].extend(grouping_info["figures"])
-
     return final
 
 
