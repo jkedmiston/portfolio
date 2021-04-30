@@ -37,6 +37,14 @@ On a clean ubuntu install, I had to do the following to avoid using `sudo` in su
 
 Then, one can run the same commands as above in the MacOS section without `sudo`.
 
+## Testing
+To execute test pipeline
+* `docker-compose run --rm web python -m pytest `
+
+To execute a single test
+* `docker-compose run --rm web python -m pytest -k (name of test)` e.g. 
+* `docker-compose run --rm web python -m pytest -k test_basic_grouping_plots`
+
 # Features
 
 ## Testing plots
