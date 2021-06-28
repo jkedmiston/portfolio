@@ -89,8 +89,6 @@ def register_stylized_dashapp(app):
         define_layout(dashapp1)
         define_callbacks(dashapp1)
 
-    # protect_dashviews(dashapp1)
-
 
 def register_extensions(app):
     from extensions import db, migrate, csrf
@@ -131,6 +129,7 @@ def create_app():
     from views.reports_bp import reports_bp
     from views.games_bp import games_bp
     from views.pubsub_bp import pubsub_bp
+    # from views.pickle_rank_bp import pickle_rank_bp
     from config import Config
 
     app = Flask(__name__, instance_relative_config=False,
@@ -152,6 +151,7 @@ def create_app():
         app.register_blueprint(reports_bp)
         app.register_blueprint(games_bp)
         app.register_blueprint(pubsub_bp)
+        # app.register_blueprint(pickle_rank_bp)
         register_context_processors(app)
         register_stylized_dashapp(app)
         app.logger = logger
