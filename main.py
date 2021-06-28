@@ -1,3 +1,6 @@
+"""
+Generate flask app with blueprints/dashboards. 
+"""
 import dash
 from flask import Flask, request, g
 import time
@@ -88,8 +91,6 @@ def register_stylized_dashapp(app):
         dashapp1.title = "Test"
         define_layout(dashapp1)
         define_callbacks(dashapp1)
-
-    # protect_dashviews(dashapp1)
 
 
 def register_extensions(app):

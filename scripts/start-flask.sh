@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# start-flask.sh
 
 set -euo pipefail
 flask db upgrade
@@ -12,15 +11,6 @@ ARGS=(
   --workers 1
 )
 
-# The "development" version of this script can be activated by calling it with
-# the `-d` flag.
-# This currently:
-# - Supplies the "--reload" option to Gunicorn which reloads files after
-# changes are made during development.
-# This mode allows us to use this script in development and in production.
-# If additional logic needs to be added in the future, it might be simpler to
-# create separate scripts for each use case rather than adding conditional
-# logic to Bash scripts and their incantations.
 DEVELOPMENT=false
 while getopts ":d:" options; do
   case "${options}" in
