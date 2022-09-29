@@ -21,7 +21,7 @@ def index_gentelella():
 @main_bp.route('/download_cv', methods=["GET"])
 def download_cv():
     from flask import send_from_directory
-    return send_from_directory("/app", "Edmiston_2020.pdf", as_attachment=True)
+    return send_from_directory("/app", "Edmiston.pdf", as_attachment=True)
 
 
 @main_bp.route('/', methods=["GET"])
