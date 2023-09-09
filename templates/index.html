@@ -14,54 +14,24 @@
       work. The app demonstrates a few backend resources/combinations typical of SaaS apps. See my resume and LinkedIn pages for a more extensive education and research history, with several years developing parallel simulation codes for scientific computing. 
     </p>
 
-    <h4>Tech Stack</h4>
-
-    <ul>
-      <li>
-        <a href="https://flask.palletsprojects.com/en/1.1.x/" target="_blank">Flask</a>, for setting up web services
-      </li>
-      <li>
-        Front end template based on <a href="https://github.com/afourmy/flask-gentelella" target="_blank">Flask-Gentelella</a>, for dashboard friendly apps. 
-      </li>
-      <li>
-        <a href="https://docs.celeryproject.org/en/stable/getting-started/introduction.html" target="_blank">Celery</a>, for background tasks, also featuring a regular task scheduler (see Heroku configuration).
-      </li>
-      <li>
-        <a href="https://flask-admin.readthedocs.io/en/latest/">Flask-Admin</a> for DB management.
-      </li>
-      <li>
-        <a href="https://plotly.com/dash/" target="_blank">Plotly Dash</a>, for interactive plotting/dashboards.
-      </li>
-      <li>
-        <a href="https://www.heroku.com" target="_blank">Heroku</a>, for quick building of apps. See the configuration screenshot below:
-      </li>
-    </ul>
-
-    <figure>
-      <img src="{{url_for('static', filename='figures/heroku_config.png')}}" width=600px alt="Heroku configuration">
-      <figcaption>
-Configuration with web dyno, worker dyno, and beat dyno. The Beat
-        dyno randomly adjusts a value in the database every 10 seconds (you can see this via refreshing the Flask-Admin page at
-        this <a href="/admin/randomdata">endpoint</a>.
-      </figcaption>
-    </figure>
 <br>
     <div class="col-12">
-<h4>Things to do within this app</h4>
+<h4>Demos</h4>
 <!-- <a href="{{url_for('main_bp.index_gentelella')}}" class="btn btn-info btn-block">Flask-Gentelella 
-        frontend</a> -->
-      <a href="{{url_for('reports_bp.latex_demo')}}" class="btn btn-info btn-block">Generate an example LaTeX report</a>
-      <a href="{{url_for('reports_bp.present_sheet')}}" class="btn btn-info btn-block">Interact with Google sheets</a>
+     frontend</a> -->
+<a href="{{url_for('pubsub_bp.pubsub_depth_cam')}}" class="btn btn-info btn-block">Cloud to local hardware communication</a>
+<!--<a href="http://www.gaitanalyzer.info" target="_blank" class="btn btn-info btn-block">Gait analysis</a>-->
+<a href="http://www.movierank.org" target="_blank" class="btn btn-info btn-block">Figure out what movie to watch</a>
+      <a href="{{url_for('reports_bp.present_sheet')}}" class="btn btn-info btn-block">Spreadsheet power use</a>
       <a href="{{url_for('reports_bp.analyze_user_sheet')}}" class="btn btn-info btn-block">Automatic data analysis</a>
-      <a href="{{url_for('pubsub_bp.pubsub_depth_cam')}}" class="btn btn-info btn-block">Demo server to hardware communication</a>            
-      <a href="/admin" class="btn btn-info btn-block">Admin panel (Proof of concept)</a>
-
-      <a href="/pk" class="btn btn-info btn-block" target="_blank">Plotly Dash (Proof of concept)</a>
-      
-
+      <a href="/admin" class="btn btn-info btn-block">Admin panel/data management</a>
+      <a href="/pk" class="btn btn-info btn-block" target="_blank">Dashboards</a>
+      <a href="{{url_for('reports_bp.latex_demo')}}" class="btn btn-info btn-block">Automatic report generation</a>
+      <a href="https://soundcloud.com/elbow_rocket" class="btn btn-info btn-block"target="_blank">Some music I made</a>
+          <a href="{{urls.main.google_scholar}}" target="_blank" class="btn btn-info btn-block">Google Scholar publications</a>      
     </div>
-    
-    <h4> External links </h4>
+
+    <h4> Other links </h4>
     <ul>
       <li>
       <a href="{{urls.main.github}}" target="_blank" >Github for this app</a>
@@ -69,18 +39,9 @@ Configuration with web dyno, worker dyno, and beat dyno. The Beat
         <li>
           <a href="http://www.linkedin.com/in/jkedmiston" target="_blank">JE's LinkedIn page</a>
         </li>
-        <li>
-          <a href="{{urls.main.google_scholar}}" target="_blank">Google Scholar publications</a>
-        </li>
-        <li>
-          <a href="http://www.gaitanalyzer.info" target="_blank">Gait analysis project</a>
-        </li>
-        <li>
-          <a href="https://soundcloud.com/elbow_rocket" target="_blank">Soundcloud page</a>
-        </li>
         
 </ul>      
-    <a href="{{url_for('main_bp.download_cv')}}" class="btn btn-info btn-block">Download resume</a>
+<!--    <a href="{{url_for('main_bp.download_cv')}}" class="btn btn-info btn-block">Download resume</a> -->
     
   </div>
 

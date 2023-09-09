@@ -1,0 +1,4 @@
+all:
+	docker-compose build 
+
+
