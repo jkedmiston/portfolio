@@ -3,10 +3,21 @@
 {% block content %}
 <div class="right_col" role="main">
   This demos a Google Pub/Sub integration - a camera (Intel RealSense depth camera) is connected to a computer running the container (defined by docker-compose-intel.yml in this repository). The camera is pointing at a random location in my office. The demo takes about 10 seconds to complete, so please be patient! <br>
+
+  <figure>
+      <img src="{{url_for('static', filename='figures/pub_sub_arch.png')}}" width=600px alt="Hardware configuration">
+      <figcaption>
+Configuration with cloud service triggering hardware image capture via GCP's Pub/Sub, <a href="https://cloud.google.com/pubsub" target="_blank">https://cloud.google.com/pubsub</a>.
+      </figcaption>
+  </figure>
+  
   <h5>Instructions for use.</h5>
   <ul>
     <li> Click the button below to trigger the remote photo to be taken and then uploaded to storage. Shortly thereafter (about 10 seconds or so), the result of the image will be presented to this screen.  </li>
   </ul>
+
+
+  
   <div class="row">
     {{form_html|safe}}
   </div>

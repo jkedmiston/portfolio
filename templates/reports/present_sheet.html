@@ -2,12 +2,11 @@
 
 {% block content %}
 <div class="right_col" role="main">
-  This demos a Google sheet integration, facilitated by the <a href="https://pygsheets.readthedocs.io/en/stable/#" target="_blank"><i class="fa fa-star"></i>Pygsheets</a> library.
-
+  This demos a Google sheet integration with this application, facilitated by the <a href="https://pygsheets.readthedocs.io/en/stable/#" target="_blank"><i class="fa fa-star"></i>Pygsheets</a> library. The practical use case is in reporting out data to a spreadsheet for the type of data consumer who would like data in such a form. For example, a scientist who wants lab measurement data aggregated in a spreadsheet, or a product manager who wants to have new enrollment numbers for the last month broken down by site. 
   <br>
   <h5>Instructions for use.</h5>
   <ul>
-    <li>Create a new Google spreadsheet where you want results</li>
+    <li>Create a new Google spreadsheet where you want results. The application will write some some data to your sheet at the tab name you desire. (Simply 2 columns, 3 rows)</li>
     <li>Give this app permission to edit the sheet, the email is {{service_email}}</li>
     <li>In the form below, enter in the URL for your sheet, and the desired name of the tab this app will write to (e.g. Sheet1 is the default).</li>
     <li>Click submit!</li>

@@ -12,6 +12,11 @@ main_bp = Blueprint(
 )
 
 
+@main_bp.route("/mechanics")
+def mechanics():
+    return render_template("index_mechanics.html")
+
+
 @main_bp.route("/index_gentelella")
 def index_gentelella():
     # demonstrates frontend, from https://github.com/afourmy/flask-gentelella
@@ -24,7 +29,12 @@ def download_cv():
     return send_from_directory("/app", "Edmiston.pdf", as_attachment=True)
 
 
+@main_bp.route('/download_dissertation', methods=["GET"])
+def download_dissertation():
+    from flask import send_from_directory
+    return send_from_directory("/app", "Edmiston_dissertation.pdf", as_attachment=True)
+
+
 @main_bp.route('/', methods=["GET"])
 def index():
     return render_template("index.html")
-
