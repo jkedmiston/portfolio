@@ -22,6 +22,12 @@ def webapps():
     return render_template("index_webapps.html")
 
 
+@main_bp.route("/staging/<page_name>")
+def staging(page_name):
+    template = f"index_{page_name}.html"
+    return render_template(template)
+
+
 @main_bp.route("/index_gentelella")
 def index_gentelella():
     # demonstrates frontend, from https://github.com/afourmy/flask-gentelella

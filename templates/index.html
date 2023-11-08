@@ -1,19 +1,11 @@
-{% extends 'layout.html' %}
-{% block nav_bar_content %}
-<!-- <a href="/" class="btn btn-info">Home</a>  -->
-{% endblock %}
+{% extends "layouts/base_site.html" %}
+
 {% block content %}
-<div class="container">
-
-  <div class="row">
-    <h3>John Edmiston</h3>
-
-    <p>
+<div class="right_col" role="main">
       Welcome! I am an experienced generalist programmer and engineer, who loves integrating across software/hardware
       levels, and from backend to frontend. I put together for this site for a collection of proof of concept/starter
-      work. The app demonstrates a few backend resources/combinations typical of SaaS apps. See my resume and LinkedIn pages for a more extensive education and research history, with several years developing parallel simulation codes for scientific computing. 
-    </p>
-  </div>
+      work. The app demonstrates a few backend resources/combinations typical of SaaS apps. See my LinkedIn page for a more extensive education and research history, including several years developing parallel simulation codes for scientific computing. 
+      <br>
   <div class="row">
     <div class="col-xs-6">
 <!--      <h4>Mechanics</h4>-->
@@ -23,6 +15,7 @@
       <a href="{{ url_for('main_bp.webapps') }}" class="btn btn-primary btn-lg btn-block">Web app demos </a>
       </div>
   </div>
+
 
   <div class="row">
 <br>
@@ -43,5 +36,4 @@
   </div>
 
 </div>
-
 {% endblock %}
