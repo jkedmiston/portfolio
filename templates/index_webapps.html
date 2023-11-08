@@ -1,0 +1,48 @@
+{% extends "layouts/base_site.html" %}
+
+{% block content %}
+<div class="right_col" role="main">
+  This links to several bits and bobs attached to this website or which I have set up as standalone applications. The focus is on setting up the end to end capability (e.g. connecting Google sheets or slides with a web application can be a powerful combination for lab/data applications). 
+  <br>
+  <br>
+  <div class="row">
+    <div class="col-xs-12">
+  <table class="table">
+    <tr>
+      <td class="align-middle text-center">
+<a href="{{url_for('pubsub_bp.pubsub_depth_cam')}}" class="btn btn-info btn-block">Cloud to local hardware communication</a>	
+      This demonstrates a simple way to turn any local hardware device (e.g. lab measurement system) into a cloud connected device. 
+      </td>
+      <td class="align-middle text-center">
+<a href="http://www.movierank.org" target="_blank" class="btn btn-info btn-block">Figure out what movie to watch</a>	
+      This is a separate application where I cross reference a couple review sites to solve the problem of "what movie can I watch for free tonight". Separately I'm a home theater enthusiast boasting an 18 inch DIY subwoofer.
+      </td>
+      <td class="align-middle text-center">
+      <a href="{{url_for('reports_bp.present_sheet')}}" class="btn btn-info btn-block">Spreadsheet power use</a>	
+      Here's a basic example of connecting a Google sheets URL with this web application. 
+      </td>
+    </tr>
+    <tr>
+      <td class="align-middle text-center">
+      <a href="{{url_for('reports_bp.analyze_user_sheet')}}" class="btn btn-info btn-block">Automatic data analysis</a>	
+      Here's an example of some automatic charts generated using this app. You'll need some spreadsheet data and have to follow some instructions. 
+      </td>
+      <td class="align-middle text-center">
+      <a href="/pk" class="btn btn-info btn-block" target="_blank">Dashboards</a>	
+      An example connecting standalone Dash app within a larger web app. 
+      </td>
+      <td class="align-middle text-center">
+      <a href="{{url_for('reports_bp.latex_demo')}}" class="btn btn-info btn-block">Automatic report generation</a>	
+      An example of a PDF prepared on the fly using LaTeX, again for data and reporting applications. 
+      </td>
+    </tr>
+  </table>
+    </div>
+  </div>
+  
+  <div class="row">
+  </div>
+  <div class="row">
+  </div>
+</div>
+{% endblock %}

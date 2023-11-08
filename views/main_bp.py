@@ -17,6 +17,11 @@ def mechanics():
     return render_template("index_mechanics.html")
 
 
+@main_bp.route("/webapps")
+def webapps():
+    return render_template("index_webapps.html")
+
+
 @main_bp.route("/index_gentelella")
 def index_gentelella():
     # demonstrates frontend, from https://github.com/afourmy/flask-gentelella

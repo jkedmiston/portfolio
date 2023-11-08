@@ -115,7 +115,7 @@ def register_context_processors(app):
         urls_info = {
             "main": {
                 "google_scholar": "https://scholar.google.com/citations?user=95tccioAAAAJ&hl=en",
-                "github": "https://github.com/jkedmiston/portfolio",
+                "github": "https://github.com/jkedmiston",
             }
         }
         return {'urls': urls_info}
@@ -135,9 +135,10 @@ def create_app():
 
     app = Flask(__name__, instance_relative_config=False,
                 template_folder="templates", static_folder="static")
-    csp = {'default-src': ['\'self\'', '\'unsafe-inline\'', 'https://cdnjs.cloudflare.com', "cdnjs.cloudflare.com", "'unsafe-eval'", "*.gstatic.com", "*.fontawesome.com", "fonts.googleapis.com", "data:", "storage.googleapis.com"],
-           'font-src': ['\'self\'', 'data', '*', 'https://use.fontawesome.com'],
-           'script-src': ['\'self\'', "'unsafe-eval'", "'unsafe-inline'"],
+    csp = {'default-src': ['\'self\'', '\'unsafe-inline\'', 'https://cdnjs.cloudflare.com', "cdnjs.cloudflare.com", "'unsafe-eval'", "*.gstatic.com", "*.fontawesome.com", "fonts.googleapis.com", "data:", "storage.googleapis.com", "https://www.youtube.com", "https://s.ytimg.com", "https://i.ytimg.com"],
+           'frame-src': ["https://www.youtube.com"],
+           'font-src': ['\'self\'', 'data', 'data:', '*', 'https://use.fontawesome.com'],
+           'script-src': ['\'self\'', "'unsafe-eval'", "'unsafe-inline'", "https://www.youtube.com", "https://i.ytimg.com"],
            'script-src-elem': ['\'self\'', 'https://cdnjs.cloudflare.com', "'unsafe-inline'"],
            'style-src-elem': ['\'self\'', 'https://cdnjs.cloudflare.com', 'https://use.fontawesome.com', 'https://fonts.googleapis.com', "'unsafe-inline'"]}
 

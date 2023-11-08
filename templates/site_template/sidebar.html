@@ -24,19 +24,19 @@
     <div class="menu_section">
       <h3>General</h3>
       <ul class="nav side-menu">
-        <li><a><i class="fa fa-sitemap"></i> Landing pages <span class="fa fa-chevron-down"></span></a>
+        <li><a><i class="fa fa-sitemap"></i> Landing page examples <span class="fa fa-chevron-down"></span></a>
 
           <ul class="nav child_menu">
             <li><a href="{{ url_for('main_bp.index') }}" >Portfolio Home </a></li>                        
-            <li><a href="{{ url_for('main_bp.index_gentelella') }}" >Flask-Gentelella Home </a></li>                                    
+            <li><a href="{{ url_for('main_bp.index_gentelella') }}" >Flask-Gentelella Example </a></li>                                    
 
           </ul>
         </li>
-        <li><a><i class="fa fa-database"></i> Database admin <span class="fa fa-chevron-down"></span></a>
+<!--        <li><a><i class="fa fa-database"></i> Database admin <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
             <li><a href='/admin' >Admin panel </a></li>                        
           </ul>
-        </li>
+        </li>-->
       </ul>
     </div>
     <div class="menu_section">
@@ -44,11 +44,15 @@
       <ul class="nav side-menu">
       <li><a><i class="fa fa-gears"></i> Demos on this app<span class="fa fa-chevron-down"></span></a>
         <ul class="nav child_menu">
-          <li><a href="{{url_for('reports_bp.latex_demo')}}" target="_blank">Generate an example LaTeX report</a></li>
-          <li><a href="{{url_for('reports_bp.present_sheet')}}" target="_blank">Interact with Google sheets</a></li>            
-          <li><a href="{{url_for('reports_bp.analyze_user_sheet')}}" target="_blank">Automatic data analysis</a></li>
-          <li><a href="/admin" target="_blank" >Admin panel (Proof of concept)</a></li>
-          <li><a href="/pk" target="_blank">Plotly Dash (Proof of concept)</a></li>
+	  <li><a href="{{url_for('main_bp.mechanics')}}" target="_blank">Continuum mechanics work</a></li>	  
+	  <li><a href="{{url_for('main_bp.webapps')}}" target="_blank">Web application bits and bobs</a></li>
+          <!--<li><a href="{{url_for('reports_bp.latex_demo')}}" target="_blank">Generate an example LaTeX report</a></li>-->
+	  
+          <!--<li><a href="{{url_for('reports_bp.present_sheet')}}" target="_blank">Interact with Google sheets</a></li>            -->
+
+	  <!--<li><a href="{{url_for('reports_bp.analyze_user_sheet')}}" target="_blank">Automatic data analysis</a></li>-->
+          <!--<li><a href="/admin" target="_blank" >Admin panel (Proof of concept)</a></li>
+          <li><a href="/pk" target="_blank">Plotly Dash (Proof of concept)</a></li>-->
           </ul>
       </li>
       </ul>
@@ -57,18 +61,18 @@
     <div class="menu_section">
       <h3>Work history</h3>
       <ul class="nav side-menu">
-      <li><a><i class="fa fa-calendar"></i> CV and work examples<span class="fa fa-chevron-down"></span></a>
+      <li><a><i class="fa fa-calendar"></i> Work examples<span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
-            <li><a href="{{url_for('main_bp.download_cv')}}">Resume</a></li>
+            <!--<li><a href="{{url_for('main_bp.download_cv')}}">Resume</a></li>-->
             <li><a href="{{urls.main.github}}" target="_blank">Github for this app</a></li>            
             <li><a href="{{urls.main.google_scholar}}" target="_blank">Google Scholar citations</a></li>
           </ul>
         </li>
-        <li><a><i class="fa fa-table"></i> Publications <span class="fa fa-chevron-down"></span></a>
+      <!--<li><a><i class="fa fa-table"></i> Publications <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
             <li><a href="#">Coming soon</a></li>
           </ul>
-        </li>
+        </li> -->
         <li><a><i class="fa fa-bar-chart-o"></i> Dashboards <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
             <li><a href="/pk" target="_blank">Plotly Dash Dashboard, embedded in Flask app</a></li>

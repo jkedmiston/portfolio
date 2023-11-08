@@ -1,0 +1,40 @@
+{% extends "layouts/base_site.html" %}
+
+{% block content %}
+<div class="right_col" role="main">
+  This links to several pieces of research from my work in continuum mechanics. In my graduate studies my curiosity commonly migrated to constitutive equations for material response (under stress, strain, electric field, etc). Some of the experiments I performed or analyzed to support that effort range from from-scratch interdigitated electrodes in combination with driving a rheometer, to image frame analysis from X-ray diffraction analysis.
+  
+  <br>
+  <div class="row">
+    <div class="col-xs-6 responsive-iframe">
+      <iframe class="iframe-padding" width="100%" height="315" src="https://www.youtube.com/embed/SzLGVpZqOEk?si=9O60I2Gs7PA28-06" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      Single crystal plasticity model (cubic symmetry), using polynomial constitutive equations instead of slip systems. Tension is applied to the top and bottom surfaces. In plane rotation angle of the lattice is plotted in the colormap. On the left: This model has non zero dependence of the derived geometrically necessary dislocation (GND) content on the yield function. Right: Yield function is independent of the GND content.
+    </div>
+    <div class="col-xs-6 responsive-iframe custom-padding">
+      <iframe class="iframe-padding" width="100%" height="315" src="https://www.youtube.com/embed/s5OCsctwRNg?si=goeW5syMguTHCmrl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      Terzaghi consolidation problem in 2D. This is a basic poroelasticity problem demonstrating coupled physics. The pressure and displacement fields are solved in a monolithic scheme using PETSc. Custom Element free Galerkin code is used for both. The displacement in the vertical direction is the colormap. The displacements in the column are exaggerated.
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6 responsive-iframe custom-padding">
+      <iframe class="iframe-padding" width="100%" height="315" src="https://www.youtube.com/embed/Arh4YuTbj7I?si=iVHtZ2udLDd1PmNo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      Standard example of crack propagation in a brittle material, modeled with peridynamics and plotted with exaggerated displacements. Colormap indicates the damage -- basically the local fraction of severed nodes.
+    </div>
+    <div class="col-xs-6 responsive-iframe custom-padding">
+      <iframe class="iframe-padding" width="100%" height="315" src="https://www.youtube.com/embed/_BZhWLw2k9Y?si=LJhbTH_Yu_u3qXJn" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      Stress relaxation in a elastic-plastic formulation described in my dissertation. The initial plastic deformation field is an interesting input to the mathematical formulation of the problem and this gives some intuition about how it works - basically an initial plastic deformation field results in a deformed current configuration. 
+    </div>
+  </div>
+  <div class="row">
+    <h4> Selected publications </h4>
+    <div class="col-xs-12">
+      <a href="https://doi.org/10.1016/j.ijengsci.2012.10.001" target="_blank" class="btn btn-info btn-block">Elastic-viscoplastic model and simulations (PhD)</a>
+      <a href="https://doi.org/10.1107/S010876731105598X" target="_blank" class="btn btn-info btn-block">Lattice deformation description for XRD (PhD)</a>
+      <a href="https://doi.org/10.1107/S0021889811002123" target="_blank" class="btn btn-info btn-block">XRD measurement precision (PhD)</a>
+      <a href="{{url_for('main_bp.download_dissertation')}}" class="btn btn-info btn-block">Dissertation (PhD)</a>      
+      <a href="https://doi.org/10.1080/14786430701206666" target="_blank" class="btn btn-info btn-block">Piezoresistance in liquid suspension (MS)</a>
+      <a href="https://scholar.google.com/citations?user=95tccioAAAAJ&hl=en" target="_blank" class="btn btn-info btn-block">Google scholar links</a>      
+      </div>
+  </div>
+</div>
+{% endblock %}
