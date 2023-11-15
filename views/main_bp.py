@@ -17,6 +17,11 @@ def mechanics():
     return render_template("index_mechanics.html")
 
 
+@main_bp.route("/machine_learning")
+def machine_learning():
+    return render_template("index_machine_learning.html")
+
+
 @main_bp.route("/webapps")
 def webapps():
     return render_template("index_webapps.html")
