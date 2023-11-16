@@ -28,3 +28,9 @@ class PubSubMessage(db.Model):
     publish_time = db.Column(db.DateTime, nullable=False)
     unique_tag = db.Column(db.Text)
     data = db.Column(db.JSON, default=lambda: {})
+
+
+class CloudFunction(db.Model):
+    __tablename__ = "cloud_functions"
+    id = db.Column(db.Integer, primary_key=True)
+    definition = db.Column(db.Text)

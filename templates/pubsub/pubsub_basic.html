@@ -1,0 +1,16 @@
+{% extends "layouts/base_site.html" %}
+
+{% block content %}
+<div class="right_col" role="main">
+  This demos a basic Google Pub/Sub integration with asynchronous compute. In the form below you can type a message of any sort (numerical, string, json, etc). The message gets published to a GCP Pub/Sub topic I've set up previously, then the data is pulled down by a separate process as a background task. In production a similar pattern can be used to trigger cloud functions, pieces of hardware, kick off data processing, and more, using a topic-subscriber pattern which is very quick to set up and work with locally and in production. <br>
+  <h5>Instructions for use.</h5>
+  <ul>
+    <li>
+      Enter a message to send to the GCP Pub/Sub topic. That message is stored and cycled back when the subscription receives it.
+    </li>
+  </ul>
+  <div class="row">
+    {{form_html|safe}}
+  </div>
+</div>
+{% endblock %}

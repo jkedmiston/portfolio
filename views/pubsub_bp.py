@@ -1,5 +1,5 @@
 """
-Primary demo here is GCP Pub/Sub to send commands to an Intel Realsense depth camera in my home office. 
+Primary demo here is GCP Pub/Sub to send commands to an Intel Realsense depth camera in my home office.
 """
 import os
 import json
@@ -18,8 +18,8 @@ from wtforms import StringField, SubmitField
 from google_functions.google_storage import get_signed_url_from_fname
 from google_functions.pubsub import publish_message
 from misc_utilities import generate_uuid
-from database.schema import PubSubMessage
-
+from database.schema import PubSubMessage, CloudFunction
+from extensions import db
 
 pubsub_bp = Blueprint(
     'pubsub_bp',
@@ -119,3 +119,35 @@ def success():
     if message:
         return "Success: You Entered {}".format(json.dumps(message.data["message"]))
     return "Unable to catch message before Heroku timeout"
+
+
+@pubsub_bp.route("/demo_cloud_function", methods=["GET"])
+@pubsub_bp.route("/demo_cloud_function/<cloud_def>", methods=["GET"])
+@pubsub_bp.route("/demo_cloud_function/<cloud_def>/<data_def>", methods=["GET"])
+def demo_cloud_function(cloud_def=None, data_def=None):
+    if cloud_def is not None:
+        cl = CloudFunction.query.get(cloud_def)
+        cloud_def = cl.definition
+
+    return render_template("cloud_definition.html", cloud_def=cloud_def, data_def=data_def)
+
+
+@pubsub_bp.route("/custom_cloud_function", methods=["GET"])
+def custom_cloud_function():
+    # Take in a simple function definition from the user.
+    # Take in 3 sets of data to process.
+    # Output the results of the function on each set of data.
+    class SheetForm(FlaskForm):
+        func_def = StringField('Function definition',
+                               validators=[DataRequired()])
+        submit = SubmitField("Submit")
+
+    form = SheetForm(request.form)
+    if form.validate_on_submit():
+        func_def = form.data["func_def"]
+        cl = CloudFunction(definition=func_def)
+        db.session.add(cl)
+        db.session.commit()
+        return redirect(url_for('pubsub_db.demo_cloud_function', cloud_def=cl.id))
+
+    return render_template("custom_cloud_function.html", form=form)
