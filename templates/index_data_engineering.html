@@ -1,0 +1,23 @@
+{% extends "layouts/base_site.html" %}
+
+{% block content %}
+<div class="right_col" role="main">
+  This links to some proof of concepts involving tools/methods perhaps inline with modern data engineering on the software engineering spectrum. 
+  <br>
+  <div class="row">
+    <div class="col-xs-6">
+  <table class="table">
+    <tr>
+      <td class="align-middle text-center">
+<a href="{{url_for('pubsub_bp.pubsub_demo')}}" class="btn btn-info btn-block">GCP Pub/Sub - basic </a>	
+      </td>
+      <td class="align-middle text-center">
+<a href="{{url_for('pubsub_bp.pubsub_depth_cam')}}" class="btn btn-info btn-block">GCP Pub/Sub - hardware </a>	
+      </td>
+    </tr>
+  </table>
+    </div>
+  </div>
+  
+</div>
+{% endblock %}

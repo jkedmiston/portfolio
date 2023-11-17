@@ -22,6 +22,11 @@ def machine_learning():
     return render_template("index_machine_learning.html")
 
 
+@main_bp.route("/data_engineering")
+def data_engineering():
+    return render_template("index_data_engineering.html")
+
+
 @main_bp.route("/webapps")
 def webapps():
     return render_template("index_webapps.html")

@@ -101,9 +101,9 @@ pub_sub_info = {"project_id": project_id,
 
 redeploy_cloud_build = 0
 gcloud_init = """gcloud config set project %(project_id)s""" % pub_sub_info
-gcloud_build = """gcloud functions deploy mpi-cloud-function --runtime python38 --trigger-topic = %(trigger_topic)s --memory = 1GB --source = ./google_functions/deployment/mpi_cloud_function --entry-point = run --timeout = 540 --env-vars-file = ./google_functions/deployment/mpi_cloud_function/.env.yaml""" % pub_sub_info
+gcloud_build = """gcloud functions deploy mpi-cloud-function --runtime python38 --trigger-topic=%(trigger_topic)s --docker-registry=artifact-registry --memory=1GB --source=./google_functions/deployment/mpi_cloud_function --entry-point=run --timeout=540 --env-vars-file=./google_functions/deployment/mpi_cloud_function/.env.yaml""" % pub_sub_info
 gcloud_topic = """gcloud pubsub topics create %(return_topic_name)s""" % pub_sub_info
-gcloud_subscription = """gcloud pubsub subscriptions create %(return_subscription_name)s --topic = %(return_topic_name)s --ack-deadline = 10 --expiration-period = never""" % pub_sub_info
+gcloud_subscription = """gcloud pubsub subscriptions create %(return_subscription_name)s --topic = %(return_topic_name)s --ack-deadline=10 --expiration-period=never""" % pub_sub_info
 
 # this is a custom function which the cloud function calls
 function_to_upload = parse_file_for_function(__file__, "process_data")

@@ -2,6 +2,7 @@
 Primary demo here is GCP Pub/Sub to send commands to an Intel Realsense depth camera in my home office. 
 """
 import os
+import json
 import datetime
 from flask import (request,
                    current_app,
@@ -90,20 +91,31 @@ def pubsub_demo():
     if form.validate_on_submit():
         # send pub sub
         current_time = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+        unique_tag = generate_uuid()
         publish_message(topic_name="portfolio-demo", data={"dummy": 1,
-                                                           "unique_tag": generate_uuid(),
-                                                           "current_time": current_time})
+                                                           "unique_tag": unique_tag,
+                                                           "current_time": current_time, "message": form.data["message"]})
         catch_pubsub_message.delay(subscription_id="portfolio-subscription")
-        return redirect(url_for("pubsub_bp.success"))
+        return redirect(url_for("pubsub_bp.success", unique_tag=unique_tag))
 
     form_html = render_template('partials/reports/basic_form.html',
                                 form=form,
                                 action=url_for('pubsub_bp.pubsub_demo'))
 
-    return render_template('pubsub/pubsub_demo.html',
+    return render_template('pubsub/pubsub_basic.html',
                            form_html=form_html)
 
 
 @pubsub_bp.route("/pubsub_demo_success", methods=["GET"])
 def success():
-    return "Success"
+    import time
+    unique_tag = request.args.get("unique_tag")
+    for j in range(20):
+        message = PubSubMessage.query.filter(
+            PubSubMessage.unique_tag == unique_tag).first()
+        if message is None:
+            time.sleep(1)
+            print(j)
+    if message:
+        return "Success: You Entered {}".format(json.dumps(message.data["message"]))
+    return "Unable to catch message before Heroku timeout"
