@@ -1,0 +1,23 @@
+{% extends "layouts/base_site.html" %}
+
+{% block content %}
+<div class="right_col" role="main">
+Enter function definition
+  
+  <div class="row">
+<form method="POST" >
+  {{ form.csrf_token }}
+  <table>
+  {% for field in form if field.id != 'csrf_token' and field.id != 'submit' %}
+  <tr>
+    <td> {{ field.label }} </td><td>&nbsp;  &nbsp;  </td>  <td>{{ field(size=20) }} </td>
+    </tr>
+ {% endfor %}
+ </table>
+{{ form.submit}} <!--  <input type="submit" value="Go">-->
+</form>
+  </div>
+  
+</div>
+{% endblock %}
+

@@ -149,6 +149,6 @@ def custom_cloud_function():
         cl = CloudFunction(definition=func_def)
         db.session.add(cl)
         db.session.commit()
-        return redirect(url_for('pubsub_db.demo_cloud_function', cloud_def=cl.id))
+        return redirect(url_for('pubsub_bp.demo_cloud_function', cloud_def=cl.id))
 
     return render_template("custom_cloud_function.html", form=form)
