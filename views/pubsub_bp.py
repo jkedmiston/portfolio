@@ -12,6 +12,7 @@ from flask import (request,
                    render_template)
 
 from flask_wtf import FlaskForm
+from wtforms import TextAreaField
 from wtforms.validators import DataRequired
 from wtforms import StringField, SubmitField
 
@@ -132,14 +133,14 @@ def demo_cloud_function(cloud_def=None, data_def=None):
     return render_template("cloud_definition.html", cloud_def=cloud_def, data_def=data_def)
 
 
-@pubsub_bp.route("/custom_cloud_function", methods=["GET"])
+@pubsub_bp.route("/custom_cloud_function", methods=["GET", "POST"])
 def custom_cloud_function():
     # Take in a simple function definition from the user.
     # Take in 3 sets of data to process.
     # Output the results of the function on each set of data.
     class SheetForm(FlaskForm):
-        func_def = StringField('Function definition',
-                               validators=[DataRequired()])
+        func_def = TextAreaField('Function definition',
+                                 validators=[DataRequired()], render_kw={"rows": 15, "cols": 48})
         submit = SubmitField("Submit")
 
     form = SheetForm(request.form)
