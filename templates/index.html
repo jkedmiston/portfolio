@@ -8,23 +8,32 @@
       <br>
       <div class="row">
 	<div class="col-xs-6">
-	  <!--      <h4>Mechanics</h4>-->
-	  <div class="row">
-	    <a href="{{ url_for('main_bp.mechanics') }}" class="btn btn-primary btn-lg btn-block">Physics work</a>
-	  </div>
-	  <div class="row">
-	    <a href="{{ url_for('main_bp.webapps') }}" class="btn btn-primary btn-lg btn-block">Web app demos </a>
-	  </div>
-	  <div class="row">
-	    <a href="{{url_for('main_bp.machine_learning') }}" class="btn btn-primary btn-lg btn-block">Machine learning</a>
-	  </div>
-	  <div class="row">
-	    <a href="{{url_for('main_bp.data_engineering') }}" class="btn btn-primary btn-lg btn-block">Data engineering</a>
-	  </div>
-	  
+	    <a href="{{ url_for('main_bp.mechanics') }}">
+	      <img src="{{ url_for('static', filename='figures/plasticity.png') }}" style="max-width: 100%; height: auto;" alt="Simulations">
+	      <button type="button" class="btn btn-primary btn-lg btn-block">Simulations</button>
+	    </a>
+	</div>
+	<div class="col-xs-6">
+	  <a href="{{ url_for('main_bp.webapps') }}" >
+	    <img src="{{url_for('static', filename='figures/webapp.png')}}" style="max-width:100%; height: auto;" alt="Hardware configuration">
+	    <button type="button" class="btn btn-primary btn-lg btn-block">Web app demos </button>	    
+	  </a>
 	</div>
       </div>
-
+      <div class="row">
+	<div class="col-xs-6">
+	  <a href="{{url_for('main_bp.machine_learning') }}" >
+	    <img src="{{url_for('static', filename='figures/physicaltherapy.png')}}" style="max-width: 100%; height: auto;" alt="Physical Therapy">
+	    <button type="button" class="btn btn-primary btn-lg btn-block">Machine Learning</button>
+	  </a> 
+	</div>
+	<div class="col-xs-6">
+	  <a href="{{url_for('main_bp.data_engineering') }}">
+	    <img src="{{url_for('static', filename='figures/pub_sub_arch.png')}}" style="max-width: 100%; height: auto;" alt="Hardware configuration">
+	    <button type="button" class="btn btn-primary btn-lg btn-block">Data engineering</button>
+	  </a>
+	</div>
+      </div>
   <div class="row">
 <br>
     <div class="col-12">
