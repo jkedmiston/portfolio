@@ -30,8 +30,8 @@
         <link href="{{ url_for('static', filename='gentelella/jqvmap/dist/jqvmap.min.css') }}" rel="stylesheet"/>
       {% endblock stylesheets %}
       <!-- Custom Theme Style -->
-      <link href="{{ url_for('static', filename='build-gentelella/css/custom.css') }}" rel="stylesheet">
-    {% endblock head %}
+	<link href="{{ url_for('static', filename='build-gentelella/css/custom.css') }}" rel="stylesheet">
+      {% endblock head %}
   </head>
 
   <body class="{% block body_class %}nav-md {% endblock body_class %}">
@@ -106,9 +106,23 @@
         <script src="{{ url_for('static', filename='gentelella/devbridge-autocomplete/dist/jquery.autocomplete.min.js') }}"></script>
         <!-- starrr -->
         <script src="{{ url_for('static', filename='gentelella/starrr/dist/starrr.js') }}"></script>
+
       {% endblock %}
       <!-- Custom Theme Scripts -->
-      <script src="{{ url_for('static', filename='build-gentelella/js/custom.js') }}"></script>
+	<script src="{{ url_for('static', filename='build-gentelella/js/custom.js') }}"></script>
+	<script>
+	  function spinner() {
+	      const btn = document.getElementById('btn');
+	      const spinnerDisplayer = document.getElementById('spinner_id');	      
+	      btn.addEventListener('click', function() {
+		  //querySelector('.spinner-displayer');
+  		  spinnerDisplayer.classList.add('xloading');
+	      });
+	  }
+	  spinner();
+	</script>
+
+		
     {% endblock body %}
   </body>
 </html>

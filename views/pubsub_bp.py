@@ -39,7 +39,8 @@ def pubsub_depth_cam():
     from celery_jobs import catch_pubsub_message
 
     class SheetForm(FlaskForm):
-        submit = SubmitField("Trigger photo")
+        submit = SubmitField("Trigger photo", render_kw={"id": "btn",
+                             "class": "btn btn-primary"})
 
     form = SheetForm(request.form)
     if form.validate_on_submit():
@@ -86,7 +87,8 @@ def pubsub_demo():
 
     class SheetForm(FlaskForm):
         message = StringField('PubSub message', validators=[DataRequired()])
-        submit = SubmitField("Submit")
+        submit = SubmitField("Submit", render_kw={"id": "btn",
+                             "class": "btn btn-primary spinner"})
 
     form = SheetForm(request.form)
     if form.validate_on_submit():

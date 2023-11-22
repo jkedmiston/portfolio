@@ -1,3 +1,5 @@
+
+
 <form method="POST" >
   {{ form.csrf_token }}
   <table>
@@ -6,6 +8,8 @@
     <td> {{ field.label }} </td><td>&nbsp;  &nbsp;  </td>  <td>{{ field(size=40) }} </td>
     </tr>
  {% endfor %}
- </table>
-{{ form.submit}} <!--  <input type="submit" value="Go">-->
+  </table>
+<div class="spinner-displayer" id="spinner_id"></div>    
+  {{ form.submit}} 
+
 </form>
