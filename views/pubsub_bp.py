@@ -1,26 +1,26 @@
 """
 Primary demo here is GCP Pub/Sub to send commands to an Intel Realsense depth camera in my home office.
 """
-import os
-import json
-import datetime
+from extensions import db
+from database.schema import PubSubMessage, CloudFunction
+from misc_utilities import generate_uuid
+from google_functions.pubsub import publish_message
+from google_functions.google_storage import get_signed_url_from_fname
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
+from wtforms import TextAreaField
+from flask_wtf import FlaskForm
 from flask import (request,
                    current_app,
                    url_for,
                    redirect,
                    Blueprint,
                    render_template)
+import datetime
+import os
+import json
+import time
 
-from flask_wtf import FlaskForm
-from wtforms import TextAreaField
-from wtforms.validators import DataRequired
-from wtforms import StringField, SubmitField
-
-from google_functions.google_storage import get_signed_url_from_fname
-from google_functions.pubsub import publish_message
-from misc_utilities import generate_uuid
-from database.schema import PubSubMessage, CloudFunction
-from extensions import db
 
 pubsub_bp = Blueprint(
     'pubsub_bp',
@@ -43,12 +43,13 @@ def pubsub_depth_cam():
                              "class": "btn btn-primary"})
 
     form = SheetForm(request.form)
+    t0 = time.time()
     if form.validate_on_submit():
         unique_tag = generate_uuid()
         publish_message(
             topic_name=os.environ["SERVER_TO_DEPTH_CAM_TOPIC"], data={'unique_tag': unique_tag})
-
-        while True:
+        url = None
+        while time.time() - t0 < 30:
             catch_pubsub_message(
                 subscription_id=os.environ["DEPTH_CAM_TO_SERVER_SUBSCRIPTION"])
 
@@ -67,10 +68,13 @@ def pubsub_depth_cam():
             url = get_signed_url_from_fname(colormap)
             break
 
-        return render_template('pubsub/pubsub_results.html',
-                               link="Link to photo",
-                               time_of_photo=time_of_photo,
-                               url=url)
+        if url:
+            return render_template('pubsub/pubsub_results.html',
+                                   link="Link to photo",
+                                   time_of_photo=time_of_photo,
+                                   url=url)
+        else:
+            return redirect(url_for('pubsub_bp.pubsub_demo'))
 
     form_html = render_template('partials/reports/basic_form.html',
                                 form=form,
