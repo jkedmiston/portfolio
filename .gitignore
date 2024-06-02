@@ -6,6 +6,8 @@ tmp/*
 *.json
 src
 realsense/run_d435
+depth0.txt
+depth0.bmp
 app.yaml
 a.out
 depth0.*
