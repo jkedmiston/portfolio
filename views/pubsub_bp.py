@@ -68,10 +68,10 @@ def pubsub_depth_cam():
                 # show this in the url
 
                 url = get_signed_url_from_fname(colormap)
+                break
             else:
                 flash("Hardware error")
                 return redirect(url_for("pubsub_bp.pubsub_depth_cam"))
-                break
 
         if url:
             return render_template('pubsub/pubsub_results.html',
