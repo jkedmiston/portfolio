@@ -50,7 +50,8 @@ def pubsub_depth_cam():
         publish_message(
             topic_name=os.environ["SERVER_TO_DEPTH_CAM_TOPIC"], data={'unique_tag': unique_tag})
         url = None
-        while time.time() - t0 < 30:
+        success = False
+        while time.time() - t0 < 25:
             catch_pubsub_message(
                 subscription_id=os.environ["DEPTH_CAM_TO_SERVER_SUBSCRIPTION"])
 
@@ -64,7 +65,7 @@ def pubsub_depth_cam():
             if "colormap" in psm.data:
                 colormap = psm.data["colormap"]  # colormap file
                 time_of_photo = psm.publish_time
-
+                success = True
                 # show this in the url
 
                 url = get_signed_url_from_fname(colormap)
@@ -73,13 +74,17 @@ def pubsub_depth_cam():
                 flash("Hardware error")
                 return redirect(url_for("pubsub_bp.pubsub_depth_cam"))
 
+        if success is False:
+            flash("Hardware error")
+            return redirect(url_for("pubsub_bp.pubsub_depth_cam"))
+
         if url:
             return render_template('pubsub/pubsub_results.html',
                                    link="Link to photo",
                                    time_of_photo=time_of_photo,
                                    url=url)
         else:
-            return redirect(url_for('pubsub_bp.pubsub_demo'))
+            return redirect(url_for('pubsub_bp.pubsub_depth_cam'))
 
     form_html = render_template('partials/reports/basic_form.html',
                                 form=form,
