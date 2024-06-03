@@ -33,11 +33,14 @@ def catch_pubsub_message(subscription_id):
         with app.app_context():
             data = json.loads(message.data.decode('utf-8'))
             publish_time = message.publish_time
-            record = PubSubMessage(data=data,
-                                   unique_tag=data["unique_tag"],
-                                   publish_time=publish_time)
-            db.session.add(record)
-            db.session.commit()
+            if "unique_tag" in data:
+                record = PubSubMessage(data=data,
+                                       unique_tag=data["unique_tag"],
+                                       publish_time=publish_time)
+                db.session.add(record)
+                db.session.commit()
+            else:
+                return 0
 
     subscription_path = subscriber.subscription_path(
         project_id, subscription_id)
