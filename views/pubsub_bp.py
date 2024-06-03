@@ -11,6 +11,7 @@ from wtforms.validators import DataRequired
 from wtforms import TextAreaField
 from flask_wtf import FlaskForm
 from flask import (request,
+                   flash,
                    current_app,
                    url_for,
                    redirect,
@@ -60,13 +61,17 @@ def pubsub_depth_cam():
                     "continuing to wait for depth cam image")
                 continue
 
-            colormap = psm.data["colormap"]  # colormap file
-            time_of_photo = psm.publish_time
+            if "colormap" in psm.data:
+                colormap = psm.data["colormap"]  # colormap file
+                time_of_photo = psm.publish_time
 
-            # show this in the url
+                # show this in the url
 
-            url = get_signed_url_from_fname(colormap)
-            break
+                url = get_signed_url_from_fname(colormap)
+            else:
+                flash("Hardware error")
+                return redirect(url_for("pubsub_bp.pubsub_depth_cam"))
+                break
 
         if url:
             return render_template('pubsub/pubsub_results.html',
