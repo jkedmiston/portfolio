@@ -1,7 +1,7 @@
 """
 Pulls messages from the channel to trigger a depth camera event
 """
-
+import time
 import os
 import json
 import subprocess
@@ -28,6 +28,7 @@ def reset_camera():
     USB port reset. 
     The realsense cam is finicky and not reliable on reuse. This resets the USB. Functionality from https://askubuntu.com/questions/645/how-do-you-reset-a-usb-device-from-the-command-line
     """
+    cmd = 'python r2.py'
     cmd = 'python reset_usb.py search "RealSense"'
     proc = subprocess.Popen([cmd],
                             shell=True,
@@ -35,7 +36,23 @@ def reset_camera():
                             stderr=subprocess.PIPE)
     stdout, stderr = proc.communicate()
     print("stdout %s" % stdout)
-    print("stdout %s" % stderr)
+    print("stderr %s" % stderr)
+    return
+
+
+def reset_camera1():
+    """
+    USB port reset. 
+    The realsense cam is finicky and not reliable on reuse. This resets the USB. Functionality from https://askubuntu.com/questions/645/how-do-you-reset-a-usb-device-from-the-command-line
+    """
+    cmd = 'python r2.py'
+    proc = subprocess.Popen([cmd],
+                            shell=True,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+    stdout, stderr = proc.communicate()
+    print("stdout %s" % stdout)
+    print("stderr %s" % stderr)
     return
 
 
@@ -43,13 +60,15 @@ def callback(message):
     """
     Take the triggered photo 
     """
+    print("callback on message %s" % message)
     message.ack()
     data = json.loads(message.data.decode('utf-8'))
     publish_time = message.publish_time
 
-    reset_camera()
+    reset_camera1()
     ntrials = 10
     for j in range(ntrials):
+        print("trial %s" % j)
         proc = subprocess.Popen(["run_d435"],
                                 shell=True,
                                 stdout=subprocess.PIPE,
@@ -80,12 +99,17 @@ def callback(message):
 
             return
         except TimeoutExpired:
+            print("timeout expired")
             proc.kill()
-            stdout, stderr = proc.communicate()
+            # stdout, stderr = proc.communicate()
             reset_camera()
+            time.sleep(1)
 
-    print("stdout", stdout, stderr)
-    raise Exception("Proc communication error %s %s" % (stdout, stderr))
+    publish_message(
+        topic_name=os.environ["DEPTH_CAM_TO_SERVER_TOPIC"],
+        data={}
+    )
+    raise Exception("Proc communication error")
 
 
 while True:
@@ -95,7 +119,7 @@ while True:
 
     streaming_pull_future = subscriber.subscribe(
         subscription_path, callback=callback)
-    print(f"Listening for messages on {subscription_path}..\n")
+    #print(f"Listening for messages on {subscription_path}..\n")
 
     # Wrap subscriber in a 'with' block to automatically call close() when done.
     with subscriber:
@@ -107,4 +131,4 @@ while True:
         except TimeoutError:
             streaming_pull_future.cancel()
 
-        print("looping")
+        # print("looping")
