@@ -64,7 +64,7 @@ def callback(message):
     data = json.loads(message.data.decode('utf-8'))
     publish_time = message.publish_time
 
-    reset_camera1()
+    # reset_camera()
     ntrials = 10
     for j in range(ntrials):
         proc = subprocess.Popen(["run_d435"],
@@ -106,7 +106,7 @@ def callback(message):
     publish_message(
         topic_name=os.environ["DEPTH_CAM_TO_SERVER_TOPIC"],
         data={})
-    raise Exception("Proc communication error %s %s" % (stdout, stderr))
+    raise Exception("Proc communication error")
 
 
 while True:

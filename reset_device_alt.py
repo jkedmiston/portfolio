@@ -11,4 +11,5 @@ for l in lines:
 
 cmd = "usbreset %s" % addr
 print(cmd)
+os.system("dmesg | grep -i usb")
 os.system(cmd)
