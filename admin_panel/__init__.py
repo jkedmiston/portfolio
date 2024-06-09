@@ -9,8 +9,8 @@ def add_admin_app(app):
         ExampleData, "ExampleData", "LIMS", can_delete_item=True),
         GenericView.generate(
             RandomData, "RandomData", "Examples", can_delete_item=True),
-        GenericView.generate(PubSubMessage, "PubSubMessage",
-                             "GCP", can_delete_item=True),
+        #        GenericView.generate(PubSubMessage, "PubSubMessage",
+        #                            "GCP", can_delete_item=True),
 
     ]
     admin = Admin(app, name="Admin", template_mode="bootstrap3",

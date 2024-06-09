@@ -3,6 +3,11 @@ Primary demo here is GCP Pub/Sub to send commands to an Intel Realsense depth ca
 """
 from extensions import db
 from database.schema import PubSubMessage, CloudFunction
+import numpy as np
+import requests
+import plotly.graph_objs as go
+import plotly.offline as pyo
+import plotly.io as pio
 from misc_utilities import generate_uuid
 from google_functions.pubsub import publish_message
 from google_functions.google_storage import get_signed_url_from_fname
@@ -31,6 +36,24 @@ pubsub_bp = Blueprint(
 )
 
 
+def download_file_from_signed_url(signed_url, local_filename):
+    try:
+        # Send a GET request to the signed URL
+        response = requests.get(signed_url)
+
+        # Raise an exception if the request was unsuccessful
+        response.raise_for_status()
+
+        # Open a local file in write-binary mode
+        with open(local_filename, 'wb') as file:
+            file.write(response.content)
+
+        print(f"File downloaded successfully and saved as {local_filename}")
+        return local_filename
+    except requests.exceptions.RequestException as e:
+        print(f"Error downloading the file: {e}")
+
+
 @pubsub_bp.route("/pubsub_depth_cam", methods=["GET", "POST"])
 def pubsub_depth_cam():
     """
@@ -50,6 +73,8 @@ def pubsub_depth_cam():
         publish_message(
             topic_name=os.environ["SERVER_TO_DEPTH_CAM_TOPIC"], data={'unique_tag': unique_tag})
         url = None
+        url_data = None
+        image_fname = None
         success = False
         while time.time() - t0 < 25:
             catch_pubsub_message(
@@ -69,20 +94,56 @@ def pubsub_depth_cam():
                 # show this in the url
 
                 url = get_signed_url_from_fname(colormap)
+                if "fname" in psm.data:
+                    url_data = get_signed_url_from_fname(psm.data["fname"])
+                    image_fname = download_file_from_signed_url(
+                        url_data, f"loc_{unique_tag}.txt")
                 break
             else:
                 flash("Hardware error")
+                current_app.logger.error("Hardware error")
                 return redirect(url_for("pubsub_bp.pubsub_depth_cam"))
 
         if success is False:
             flash("Hardware error")
             return redirect(url_for("pubsub_bp.pubsub_depth_cam"))
 
+        fig_html = None
         if url:
+            #
+            if image_fname:
+                current_app.logger.info("reading %s" % image_fname)
+                arr = np.loadtxt(image_fname)
+                shape = arr.shape
+                xs = np.arange(shape[1])
+                ys = np.arange(shape[0])
+                X, Y = np.meshgrid(xs, ys)
+                # Create a 3D surface plot
+                surface = go.Surface(
+                    x=X,
+                    y=Y,
+                    z=arr
+                )
+                # Layout for the plots
+                layout = go.Layout(
+                    title='3D Surface Plot - Depth Cam',
+                    scene=dict(
+                        xaxis_title='X Axis',
+                        yaxis_title='Y Axis',
+                        zaxis_title='Z Axis'
+                    )
+                )
+                fig = go.Figure(data=[surface], layout=layout)
+                fig_html = pio.to_html(
+                    fig, include_plotlyjs=True, full_html=False)
+
             return render_template('pubsub/pubsub_results.html',
                                    link="Link to photo",
+                                   link_data="Link to 3D data",
                                    time_of_photo=time_of_photo,
-                                   url=url)
+                                   fig_html=fig_html,
+                                   url=url,
+                                   url_data=url_data)
         else:
             return redirect(url_for('pubsub_bp.pubsub_depth_cam'))
 
@@ -102,7 +163,7 @@ def pubsub_demo():
     class SheetForm(FlaskForm):
         message = StringField('PubSub message', validators=[DataRequired()])
         submit = SubmitField("Submit", render_kw={"id": "btn",
-                             "class": "btn btn-primary spinner"})
+                                                  "class": "btn btn-primary spinner"})
 
     form = SheetForm(request.form)
     if form.validate_on_submit():

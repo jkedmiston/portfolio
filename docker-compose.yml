@@ -6,7 +6,6 @@ services:
             context: .
             dockerfile: Dockerfile
         image: etl
-        container_name: etl-compose
         restart: always
         command: ./scripts/start-flask.sh -d 1
         depends_on:
@@ -34,7 +33,6 @@ services:
 
     worker:
         image: etl
-        container_name: etl-worker
         command: ./scripts/start-celery-worker.sh
         restart: on-failure
         depends_on:
@@ -54,7 +52,6 @@ services:
 
     beat:
         image: etl
-        container_name: etl-beat
         command: ./scripts/start-celery-beat.sh
         restart: on-failure
         depends_on:
@@ -70,7 +67,6 @@ services:
             - STORAGE_BUCKET
     redis:
         image: redis:5.0
-        container_name: etl-redis
         ports:
           - '6579:6379'
         volumes:
@@ -80,7 +76,6 @@ services:
         environment:
           POSTGRES_USER: postgres_user
           POSTGRES_PASSWORD: postgres_password
-        container_name: etl-compose-database
         expose:
           - "5432"
         image: postgres:11.5
