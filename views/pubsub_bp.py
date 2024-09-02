@@ -3,6 +3,7 @@ Primary demo here is GCP Pub/Sub to send commands to an Intel Realsense depth ca
 """
 from extensions import db
 from database.schema import PubSubMessage, CloudFunction
+from database.schema import Healthcheck
 import numpy as np
 import requests
 import plotly.graph_objs as go
@@ -64,7 +65,7 @@ def pubsub_depth_cam():
 
     class SheetForm(FlaskForm):
         submit = SubmitField("Trigger photo", render_kw={"id": "btn",
-                             "class": "btn btn-primary"})
+                                                         "class": "btn btn-primary"})
 
     form = SheetForm(request.form)
     t0 = time.time()
@@ -98,7 +99,6 @@ def pubsub_depth_cam():
                     url_data = get_signed_url_from_fname(psm.data["fname"])
                     image_fname = download_file_from_signed_url(
                         url_data, f"loc_{unique_tag}.txt")
-                    from database.schema import Healthcheck
                     hcs = Healthcheck.query.all()
                     if len(hcs) == 0:
                         hc = Healthcheck(last_hit=datetime.datetime.utcnow())
