@@ -98,6 +98,16 @@ def pubsub_depth_cam():
                     url_data = get_signed_url_from_fname(psm.data["fname"])
                     image_fname = download_file_from_signed_url(
                         url_data, f"loc_{unique_tag}.txt")
+                    from database.schema import Healthcheck
+                    hcs = Healthcheck.query.all()
+                    if len(hcs) == 0:
+                        hc = Healthcheck(last_hit=datetime.datetime.utcnow())
+                        db.session.add(hc)
+                        db.session.commit()
+                    else:
+                        hc = hcs[0]
+                        hc.last_hit = datetime.datetime.utcnow()
+                        db.session.commit()
                 break
             else:
                 flash("Hardware error")

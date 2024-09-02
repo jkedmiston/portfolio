@@ -1,6 +1,6 @@
 from flask_admin import AdminIndexView
 from admin_panel.generic_view import GenericView
-from database.schema import ExampleData, RandomData, PubSubMessage
+from database.schema import ExampleData, RandomData, PubSubMessage, Healthcheck
 from flask_admin import Admin
 
 
@@ -9,9 +9,8 @@ def add_admin_app(app):
         ExampleData, "ExampleData", "LIMS", can_delete_item=True),
         GenericView.generate(
             RandomData, "RandomData", "Examples", can_delete_item=True),
-        #        GenericView.generate(PubSubMessage, "PubSubMessage",
-        #                            "GCP", can_delete_item=True),
-
+        GenericView.generate(Healthcheck, "Healthcheck",
+                             "Examples", can_delete_item=False),
     ]
     admin = Admin(app, name="Admin", template_mode="bootstrap3",
                   index_view=AdminIndexView())

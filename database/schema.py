@@ -30,6 +30,12 @@ class PubSubMessage(db.Model):
     data = db.Column(db.JSON, default=lambda: {})
 
 
+class Healthcheck(db.Model):
+    __tablename__ = "healthcheck"
+    id = db.Column(db.Integer, primary_key=True)
+    last_hit = db.Column(db.DateTime, nullable=True)
+
+
 class CloudFunction(db.Model):
     __tablename__ = "cloud_functions"
     id = db.Column(db.Integer, primary_key=True)
