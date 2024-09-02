@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="right_col" role="main">
-  This demos a Google Pub/Sub integration - a camera (Intel RealSense depth camera) is connected to a computer running the container (defined by docker-compose-intel.yml in this repository). The camera is pointing at a random location in my office. The demo takes about 10 seconds to complete, so please be patient! <br>
+  This demos a Google Pub/Sub integration - a camera (Intel RealSense depth camera) is connected to a computer running the container (defined by docker-compose-intel.yml in this repository). The depth camera is pointing at a random location in my office (at some wires). I set this up to show some non-trivial use of Docker, C++, and a hardware device, compared to what would be achieved with, e.g., gPhoto2 and a DSLR. I also provide the depth data as a downloadable file. The demo takes about 10 seconds to complete, so please be patient! <br>
 
   <figure>
       <img src="{{url_for('static', filename='figures/pub_sub_arch.png')}}" width=600px alt="Hardware configuration">

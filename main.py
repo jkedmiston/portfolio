@@ -62,6 +62,9 @@ def register_request_logger(app):
 
     app.before_request(_before_request)
     app.after_request(_after_request)
+    for blueprint in app.blueprints.values():
+        blueprint.before_request(_before_request)
+        blueprint.after_request(_after_request)
 
 
 def register_stylized_dashapp(app):
@@ -147,12 +150,13 @@ def create_app():
     app.logger.setLevel(logging.INFO)
     with app.app_context():
         register_extensions(app)
-        register_request_logger(app)
+
         register_admin_panel(app)
         app.register_blueprint(main_bp)
         app.register_blueprint(reports_bp)
         app.register_blueprint(games_bp)
         app.register_blueprint(pubsub_bp)
+        register_request_logger(app)
         register_context_processors(app)
         register_stylized_dashapp(app)
         app.logger = logger
