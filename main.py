@@ -26,6 +26,8 @@ logger.setLevel(logging.INFO)
 
 def register_request_logger(app):
     def _before_request():
+        if request.path.startswith('/static'):
+            return
         g.request_start_time = time.time()
         if request.headers.get('X-Forwarded-Proto') == 'http':
             url = request.url.replace('http://', 'https://', 1)
@@ -33,14 +35,21 @@ def register_request_logger(app):
             return redirect(url, code=code)
 
     def _after_request(response):
+        if request.path.startswith('/static'):
+            return response
         request_end_time = time.time()
         if hasattr(g, "request_start_time"):
             seconds = request_end_time - g.request_start_time
         else:
-            current_app.logger.error(
-                "_after_request has no attribute request_start_time")
+            if request.path == "/":
+                current_app.logger.error(
+                    f"_after_request {request.path} {request.referrer} {request.data} {response.status} {request.method} has no attribute request_start_time")
+            else:
+                # bots, accessing non existent paths.
+                current_app.logger.info(
+                    f"_after_request {request.path} {request.referrer} has no attribute request_start_time")
             seconds = 10
-        request_duration = datetime.timedelta(seconds=seconds).total_seconds()
+        request_duration = seconds
 
         current_app.logger.info(
             "%s [%s] %s %s %s %s %s %s %s %s %s %ss",
@@ -62,9 +71,6 @@ def register_request_logger(app):
 
     app.before_request(_before_request)
     app.after_request(_after_request)
-    for blueprint in app.blueprints.values():
-        blueprint.before_request(_before_request)
-        blueprint.after_request(_after_request)
 
 
 def register_stylized_dashapp(app):

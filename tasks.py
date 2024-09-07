@@ -58,11 +58,12 @@ def healthcheck():
         hc = hcs[0]
         now = datetime.datetime.utcnow()
         interval = (now - hc.last_hit).total_seconds()
-        print(f"interval {interval}")
-        if interval > 12 * 60:
+        print(f"interval {interval/60}")
+        max_interval = int(os.environ.get("HEALTHCHECK_MAX_INTERVAL", "12"))
+        if interval > max_interval * 60:
             send_email(email=os.environ["HEALTHCHECK_FAIL_NOTIFY_EMAIL"],
                        subject="Serverside healthcheck failed",
-                       message_text="No contact in 60 minutes")
+                       message_text=f"No contact in {max_interval} minutes")
         else:
             return
     else:

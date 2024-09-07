@@ -11,9 +11,12 @@
       <td class="align-middle text-center">
 <a href="{{url_for('pubsub_bp.pubsub_demo')}}" class="btn btn-info btn-block">GCP Pub/Sub - basic </a>	
       </td>
+      {% if active_pubsub == 1 %}
       <td class="align-middle text-center">
 <a href="{{url_for('pubsub_bp.pubsub_depth_cam')}}" class="btn btn-info btn-block">GCP Pub/Sub - hardware </a>	
       </td>
+      {% else %}
+      {% endif %}
     </tr>
   </table>
     </div>
