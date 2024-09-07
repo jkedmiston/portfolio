@@ -22,6 +22,9 @@ services:
             - DIABETES_DATA_URL
             - SERVER_TO_DEPTH_CAM_TOPIC
             - DEPTH_CAM_TO_SERVER_SUBSCRIPTION
+            - HEALTHCHECK_FAIL_NOTIFY_EMAIL
+            - FOG_APP_PW
+            - APP_EMAIL
             
         stdin_open: true
         tty: true
@@ -49,7 +52,13 @@ services:
             - STORAGE_BUCKET            
             - SERVER_TO_DEPTH_CAM_TOPIC
             - DEPTH_CAM_TO_SERVER_SUBSCRIPTION
+            - HEALTHCHECK_FAIL_NOTIFY_EMAIL
+            - FOG_APP_PW
+            - APP_EMAIL
 
+        volumes:
+            - .:/app
+   
     beat:
         image: etl
         command: ./scripts/start-celery-beat.sh

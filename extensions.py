@@ -32,7 +32,7 @@ csrf = CSRFProtect()
 
 redis_url = os.getenv('REDIS_URL')
 redis_db_0 = redis_url + '/0'
-celery = Celery(__name__, broker=redis_db_0)
+celery = Celery(__name__, broker=redis_db_0, backend=redis_db_0)
 
 
 @task_prerun.connect
