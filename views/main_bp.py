@@ -1,8 +1,5 @@
-import base64
-from flask import request
-from flask import url_for, redirect
 from flask import Blueprint, render_template
-
+import datetime
 
 main_bp = Blueprint(
     'main_bp',
@@ -22,14 +19,29 @@ def machine_learning():
     return render_template("index_machine_learning.html")
 
 
+def get_healthcheck():
+    from database.schema import Healthcheck
+    hcs = Healthcheck.query.all()
+    active_pubsub = 0
+    if len(hcs) == 1:
+        hc = hcs[0]
+        now = datetime.datetime.utcnow()
+        interval = (now - hc.last_hit).total_seconds()
+        if interval < 12 * 60:
+            active_pubsub = 1
+    return active_pubsub
+
+
 @main_bp.route("/data_engineering")
 def data_engineering():
-    return render_template("index_data_engineering.html")
+    active_pubsub = get_healthcheck()
+    return render_template("index_data_engineering.html", active_pubsub=active_pubsub)
 
 
 @main_bp.route("/webapps")
 def webapps():
-    return render_template("index_webapps.html")
+    active_pubsub = get_healthcheck()
+    return render_template("index_webapps.html", active_pubsub=active_pubsub)
 
 
 @main_bp.route("/staging/<page_name>")

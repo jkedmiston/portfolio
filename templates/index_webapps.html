@@ -10,8 +10,11 @@
   <table class="table">
     <tr>
       <td class="align-middle text-center">
+	{% if active_pubsub == 1 %}
 <a href="{{url_for('pubsub_bp.pubsub_depth_cam')}}" class="btn btn-info btn-block">Cloud to local hardware communication</a>	
-      This demonstrates a simple way to turn any local hardware device (e.g. lab measurement system) into a cloud connected device. 
+This demonstrates a simple way to turn any local hardware device (e.g. lab measurement system) into a cloud connected device.
+{% else %}
+{% endif %}
       </td>
       <td class="align-middle text-center">
 <a href="http://www.movierank.org" target="_blank" class="btn btn-info btn-block">Figure out what movie to watch</a>	
