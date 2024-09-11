@@ -42,7 +42,7 @@ def register_request_logger(app):
             seconds = request_end_time - g.request_start_time
         else:
             if request.path == "/":
-                current_app.logger.error(
+                current_app.logger.info(
                     f"_after_request {request.path} {request.referrer} {request.data} {response.status} {request.method} has no attribute request_start_time")
             else:
                 # bots, accessing non existent paths.
