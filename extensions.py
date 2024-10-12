@@ -31,9 +31,11 @@ csrf = CSRFProtect()
 
 
 redis_url = os.getenv('REDIS_URL')
-redis_db_0 = redis_url + '/0'
+redis_db_0 = redis_url + '/0?ssl_cert_reqs=CERT_NONE'
 celery = Celery(__name__, broker=redis_db_0, backend=redis_db_0)
-
+celery.conf.update(task_ignore_result=True,
+                   result_expires=600,
+                   )
 
 @task_prerun.connect
 def on_task_init(*args, **kwargs):
