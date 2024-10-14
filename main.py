@@ -145,7 +145,7 @@ def create_app():
     app = Flask(__name__, instance_relative_config=False,
                 template_folder="templates", static_folder="static")
     csp = {'default-src': ['\'self\'', '\'unsafe-inline\'', 'https://cdnjs.cloudflare.com', "cdnjs.cloudflare.com", "'unsafe-eval'", "*.gstatic.com", "*.fontawesome.com", "fonts.googleapis.com", "data:", "storage.googleapis.com", "https://www.youtube.com", "https://s.ytimg.com", "https://i.ytimg.com"],
-           'frame-src': ["https://www.youtube.com"],
+           'frame-src': ['\'self\'', "https://www.youtube.com"],
            'font-src': ['\'self\'', 'data', 'data:', '*', 'https://use.fontawesome.com'],
            'script-src': ['\'self\'', "'unsafe-eval'", "'unsafe-inline'", "https://www.youtube.com", "https://i.ytimg.com"],
            'script-src-elem': ['\'self\'', 'https://cdnjs.cloudflare.com', "'unsafe-inline'"],
