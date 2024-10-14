@@ -148,7 +148,7 @@ def create_app():
            'frame-src': ['\'self\'', "https://www.youtube.com"],
            'font-src': ['\'self\'', 'data', 'data:', '*', 'https://use.fontawesome.com'],
            'script-src': ['\'self\'', "'unsafe-eval'", "'unsafe-inline'", "https://www.youtube.com", "https://i.ytimg.com"],
-           'script-src-elem': ['\'self\'', 'https://cdnjs.cloudflare.com', "'unsafe-inline'"],
+           'script-src-elem': ['\'self\'', 'https://cdnjs.cloudflare.com', "'unsafe-inline'", "https://cdn.plot.ly"],
            'style-src-elem': ['\'self\'', 'https://cdnjs.cloudflare.com', 'https://use.fontawesome.com', 'https://fonts.googleapis.com', "'unsafe-inline'"]}
 
     Talisman(app, content_security_policy=csp)
