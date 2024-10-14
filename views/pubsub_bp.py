@@ -144,14 +144,15 @@ def pubsub_depth_cam():
                     )
                 )
                 fig = go.Figure(data=[surface], layout=layout)
-                fig_html = pio.to_html(
-                    fig, include_plotlyjs=True, full_html=False)
-
+                #fig_html = pio.to_html(
+                #    fig, include_plotlyjs=True, full_html=False)
+                with open('static/figures/figure.html', 'w') as f:
+                    f.write(pio.to_html(fig, include_plotlyjs='cdn', full_html=False))
             return render_template('pubsub/pubsub_results.html',
                                    link="Link to photo",
                                    link_data="Link to 3D data",
                                    time_of_photo=time_of_photo,
-                                   fig_html=fig_html,
+                                   fig_html="static/figures/figure.html", 
                                    url=url,
                                    url_data=url_data)
         else:
