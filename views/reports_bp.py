@@ -571,7 +571,7 @@ def latex_demo():
 \usepackage{graphicx}
 \begin{document}
 \section{Introduction}
-This document is prepared in LaTeX, which may be integrated with python for automated reports easily.
+This document is prepared in LaTeX on %(dt)s, which may be integrated with python for automated reports easily.
 \begin{enumerate}
 \item{Item 1 - [Python generated text here...]}
 \item{Item 2 - for an example of embedded graphics, see Figure \ref{fig:label}}
@@ -588,7 +588,7 @@ This document is prepared in LaTeX, which may be integrated with python for auto
 \section{Appendix}
 Final results here. 
 \end{document}
-    """
+    """ % dict(dt=datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d %H:%M:%S UTC"))
     f = open("tmp/example_report.tex", "w")
     f.write(dummy_file)
     f.close()
