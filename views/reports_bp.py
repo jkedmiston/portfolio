@@ -588,7 +588,7 @@ This document is prepared in LaTeX on %(dt)s, which may be integrated with pytho
 \section{Appendix}
 Final results here. 
 \end{document}
-    """ % dict(dt=datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d %H:%M:%S UTC"))
+    """ % dict(dt=datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"))
     f = open("tmp/example_report.tex", "w")
     f.write(dummy_file)
     f.close()

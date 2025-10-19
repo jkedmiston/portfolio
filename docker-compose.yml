@@ -9,8 +9,8 @@ services:
         restart: always
         command: ./scripts/start-flask.sh -d 1
         depends_on:
-            - database
-            - worker
+         - database
+         - worker
         environment:
             - GOOGLE_APPLICATION_CREDENTIALS
             - DATABASE_URL=postgresql://postgres_user:postgres_password@database:5432
@@ -29,7 +29,7 @@ services:
         stdin_open: true
         tty: true
         ports:
-            - "5001:5000"
+            - "5002:5000"
 
         volumes:
             - .:/app
@@ -89,7 +89,7 @@ services:
           - "5432"
         image: postgres:11.5
         ports:
-          - "127.0.0.1:5444:5432"
+          - "127.0.0.1:5445:5432"
         volumes:
           - persistent_database_postgres:/var/lib/postgresql/data
 
