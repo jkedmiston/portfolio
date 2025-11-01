@@ -10,43 +10,67 @@
                 levels, and from backend to frontend. I put together for this site for a collection of proof of concept/starter
                 work as well as past contributions. See my LinkedIn page for a more extensive education and research history, including several years developing parallel simulation codes for scientific computing. 
             </p>
-            <p>
-                <a href="http://www.linkedin.com/in/jkedmiston" target="_blank" class="btn btn-primary">
-                    <i class="fa fa-linkedin"></i> View LinkedIn Profile
-                </a>
-                <a href="{{url_for('main_bp.download_cv')}}" target="_blank" class="btn btn-success">
-                    <i class="fa fa-download"></i> Download Resume
-                </a>
-                <a href="{{url_for('main_bp.download_dissertation')}}" target="_blank" class="btn btn-default">
+	    <p>
+    <a href="http://www.linkedin.com/in/jkedmiston" target="_blank" class="btn btn-primary">
+        <i class="fa fa-linkedin"></i> View LinkedIn Profile
+    </a>
+    <a href="{{url_for('main_bp.download_cv')}}" target="_blank" class="btn btn-success">
+        <i class="fa fa-download"></i> Download Resume
+    </a>
+
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-plus-circle"></i> More <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="{{url_for('main_bp.download_dissertation')}}" target="_blank">
                     <i class="fa fa-book"></i> Download Dissertation
                 </a>
-            </p>
+            </li>
+            <li>
+                <a href="https://soundcloud.com/elbow_rocket/sets/nanoloop-creations" target="_blank">
+                    <i class="fa fa-soundcloud"></i> Nanoloop creations on SoundCloud
+                </a>
+            </li>
+        </ul>
+    </div>
+    </p>
+
+	   
             <hr>
         </div>
     </div>
-    
+
+		
     <div class="row">
         <div class="col-md-12">
             
             <ul class="media-list">
 
                 <li class="media">
-                    <a class="pull-left" href="{{ url_for('main_bp.mechanics') }}">
+                    <a class="pull-left" href="#" data-toggle="modal" data-target="#imageModal" 
+                       data-image-src="{{ url_for('static', filename='figures/plasticity.png') }}"
+                       data-image-title="Simulations">
                         <img class="media-object" src="{{ url_for('static', filename='figures/plasticity.png') }}" alt="Simulations" style="width: 150px; height: auto; border-radius: 4px;">
                     </a>
                     <div class="media-body">
                         <h4 class="media-heading"><a href="{{ url_for('main_bp.mechanics') }}">Simulations</a></h4>
                         <p><strong>[Example: Parallel simulation codes developed to model material plasticity and lattice deformation in scientific computing.]</strong></p>
                         <p>
-                            <span class="label label-primary">Python</span>
+                          <span class="label label-primary">Python</span>
+                            <span class="label label-primary">C++</span>        
                             <span class="label label-default">Fortran</span>
                             <span class="label label-default">MPI</span>
+                            <span class="label label-default">HPC</span>			    
                         </p>
                     </div>
                 </li>
 
                 <li class="media">
-                    <a class="pull-left" href="{{ url_for('main_bp.webapps') }}">
+                    <a class="pull-left" href="#" data-toggle="modal" data-target="#imageModal"
+                       data-image-src="{{url_for('static', filename='figures/webapp.png')}}"
+                       data-image-title="Web app demos">
                         <img class="media-object" src="{{url_for('static', filename='figures/webapp.png')}}" alt="Web app demos" style="width: 150px; height: auto; border-radius: 4px;">
                     </a>
                     <div class="media-body">
@@ -56,14 +80,18 @@
                             <span class="label label-info">Python</span>
                             <span class="label label-info">Flask</span>
                             <span class="label label-info">Google Cloud</span>
+                            <span class="label label-info">AWS</span>           
                             <span class="label label-info">Pub/Sub</span>
                             <span class="label label-info">Docker</span>
+                            <span class="label label-info">Heroku</span>
                         </p>
                     </div>
                 </li>
 
                 <li class="media">
-                    <a class="pull-left" href="{{url_for('main_bp.machine_learning') }}">
+                    <a class="pull-left" href="#" data-toggle="modal" data-target="#imageModal"
+                       data-image-src="{{url_for('static', filename='figures/physicaltherapy.png')}}"
+                       data-image-title="Machine Learning">
                         <img class="media-object" src="{{url_for('static', filename='figures/physicaltherapy.png')}}" alt="Machine Learning" style="width: 150px; height: auto; border-radius: 4px;">
                     </a>
                     <div class="media-body">
@@ -73,20 +101,22 @@
                             <span class="label label-success">Python</span>
                             <span class="label label-success">SciPy</span>
                             <span class="label label-success">Numpy</span>
-                            <span class="label label-success">Signal Processing</span>
+                            <span class="label label-success">Time series signal processing</span>
                         </p>
                     </div>
                 </li>
 
                 <li class="media">
-                    <a class="pull-left" href="{{url_for('main_bp.data_engineering') }}">
+                    <a class="pull-left" href="#" data-toggle="modal" data-target="#imageModal"
+                       data-image-src="{{url_for('static', filename='figures/pub_sub_arch.png')}}"
+                       data-image-title="Data engineering">
                         <img class="media-object" src="{{url_for('static', filename='figures/pub_sub_arch.png')}}" alt="Data engineering" style="width: 150px; height: auto; border-radius: 4px;">
                     </a>
                     <div class="media-body">
                         <h4 class="media-heading"><a href="{{url_for('main_bp.data_engineering') }}">Data engineering</a></h4>
-                        <p><strong>[Example: Real-time data engineering pipeline using Rust for high-performance data capture from a depth camera, streamed to Google Pub/Sub.]</strong></p>
+                        <p><strong>[Example: Real-time hardware in loop demo capturing data from a depth camera.]</strong></p>
                         <p>
-                            <span class="label label-warning">Rust</span>
+                           <span class="label label-warning">Hardware in Loop (HIL)</span>
                             <span class="label label-warning">Google Cloud</span>
                             <span class="label label-warning">Pub/Sub</span>
                             <span class="label label-warning">Data Pipelines</span>
@@ -99,4 +129,48 @@
     </div>
     
 </div>
+
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document"> <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="imageModalLabel">Image Preview</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <img src="" id="modalImage" style="width: 100%; height: auto;">
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ super() if super }} <script>
+$(document).ready(function() {
+    // Listen for the modal to be shown
+    $('#imageModal').on('show.bs.modal', function (event) {
+        var triggerElement = $(event.relatedTarget); // Get the <a> tag that was clicked
+        
+        // Extract info from the data-* attributes
+        var imageSrc = triggerElement.data('image-src');
+        var imageTitle = triggerElement.data('image-title'); 
+        
+        var modal = $(this);
+        
+        // Update the modal's content
+        modal.find('.modal-title').text(imageTitle); // Set the title
+        modal.find('#modalImage').attr('src', imageSrc); // Set the image source
+    });
+
+    // Optional: Clear the image source when modal is hidden
+    // This prevents the old image from flashing briefly if a new one is opened
+    $('#imageModal').on('hidden.bs.modal', function (event) {
+        var modal = $(this);
+        modal.find('#modalImage').attr('src', ''); // Clear the src
+    });
+});
+</script>
 {% endblock %}
