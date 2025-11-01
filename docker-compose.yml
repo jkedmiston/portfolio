@@ -9,8 +9,11 @@ services:
         restart: always
         command: ./scripts/start-flask.sh -d 1
         depends_on:
-         - database
-         - worker
+          worker:
+            condition: service_started
+          database:
+            condition: service_healthy
+
         environment:
             - GOOGLE_APPLICATION_CREDENTIALS
             - DATABASE_URL=postgresql://postgres_user:postgres_password@database:5432
@@ -33,7 +36,6 @@ services:
 
         volumes:
             - .:/app
-
     worker:
         image: etl
         command: ./scripts/start-celery-worker.sh
@@ -92,7 +94,12 @@ services:
           - "127.0.0.1:5445:5432"
         volumes:
           - persistent_database_postgres:/var/lib/postgresql/data
-
+        healthcheck:
+          test: ["CMD-SHELL", "pg_isready -U postgres_user -d postgres_user"]
+          interval: 10s # Check every 10 seconds
+          timeout: 5s   # Wait 5 seconds for the check to complete
+          retries: 5    # Try 5 times before marking as unhealthy
+          start_period: 10s # Give the container 10s to start before first check
 
 volumes:
   persistent_database_postgres:
