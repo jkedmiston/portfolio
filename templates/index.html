@@ -2,57 +2,100 @@
 
 {% block content %}
 <div class="right_col" role="main">
-      Welcome! I am an experienced generalist programmer and engineer, who loves integrating across software/hardware
-      levels, and from backend to frontend. I put together for this site for a collection of proof of concept/starter
-      work as well as past contributions. See my LinkedIn page for a more extensive education and research history, including several years developing parallel simulation codes for scientific computing. 
-      <br>
-      <div class="row">
-	<div class="col-xs-6">
-	    <a href="{{ url_for('main_bp.mechanics') }}">
-	      <img src="{{ url_for('static', filename='figures/plasticity.png') }}" style="max-width: 100%; height: auto;" alt="Simulations">
-	      <button type="button" class="btn btn-primary btn-lg btn-block">Simulations</button>
-	    </a>
-	</div>
-	<div class="col-xs-6">
-	  <a href="{{ url_for('main_bp.webapps') }}" >
-	    <img src="{{url_for('static', filename='figures/webapp.png')}}" style="max-width:100%; height: auto;" alt="Hardware configuration">
-	    <button type="button" class="btn btn-primary btn-lg btn-block">Web app demos </button>	    
-	  </a>
-	</div>
-      </div>
-      <div class="row">
-	<div class="col-xs-6">
-	  <a href="{{url_for('main_bp.machine_learning') }}" >
-	    <img src="{{url_for('static', filename='figures/physicaltherapy.png')}}" style="max-width: 100%; height: auto;" alt="Physical Therapy">
-	    <button type="button" class="btn btn-primary btn-lg btn-block">Machine Learning</button>
-	  </a> 
-	</div>
-	<div class="col-xs-6">
-	  <a href="{{url_for('main_bp.data_engineering') }}">
-	    <img src="{{url_for('static', filename='figures/pub_sub_arch.png')}}" style="max-width: 100%; height: auto;" alt="Hardware configuration">
-	    <button type="button" class="btn btn-primary btn-lg btn-block">Data engineering</button>
-	  </a>
-	</div>
-      </div>
-  <div class="row">
-<br>
-    <div class="col-12">
-
-    <h4> Other links </h4>
-    <ul>
-        <li>
-          <a href="http://www.linkedin.com/in/jkedmiston" target="_blank">JE's LinkedIn page</a>
-        </li>
-        <li>
-	  <a href="{{url_for('main_bp.download_cv')}}" target="_blank">Download resume</a>
-        </li>
-        <li>
-  	  <a href="{{url_for('main_bp.download_dissertation')}}" target="_blank">Download dissertation</a>
-        </li>
-    </ul>      
-<!--    
     
-  </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p>
+                Welcome! I am an experienced generalist programmer and engineer, who loves integrating across software/hardware
+                levels, and from backend to frontend. I put together for this site for a collection of proof of concept/starter
+                work as well as past contributions. See my LinkedIn page for a more extensive education and research history, including several years developing parallel simulation codes for scientific computing. 
+            </p>
+            <p>
+                <a href="http://www.linkedin.com/in/jkedmiston" target="_blank" class="btn btn-primary">
+                    <i class="fa fa-linkedin"></i> View LinkedIn Profile
+                </a>
+                <a href="{{url_for('main_bp.download_cv')}}" target="_blank" class="btn btn-success">
+                    <i class="fa fa-download"></i> Download Resume
+                </a>
+                <a href="{{url_for('main_bp.download_dissertation')}}" target="_blank" class="btn btn-default">
+                    <i class="fa fa-book"></i> Download Dissertation
+                </a>
+            </p>
+            <hr>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <div class="thumbnail" style="height: 100%;"> 
+                <img src="{{ url_for('static', filename='figures/plasticity.png') }}" alt="Simulations" style="width: 100%; max-height: 250px; object-fit: cover;">
+                <div class="caption">
+                    <h3>Simulations</h3>
+                    <p><strong>[Example: Parallel simulation codes developed to model material plasticity and lattice deformation in scientific computing.]</strong></p>
+                    <p>
+                        <span class="label label-primary">Python</span>
+                        <span class="label label-default">Fortran</span>
+                        <span class="label label-default">MPI</span>
+                    </p>
+                    <p><a href="{{ url_for('main_bp.mechanics') }}" class="btn btn-primary" role="button">View Project</a></p>
+                </div>
+            </div>
+        </div>
 
-</div>
+        <div class="col-md-6 col-sm-12">
+            <div class="thumbnail" style="height: 100%;">
+                <img src="{{url_for('static', filename='figures/webapp.png')}}" alt="Web app demos" style="width: 100%; max-height: 250px; object-fit: cover;">
+                <div class="caption">
+                    <h3>Web app demos</h3>
+                    <p><strong>[Example: Full-stack web application demonstrating a data pipeline from Google Pub/Sub to Google Sheets, visualized via a Flask frontend.]</strong></p>
+                    <p>
+                        <span class="label label-info">Python</span>
+                        <span class="label label-info">Flask</span>
+                        <span class="label label-info">Google Cloud</span>
+                        <span class="label label-info">Pub/Sub</span>
+                        <span class="label label-info">Docker</span>
+                    </p>
+                    <p><a href="{{ url_for('main_bp.webapps') }}" class="btn btn-primary" role="button">View Demos</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <div class="thumbnail" style="height: 100%;">
+                <img src="{{url_for('static', filename='figures/physicaltherapy.png')}}" alt="Machine Learning" style="width: 100%; max-height: 250px; object-fit: cover;">
+                <div class="caption">
+                    <h3>Machine Learning</h3>
+                    <p><strong>[Example: Signal processing and ML to analyze gait data from sensors, using FFT to identify step frequency for physical therapy applications.]</strong></p>
+                    <p>
+                        <span class="label label-success">Python</span>
+                        <span class="label label-success">SciPy</span>
+                        <span class="label label-success">Numpy</span>
+                        <span class="label label-success">Signal Processing</span>
+                    </p>
+                    <p><a href="{{url_for('main_bp.machine_learning') }}" class="btn btn-primary" role="button">View Project</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-sm-12">
+            <div class="thumbnail" style="height: 100%;">
+                <img src="{{url_for('static', filename='figures/pub_sub_arch.png')}}" alt="Data engineering" style="width: 100%; max-height: 250px; object-fit: cover;">
+                <div class="caption">
+                    <h3>Data engineering</h3>
+                    <p><strong>[Example: Real-time data engineering pipeline using Rust for high-performance data capture from a depth camera, streamed to Google Pub/Sub.]</strong></p>
+                    <p>
+                        <span class="label label-warning">Rust</span>
+                        <span class="label label-warning">Google Cloud</span>
+                        <span class="label label-warning">Pub/Sub</span>
+                        <span class="label label-warning">Data Pipelines</span>
+                    </p>
+                    <p><a href="{{url_for('main_bp.data_engineering') }}" class="btn btn-primary" role="button">View Project</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
 {% endblock %}
