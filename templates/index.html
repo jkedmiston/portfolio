@@ -26,76 +26,77 @@
     </div>
     
     <div class="row">
-        <div class="col-md-6 col-sm-12">
-            <div class="thumbnail" style="height: 100%;"> 
-                <img src="{{ url_for('static', filename='figures/plasticity.png') }}" alt="Simulations" style="width: 100%; max-height: 250px; object-fit: cover;">
-                <div class="caption">
-                    <h3>Simulations</h3>
-                    <p><strong>[Example: Parallel simulation codes developed to model material plasticity and lattice deformation in scientific computing.]</strong></p>
-                    <p>
-                        <span class="label label-primary">Python</span>
-                        <span class="label label-default">Fortran</span>
-                        <span class="label label-default">MPI</span>
-                    </p>
-                    <p><a href="{{ url_for('main_bp.mechanics') }}" class="btn btn-primary" role="button">View Project</a></p>
-                </div>
-            </div>
-        </div>
+        <div class="col-md-12">
+            
+            <ul class="media-list">
 
-        <div class="col-md-6 col-sm-12">
-            <div class="thumbnail" style="height: 100%;">
-                <img src="{{url_for('static', filename='figures/webapp.png')}}" alt="Web app demos" style="width: 100%; max-height: 250px; object-fit: cover;">
-                <div class="caption">
-                    <h3>Web app demos</h3>
-                    <p><strong>[Example: Full-stack web application demonstrating a data pipeline from Google Pub/Sub to Google Sheets, visualized via a Flask frontend.]</strong></p>
-                    <p>
-                        <span class="label label-info">Python</span>
-                        <span class="label label-info">Flask</span>
-                        <span class="label label-info">Google Cloud</span>
-                        <span class="label label-info">Pub/Sub</span>
-                        <span class="label label-info">Docker</span>
-                    </p>
-                    <p><a href="{{ url_for('main_bp.webapps') }}" class="btn btn-primary" role="button">View Demos</a></p>
-                </div>
-            </div>
+                <li class="media">
+                    <a class="pull-left" href="{{ url_for('main_bp.mechanics') }}">
+                        <img class="media-object" src="{{ url_for('static', filename='figures/plasticity.png') }}" alt="Simulations" style="width: 150px; height: auto; border-radius: 4px;">
+                    </a>
+                    <div class="media-body">
+                        <h4 class="media-heading"><a href="{{ url_for('main_bp.mechanics') }}">Simulations</a></h4>
+                        <p><strong>[Example: Parallel simulation codes developed to model material plasticity and lattice deformation in scientific computing.]</strong></p>
+                        <p>
+                            <span class="label label-primary">Python</span>
+                            <span class="label label-default">Fortran</span>
+                            <span class="label label-default">MPI</span>
+                        </p>
+                    </div>
+                </li>
+
+                <li class="media">
+                    <a class="pull-left" href="{{ url_for('main_bp.webapps') }}">
+                        <img class="media-object" src="{{url_for('static', filename='figures/webapp.png')}}" alt="Web app demos" style="width: 150px; height: auto; border-radius: 4px;">
+                    </a>
+                    <div class="media-body">
+                        <h4 class="media-heading"><a href="{{ url_for('main_bp.webapps') }}">Web app demos</a></h4>
+                        <p><strong>[Example: Full-stack web application demonstrating a data pipeline from Google Pub/Sub to Google Sheets, visualized via a Flask frontend.]</strong></p>
+                        <p>
+                            <span class="label label-info">Python</span>
+                            <span class="label label-info">Flask</span>
+                            <span class="label label-info">Google Cloud</span>
+                            <span class="label label-info">Pub/Sub</span>
+                            <span class="label label-info">Docker</span>
+                        </p>
+                    </div>
+                </li>
+
+                <li class="media">
+                    <a class="pull-left" href="{{url_for('main_bp.machine_learning') }}">
+                        <img class="media-object" src="{{url_for('static', filename='figures/physicaltherapy.png')}}" alt="Machine Learning" style="width: 150px; height: auto; border-radius: 4px;">
+                    </a>
+                    <div class="media-body">
+                        <h4 class="media-heading"><a href="{{url_for('main_bp.machine_learning') }}">Machine Learning</a></h4>
+                        <p><strong>[Example: Signal processing and ML to analyze gait data from sensors, using FFT to identify step frequency for physical therapy applications.]</strong></p>
+                        <p>
+                            <span class="label label-success">Python</span>
+                            <span class="label label-success">SciPy</span>
+                            <span class="label label-success">Numpy</span>
+                            <span class="label label-success">Signal Processing</span>
+                        </p>
+                    </div>
+                </li>
+
+                <li class="media">
+                    <a class="pull-left" href="{{url_for('main_bp.data_engineering') }}">
+                        <img class="media-object" src="{{url_for('static', filename='figures/pub_sub_arch.png')}}" alt="Data engineering" style="width: 150px; height: auto; border-radius: 4px;">
+                    </a>
+                    <div class="media-body">
+                        <h4 class="media-heading"><a href="{{url_for('main_bp.data_engineering') }}">Data engineering</a></h4>
+                        <p><strong>[Example: Real-time data engineering pipeline using Rust for high-performance data capture from a depth camera, streamed to Google Pub/Sub.]</strong></p>
+                        <p>
+                            <span class="label label-warning">Rust</span>
+                            <span class="label label-warning">Google Cloud</span>
+                            <span class="label label-warning">Pub/Sub</span>
+                            <span class="label label-warning">Data Pipelines</span>
+                        </p>
+                    </div>
+                </li>
+
+            </ul>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-md-6 col-sm-12">
-            <div class="thumbnail" style="height: 100%;">
-                <img src="{{url_for('static', filename='figures/physicaltherapy.png')}}" alt="Machine Learning" style="width: 100%; max-height: 250px; object-fit: cover;">
-                <div class="caption">
-                    <h3>Machine Learning</h3>
-                    <p><strong>[Example: Signal processing and ML to analyze gait data from sensors, using FFT to identify step frequency for physical therapy applications.]</strong></p>
-                    <p>
-                        <span class="label label-success">Python</span>
-                        <span class="label label-success">SciPy</span>
-                        <span class="label label-success">Numpy</span>
-                        <span class="label label-success">Signal Processing</span>
-                    </p>
-                    <p><a href="{{url_for('main_bp.machine_learning') }}" class="btn btn-primary" role="button">View Project</a></p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-sm-12">
-            <div class="thumbnail" style="height: 100%;">
-                <img src="{{url_for('static', filename='figures/pub_sub_arch.png')}}" alt="Data engineering" style="width: 100%; max-height: 250px; object-fit: cover;">
-                <div class="caption">
-                    <h3>Data engineering</h3>
-                    <p><strong>[Example: Real-time data engineering pipeline using Rust for high-performance data capture from a depth camera, streamed to Google Pub/Sub.]</strong></p>
-                    <p>
-                        <span class="label label-warning">Rust</span>
-                        <span class="label label-warning">Google Cloud</span>
-                        <span class="label label-warning">Pub/Sub</span>
-                        <span class="label label-warning">Data Pipelines</span>
-                    </p>
-                    <p><a href="{{url_for('main_bp.data_engineering') }}" class="btn btn-primary" role="button">View Project</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    </div>
+    
+</div>
 {% endblock %}
