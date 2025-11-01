@@ -17,12 +17,12 @@ This demonstrates a simple way to turn any local hardware device (e.g. lab measu
 {% endif %}
       </td>
       <td class="align-middle text-center">
-<a href="http://www.movierank.org" target="_blank" class="btn btn-info btn-block">Figure out what movie to watch</a>	
-      This is a separate application where I cross reference a couple review sites to solve the problem of "what movie can I watch for free tonight". Separately I'm a home theater enthusiast boasting an 18 inch DIY subwoofer.
+<a href="http://www.movierank.org" target="_blank" class="btn btn-info btn-block">Movie app</a>	
+      This is a separate application where I cross reference a couple review sites to solve the problem of "what movie can I watch for free tonight". The incoming data needs updating so it's a bit out of date. Separately I'm a home theater enthusiast boasting an 18 inch DIY subwoofer.
       </td>
       <td class="align-middle text-center">
-      <a href="{{url_for('reports_bp.present_sheet')}}" class="btn btn-info btn-block">Spreadsheet power use</a>	
-      Here's a basic example of connecting a Google sheets URL with this web application. 
+	<a href="https://www.plantlogger.app" target="_blank" class="btn btn-info btn-block">Plant growth app</a>
+	An app I built to log plant growth over time, and to do experiments w.r.t. fertilizer, mulch, pruning, etc. I have some blueberry bushes at home I'm trying to optimize. I'm using SendGrid for email/login workflows and AWS S3 for user uploaded image storage. 
       </td>
     </tr>
     <tr>
@@ -38,6 +38,13 @@ This demonstrates a simple way to turn any local hardware device (e.g. lab measu
       <a href="{{url_for('reports_bp.latex_demo')}}" class="btn btn-info btn-block">Automatic report generation</a>	
       An example of a PDF prepared on the fly using LaTeX, again for data and reporting applications. 
       </td>
+    </tr>
+    <tr>
+      <td class="align-middle text-center">
+      <a href="{{url_for('reports_bp.present_sheet')}}" class="btn btn-info btn-block">Spreadsheet power use</a>	
+      Here's a basic example of connecting a Google sheets URL with this web application. 
+      </td>
+      
     </tr>
   </table>
     </div>
