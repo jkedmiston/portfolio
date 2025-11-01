@@ -24,12 +24,11 @@
     <div class="menu_section">
       <h3>General</h3>
       <ul class="nav side-menu">
-        <li><a><i class="fa fa-sitemap"></i> Landing page examples <span class="fa fa-chevron-down"></span></a>
+        <li><a><i class="fa fa-sitemap"></i> Site navigation example <span class="fa fa-chevron-down"></span></a>
 
           <ul class="nav child_menu">
             <li><a href="{{ url_for('main_bp.index') }}" >Portfolio Home </a></li>                        
-            <li><a href="{{ url_for('main_bp.index_gentelella') }}" >Flask-Gentelella Example </a></li>                                    
-
+            <li><a href="{{ url_for('main_bp.index_gentelella') }}" >Dashboard template</a></li>  
           </ul>
         </li>
 <!--        <li><a><i class="fa fa-database"></i> Database admin <span class="fa fa-chevron-down"></span></a>
@@ -61,26 +60,21 @@
     </div>
             
     <div class="menu_section">
-      <h3>Work history</h3>
+      <h3>More information</h3>
       <ul class="nav side-menu">
-      <li><a><i class="fa fa-calendar"></i> Work examples<span class="fa fa-chevron-down"></span></a>
+      <li><a><i class="fa fa-calendar"></i> Resume, etc. <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
-            <!--<li><a href="{{url_for('main_bp.download_cv')}}">Resume</a></li>-->
-            <li><a href="{{urls.main.github}}" target="_blank">Github for this app</a></li>            
-            <li><a href="{{urls.main.google_scholar}}" target="_blank">Google Scholar citations</a></li>
+            <li><a href="{{url_for('main_bp.download_cv')}}">Resume</a></li>
+            <li><a href="{{urls.main.google_scholar}}" target="_blank">Google Scholar</a></li>
+            <li><a href="https://soundcloud.com/elbow_rocket/sets/nanoloop-creations" target="_blank">Nanoloop creations on SoundCloud</a></li>	    
           </ul>
         </li>
-      <!--<li><a><i class="fa fa-table"></i> Publications <span class="fa fa-chevron-down"></span></a>
-          <ul class="nav child_menu">
-            <li><a href="#">Coming soon</a></li>
-          </ul>
-        </li> -->
-        <li><a><i class="fa fa-bar-chart-o"></i> Dashboards <span class="fa fa-chevron-down"></span></a>
+        <!-- <li><a><i class="fa fa-bar-chart-o"></i> Dashboards <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
             <li><a href="/pk" target="_blank">Plotly Dash Dashboard, embedded in Flask app</a></li>
           </ul>
-        </li>
-        <!-- fa-database -->
+        </li> -->
+
         
       </ul>
     </div>
